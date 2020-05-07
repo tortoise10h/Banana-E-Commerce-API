@@ -8,10 +8,10 @@ namespace Banana_E_Commerce_API.Controllers
     [Route("/error")]
     public class ErrorController : ControllerBase
     {
-        public IActionResult Error() => Problem();
+        protected IActionResult Error() => Problem();
 
         [Route("/error-local-development")]
-        public IActionResult ErrorLocalDevelopment([FromServices] IWebHostEnvironment webHostEnviroment)
+        protected IActionResult ErrorLocalDevelopment([FromServices] IWebHostEnvironment webHostEnviroment)
         {
             if (webHostEnviroment.EnvironmentName != "Development")
             {

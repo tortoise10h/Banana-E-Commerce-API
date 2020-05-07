@@ -49,6 +49,22 @@ namespace Banana_E_Commerce_API
 
             app.UseHttpsRedirection();
 
+
+            // Config swagger
+            var swaggerOptions = new SwaggerOptions();
+            Configuration.GetSection(nameof(SwaggerOptions)).Bind(swaggerOptions);
+
+            app.UseSwagger(option =>
+            {
+                option.RouteTemplate = swaggerOptions.JsonRoute;
+            });
+
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint(swaggerOptions.UIEndpoint, swaggerOptions.Description);
+            });
+
+
             app.UseRouting();
 
             app.UseAuthorization();
