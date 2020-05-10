@@ -20,7 +20,8 @@ namespace Banana_E_Commerce_API.Entities
 
     public enum UserStatus
     {
+        New,
         Banned,
-        Available
+        Verified,
     }
 }

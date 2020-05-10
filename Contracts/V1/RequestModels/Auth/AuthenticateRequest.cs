@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace Banana_E_Commerce_API.Contracts.V1.RequestModels.Users
+namespace Banana_E_Commerce_API.Contracts.V1.RequestModels.Auth
 {
     public class AuthenticateRequest
     {

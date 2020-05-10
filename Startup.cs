@@ -67,6 +67,8 @@ namespace Banana_E_Commerce_API
 
             app.UseRouting();
 
+            app.UseAuthentication();
+
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

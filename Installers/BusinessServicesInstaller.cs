@@ -9,6 +9,7 @@ namespace Banana_E_Commerce_API.Installers
         public void InstallServices(IConfiguration configuration, IServiceCollection services)
         {
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IAuthService, AuthService>();
         }
     }
 }

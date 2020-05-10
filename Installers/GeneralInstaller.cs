@@ -52,6 +52,8 @@ namespace Banana_E_Commerce_API.Installers
                     }
                 });
             });
+
+            services.AddAutoMapper(typeof(Startup));
         }
     }
 }
