@@ -23,12 +23,19 @@ namespace Banana_E_Commerce_API.Helpers
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            /** ========== CONFIG DB TABLES REQUIREMENT ========== */
+            modelBuilder.Entity<User>()
+                .Property(user => user.Email)
+                    .IsRequired()
+                    .HasMaxLength(255);
+
             /** ========== CONFIG DB TABLES RELATIONSHIP ========== */
             /** User and Role */
             modelBuilder.Entity<User>()
                 .HasOne<Role>(u => u.Role)
                 .WithMany(r => r.Users)
                 .HasForeignKey(u => u.RoleId);
+
         }
 
     }
