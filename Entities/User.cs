@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Banana_E_Commerce_API.Entities;
 
 namespace Banana_E_Commerce_API.Entities
@@ -16,6 +17,12 @@ namespace Banana_E_Commerce_API.Entities
 
         public int RoleId { get; set; }
         public Role Role { get; set; }
+
+        public Manager Manager { get; set; }
+        public Customer Customer { get; set; }
+        public Shipper Shipper { get; set; }
+        public ICollection<Notification> Notifications { get; set; }
+
     }
 
     public enum UserStatus
