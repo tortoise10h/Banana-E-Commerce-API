@@ -22,5 +22,10 @@ namespace Banana_E_Commerce_API.Contracts.V1
             public const string Login = Base + "/login";
             public const string Register = Base + "/register";
         }
+
+        public static class Cart
+        {
+            public const string AddToCart = Base + "/cart";
+        }
     }
 }
