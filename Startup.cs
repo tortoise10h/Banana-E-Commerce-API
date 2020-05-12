@@ -26,6 +26,7 @@ namespace Banana_E_Commerce_API
     {
         public IConfiguration Configuration { get; }
         public IWebHostEnvironment Env { get; }
+        readonly string MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 
         public Startup(IConfiguration configuration, IWebHostEnvironment env)
         {
@@ -66,6 +67,8 @@ namespace Banana_E_Commerce_API
 
 
             app.UseRouting();
+
+            app.UseCors(MyAllowSpecificOrigins);
 
             app.UseAuthentication();
 

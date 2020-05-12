@@ -10,9 +10,18 @@ namespace Banana_E_Commerce_API.Installers
 {
     public class GeneralInstaller : IInstaller
     {
+        readonly string MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
         public void InstallServices(IConfiguration configuration, IServiceCollection services)
         {
-            services.AddCors();
+            services.AddCors(options =>
+            {
+                options.AddPolicy(name: MyAllowSpecificOrigins,
+                              builder =>
+                              {
+                                  builder.WithOrigins("http://localhost:3000",
+                                                      "https://localhost:3000");
+                              });
+            });
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             services.AddDbContext<DataContext>();
             services.AddSwaggerGen(x =>
