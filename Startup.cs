@@ -68,7 +68,7 @@ namespace Banana_E_Commerce_API
 
             app.UseRouting();
 
-            app.UseCors(MyAllowSpecificOrigins);
+            app.UseCors("AllowMyOrigin");
 
             app.UseAuthentication();
 

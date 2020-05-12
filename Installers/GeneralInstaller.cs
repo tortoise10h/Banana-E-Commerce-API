@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using AutoMapper;
 using Banana_E_Commerce_API.Helpers;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
@@ -10,18 +11,22 @@ namespace Banana_E_Commerce_API.Installers
 {
     public class GeneralInstaller : IInstaller
     {
-        readonly string MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
         public void InstallServices(IConfiguration configuration, IServiceCollection services)
         {
             services.AddCors(options =>
             {
-                options.AddPolicy(name: MyAllowSpecificOrigins,
+                options.AddPolicy("AllowMyOrigin",
                               builder =>
                               {
-                                  builder.WithOrigins("http://localhost:3000",
-                                                      "https://localhost:3000");
+                                  builder.AllowAnyOrigin();
                               });
             });
+            // services.Configure<MvcOptions>(options =>
+            // {
+
+            //     options.Filters.Add(new CorsAuthorizationFilterFactory("AllowMyOrigin"));
+
+            // });
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             services.AddDbContext<DataContext>();
             services.AddSwaggerGen(x =>
