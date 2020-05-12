@@ -25,7 +25,7 @@ namespace Banana_E_Commerce_API.Contracts.V1
 
         public static class Cart
         {
-            public const string AddToCart = Base + "/cart";
+            public const string AddToCart = Base + "/carts";
         }
     }
 }

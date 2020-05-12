@@ -55,7 +55,7 @@ namespace Banana_E_Commerce_API.Controllers.V1
             }
 
             // generate JWT token for login user
-            string token = _authService.WriteTokenForLoginUser(_appSettings.SecretKey, result.User.Id);
+            string token = _authService.WriteTokenForLoginUser(_appSettings.SecretKey, result.User);
 
             return Ok(
                 new AuthenticateSuccessResponse

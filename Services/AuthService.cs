@@ -18,7 +18,7 @@ namespace Banana_E_Commerce_API.Services
         void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt);
         bool VerifyPasswordHash(string password, byte[] passwordHash, byte[] passwordSalt);
         AuthenticateResult Authenticate(string email, string password);
-        string WriteTokenForLoginUser(string secretKey, int userId);
+        string WriteTokenForLoginUser(string secretKey, UserResponse user);
     }
     public class AuthService : IAuthService
     {
@@ -166,7 +166,7 @@ namespace Banana_E_Commerce_API.Services
             return true;
         }
 
-        public string WriteTokenForLoginUser(string secretKey, int userId)
+        public string WriteTokenForLoginUser(string secretKey, UserResponse user)
         {
             // generate JWT token
             var tokenHandler = new JwtSecurityTokenHandler();
@@ -174,9 +174,12 @@ namespace Banana_E_Commerce_API.Services
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(new Claim[] {
-                    new Claim(ClaimTypes.Name, userId.ToString())
+                    new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                    new Claim(JwtRegisteredClaimNames.Email, user.Email),
+                    new Claim(JwtRegisteredClaimNames.Sub, user.Email),
+                    new Claim("id", user.Id.ToString())
                 }),
-                Expires = DateTime.UtcNow.AddDays(7),
+                Expires = DateTime.UtcNow.AddHours(4),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
 

@@ -4,14 +4,16 @@ using Banana_E_Commerce_API.Helpers;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Banana_E_Commerce_API.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20200512041125_RemoveManagerRoleRelationship")]
+    partial class RemoveManagerRoleRelationship
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -715,11 +717,11 @@ namespace Banana_E_Commerce_API.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<bool>("IsDeleted")
+                    b.Property<bool>("Is_deleted")
                         .HasColumnType("bit");
 
-                    b.Property<int>("RoleName")
-                        .HasColumnType("int");
+                    b.Property<string>("RoleName")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("datetime2");
@@ -727,48 +729,6 @@ namespace Banana_E_Commerce_API.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Role");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            CreatedAt = new DateTime(2020, 5, 12, 4, 21, 20, 265, DateTimeKind.Utc).AddTicks(8900),
-                            IsDeleted = false,
-                            RoleName = 0,
-                            UpdatedAt = new DateTime(2020, 5, 12, 4, 21, 20, 265, DateTimeKind.Utc).AddTicks(9396)
-                        },
-                        new
-                        {
-                            Id = 2,
-                            CreatedAt = new DateTime(2020, 5, 12, 4, 21, 20, 266, DateTimeKind.Utc).AddTicks(209),
-                            IsDeleted = false,
-                            RoleName = 2,
-                            UpdatedAt = new DateTime(2020, 5, 12, 4, 21, 20, 266, DateTimeKind.Utc).AddTicks(223)
-                        },
-                        new
-                        {
-                            Id = 3,
-                            CreatedAt = new DateTime(2020, 5, 12, 4, 21, 20, 266, DateTimeKind.Utc).AddTicks(289),
-                            IsDeleted = false,
-                            RoleName = 1,
-                            UpdatedAt = new DateTime(2020, 5, 12, 4, 21, 20, 266, DateTimeKind.Utc).AddTicks(290)
-                        },
-                        new
-                        {
-                            Id = 4,
-                            CreatedAt = new DateTime(2020, 5, 12, 4, 21, 20, 266, DateTimeKind.Utc).AddTicks(292),
-                            IsDeleted = false,
-                            RoleName = 3,
-                            UpdatedAt = new DateTime(2020, 5, 12, 4, 21, 20, 266, DateTimeKind.Utc).AddTicks(293)
-                        },
-                        new
-                        {
-                            Id = 5,
-                            CreatedAt = new DateTime(2020, 5, 12, 4, 21, 20, 266, DateTimeKind.Utc).AddTicks(295),
-                            IsDeleted = false,
-                            RoleName = 4,
-                            UpdatedAt = new DateTime(2020, 5, 12, 4, 21, 20, 266, DateTimeKind.Utc).AddTicks(296)
-                        });
                 });
 
             modelBuilder.Entity("Banana_E_Commerce_API.Entities.Shipment", b =>

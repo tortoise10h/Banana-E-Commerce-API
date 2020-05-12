@@ -15,7 +15,7 @@ namespace Banana_E_Commerce_API.Services
 
         public CartService(DataContext dataContext)
         {
-
+            _dataContext = dataContext;
         }
 
         public AddToCartResult AddProductToCart(int productId, int cartId, int quantity)

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace Banana_E_Commerce_API.Entities
 {
@@ -13,5 +14,8 @@ namespace Banana_E_Commerce_API.Entities
 
         public User User { get; set; }
         public int UserId { get; set; }
+
+        // public ICollection<Role> Roles { get; set; }
+
     }
 }
