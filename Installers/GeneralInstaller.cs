@@ -13,14 +13,7 @@ namespace Banana_E_Commerce_API.Installers
     {
         public void InstallServices(IConfiguration configuration, IServiceCollection services)
         {
-            services.AddCors(options =>
-            {
-                options.AddPolicy("AllowMyOrigin",
-                              builder =>
-                              {
-                                  builder.AllowAnyOrigin();
-                              });
-            });
+
             // services.Configure<MvcOptions>(options =>
             // {
 

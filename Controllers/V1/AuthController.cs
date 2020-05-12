@@ -12,12 +12,14 @@ using Banana_E_Commerce_API.Entities;
 using Banana_E_Commerce_API.Helpers;
 using Banana_E_Commerce_API.Services;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 
 namespace Banana_E_Commerce_API.Controllers.V1
 {
+    [EnableCors("AllowMyOrigin")]
     public class AuthController : ControllerBase
     {
         private IAuthService _authService;

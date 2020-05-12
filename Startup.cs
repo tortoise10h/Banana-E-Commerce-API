@@ -38,6 +38,16 @@ namespace Banana_E_Commerce_API
         public void ConfigureServices(IServiceCollection services)
         {
             InstallerExtension.InstallServicesInAssembly(services, Configuration);
+            services.AddCors(options =>
+            {
+                options.AddPolicy("AllowMyOrigin",
+                              builder =>
+                              {
+                                  builder.AllowAnyOrigin()
+                                         .AllowAnyMethod()
+                                         .AllowAnyHeader();
+                              });
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
