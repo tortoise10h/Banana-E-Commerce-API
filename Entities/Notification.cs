@@ -1,4 +1,5 @@
 using System;
+using Banana_E_Commerce_API.Enums;
 
 namespace Banana_E_Commerce_API.Entities
 {
@@ -18,10 +19,5 @@ namespace Banana_E_Commerce_API.Entities
         public int NotificationTo { get; set; }
     }
 
-    public enum NotificationType
-    {
-        General,
-        Sale,
-        Bill
-    }
+
 }

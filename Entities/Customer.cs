@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Banana_E_Commerce_API.Enums;
 
 namespace Banana_E_Commerce_API.Entities
 {
@@ -8,21 +9,22 @@ namespace Banana_E_Commerce_API.Entities
         public int Id { get; set; }
         public string Name { get; set; }
         public DateTime Birthday { get; set; }
-        public string Gender { get; set; }
+        public Gender Gender { get; set; }
         public string Phone { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
         public bool IsDeleted { get; set; }
-
-        public User User { get; set; }
         public int UserId { get; set; }
 
+
+        public User User { get; set; }
         public ICollection<Address> Addresses { get; set; }
         public ICollection<Order> Orders { get; set; }
         public ICollection<Rating> Rates { get; set; }
         public ICollection<ProductFavorite> ProductFavorites { get; set; }
-
         public Cart Cart { get; set; }
 
     }
+
+
 }

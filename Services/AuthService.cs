@@ -9,12 +9,13 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
+using Banana_E_Commerce_API.Enums;
 
 namespace Banana_E_Commerce_API.Services
 {
     public interface IAuthService
     {
-        Task<RegisterResponse> RegisterAsync(string email, string password);
+        Task<RegisterResponse> RegisterAsync(string email, string password, Customer customer);
         void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt);
         bool VerifyPasswordHash(string password, byte[] passwordHash, byte[] passwordSalt);
         AuthenticateResult Authenticate(string email, string password);
@@ -22,16 +23,21 @@ namespace Banana_E_Commerce_API.Services
     }
     public class AuthService : IAuthService
     {
-        private DataContext _dataContext;
+        private readonly DataContext _context;
+        private readonly ICustomerService _customerService;
 
-        public AuthService(DataContext dataContext)
+        public AuthService(
+            DataContext context,
+            ICustomerService customerService)
         {
-            _dataContext = dataContext;
+            _context = context;
+            _customerService = customerService;
         }
 
-        public async Task<RegisterResponse> RegisterAsync(string email, string password)
+        public async Task<RegisterResponse> RegisterAsync(string email, string password, Customer customer)
         {
-            var existedUser = _dataContext.Users.SingleOrDefault(u => u.Email == email);
+            var existedUser = _context.Users.SingleOrDefault(u => u.Email == email);
+            var customerRole = _context.Roles.SingleOrDefault(r => r.RoleName == RoleNameEnum.Customer);
 
             if (existedUser != null)
             {
@@ -45,26 +51,52 @@ namespace Banana_E_Commerce_API.Services
                 };
             }
 
+            /** Create new user info */
             var newUser = new User
             {
-                Email = email
+                Email = email,
+                IsDeleted = false,
+                CreatedAt = DateTime.Now,
+                Status = UserStatus.Verified,
+                RoleId = customerRole.Id
             };
-
             // hash user password process
             byte[] passwordHash, passwordSalt;
             CreatePasswordHash(password, out passwordHash, out passwordSalt);
-
             newUser.PasswordHash = passwordHash;
             newUser.PasswordSalt = passwordSalt;
-            newUser.IsDeleted = false;
-            newUser.CreatedAt = DateTime.Now;
-            newUser.Status = UserStatus.Verified;
 
-            // TODO: get the existed roles in db and filter to get customer role to put in RoleID field
-            newUser.RoleId = 1;
+            using (var transaction = _context.Database.BeginTransaction())
+            {
+                try
+                {
+                    await _context.Users.AddAsync(newUser);
+                    var created = await _context.SaveChangesAsync();
+                    var createUser = _context.Users.SingleOrDefault(u => u.Email == email);
 
-            _dataContext.Users.Add(newUser);
-            await _dataContext.SaveChangesAsync();
+
+                    customer.UserId = createUser.Id;
+                    var customerCreated = await _customerService.CreateAsync(customer);
+                    if (!customerCreated)
+                    {
+                        transaction.Dispose();
+                    }
+
+                    transaction.Commit();
+                }
+                catch (System.Exception)
+                {
+
+                    return new RegisterResponse
+                    {
+                        IsSuccess = false,
+                        Errors = new[]
+                        {
+                            $"The phone number {customer.Phone} is already existed"
+                        }
+                    };
+                }
+            }
 
             return new RegisterResponse
             {
@@ -80,7 +112,7 @@ namespace Banana_E_Commerce_API.Services
         // I'll make it async later
         public AuthenticateResult Authenticate(string email, string password)
         {
-            var user = _dataContext.Users.SingleOrDefault(user => user.Email == email);
+            var user = _context.Users.SingleOrDefault(user => user.Email == email);
 
             if (user == null)
             {

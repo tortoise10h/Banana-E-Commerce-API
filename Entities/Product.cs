@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Banana_E_Commerce_API.Enums;
 
 namespace Banana_E_Commerce_API.Entities
 {
@@ -33,9 +34,5 @@ namespace Banana_E_Commerce_API.Entities
 
     }
 
-    public enum PriceCurrency
-    {
-        Dollar,
-        VND
-    }
+
 }

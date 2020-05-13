@@ -1,5 +1,6 @@
 using System;
 using Banana_E_Commerce_API.Entities;
+using Banana_E_Commerce_API.Enums;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -359,6 +360,16 @@ namespace Banana_E_Commerce_API.Extensions
                 .OnDelete(DeleteBehavior.NoAction);
         }
 
+        public static void ConfigTablesRequirements(this ModelBuilder modelBuilder)
+        {
+            /** User */
+            modelBuilder.Entity<User>()
+                .Property(user => user.Email)
+                    .IsRequired()
+                    .HasMaxLength(255);
+
+        }
+
         public static void Seed(this ModelBuilder modelBuilder)
         {
             /** Role Seed Data */
@@ -367,7 +378,7 @@ namespace Banana_E_Commerce_API.Extensions
                     new Role
                     {
                         Id = 1,
-                        RoleName = RoleName.Customer,
+                        RoleName = RoleNameEnum.Customer,
                         CreatedAt = DateTime.UtcNow,
                         UpdatedAt = DateTime.UtcNow,
                         IsDeleted = false
@@ -375,7 +386,7 @@ namespace Banana_E_Commerce_API.Extensions
                     new Role
                     {
                         Id = 2,
-                        RoleName = RoleName.Shipper,
+                        RoleName = RoleNameEnum.Shipper,
                         CreatedAt = DateTime.UtcNow,
                         UpdatedAt = DateTime.UtcNow,
                         IsDeleted = false
@@ -383,7 +394,7 @@ namespace Banana_E_Commerce_API.Extensions
                     new Role
                     {
                         Id = 3,
-                        RoleName = RoleName.Admin,
+                        RoleName = RoleNameEnum.Admin,
                         CreatedAt = DateTime.UtcNow,
                         UpdatedAt = DateTime.UtcNow,
                         IsDeleted = false
@@ -391,7 +402,7 @@ namespace Banana_E_Commerce_API.Extensions
                     new Role
                     {
                         Id = 4,
-                        RoleName = RoleName.StorageManager,
+                        RoleName = RoleNameEnum.StorageManager,
                         CreatedAt = DateTime.UtcNow,
                         UpdatedAt = DateTime.UtcNow,
                         IsDeleted = false
@@ -399,7 +410,7 @@ namespace Banana_E_Commerce_API.Extensions
                     new Role
                     {
                         Id = 5,
-                        RoleName = RoleName.Manager,
+                        RoleName = RoleNameEnum.Manager,
                         CreatedAt = DateTime.UtcNow,
                         UpdatedAt = DateTime.UtcNow,
                         IsDeleted = false

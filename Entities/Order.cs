@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Banana_E_Commerce_API.Enums;
 
 namespace Banana_E_Commerce_API.Entities
 {
@@ -29,13 +30,5 @@ namespace Banana_E_Commerce_API.Entities
         public ICollection<OrderItem> OrderItems { get; set; }
     }
 
-    public enum OrderStatus
-    {
-        New,
-        Processing,
-        Delivering,
-        Canceled,
-        Boom,
-        Succeeded
-    }
+
 }

@@ -14,12 +14,16 @@ namespace Banana_E_Commerce_API.Installers
         public void InstallServices(IConfiguration configuration, IServiceCollection services)
         {
 
-            // services.Configure<MvcOptions>(options =>
-            // {
-
-            //     options.Filters.Add(new CorsAuthorizationFilterFactory("AllowMyOrigin"));
-
-            // });
+            services.AddCors(options =>
+            {
+                options.AddPolicy("AllowMyOrigin",
+                              builder =>
+                              {
+                                  builder.AllowAnyOrigin()
+                                         .AllowAnyMethod()
+                                         .AllowAnyHeader();
+                              });
+            });
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             services.AddDbContext<DataContext>();
             services.AddSwaggerGen(x =>

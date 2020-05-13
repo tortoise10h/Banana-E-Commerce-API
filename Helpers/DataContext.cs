@@ -10,11 +10,14 @@ namespace Banana_E_Commerce_API.Helpers
     {
         protected readonly IConfiguration Configuration;
         public DbSet<User> Users { get; set; }
+        public DbSet<Role> Roles { get; set; }
         public DbSet<Cart> Carts { get; set; }
         public DbSet<CartDetail> CartDetails { get; set; }
+        public DbSet<Customer> Customers { get; set; }
 
 
-        public DataContext(IConfiguration configuration)
+        public DataContext(DbContextOptions options, IConfiguration configuration)
+            : base(options)
         {
             Configuration = configuration;
         }
@@ -29,13 +32,9 @@ namespace Banana_E_Commerce_API.Helpers
         {
             base.OnModelCreating(modelBuilder);
 
-            /** ========== CONFIG DB TABLES REQUIREMENT ========== */
-            modelBuilder.Entity<User>()
-                .Property(user => user.Email)
-                    .IsRequired()
-                    .HasMaxLength(255);
-
             modelBuilder.ConfigDBTablesRelationship();
+
+            modelBuilder.ConfigTablesRequirements();
 
             modelBuilder.Seed();
         }

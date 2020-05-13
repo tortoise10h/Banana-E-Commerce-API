@@ -19,23 +19,25 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace Banana_E_Commerce_API.Controllers.V1
 {
-    [EnableCors("AllowMyOrigin")]
     public class AuthController : ControllerBase
     {
         private IAuthService _authService;
         private IUserService _userService;
+        private ICustomerService _customerService;
         private IMapper _mapper;
         private readonly AppSettings _appSettings;
 
         public AuthController(
             IAuthService authService,
             IUserService userService,
+            ICustomerService customerService,
             IMapper mapper,
             IOptions<AppSettings> appSettings
         )
         {
             _authService = authService;
             _userService = userService;
+            _customerService = customerService;
             _mapper = mapper;
             _appSettings = appSettings.Value;
         }
@@ -72,7 +74,9 @@ namespace Banana_E_Commerce_API.Controllers.V1
         [HttpPost(ApiRoutes.Auth.Register)]
         public async Task<IActionResult> Register([FromBody] RegisterRequest model)
         {
-            var registerResult = await _authService.RegisterAsync(model.Email, model.Password);
+            var customerEntity = _mapper.Map<Customer>(model);
+
+            var registerResult = await _authService.RegisterAsync(model.Email, model.Password, customerEntity);
 
             if (!registerResult.IsSuccess)
             {

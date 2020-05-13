@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Banana_E_Commerce_API.Enums;
 
 namespace Banana_E_Commerce_API.Entities
 {
@@ -23,18 +24,5 @@ namespace Banana_E_Commerce_API.Entities
         public int CreatedBy { get; set; }
 
         public ICollection<Shipment> Shipments { get; set; }
-    }
-
-    public enum Gender
-    {
-        Male,
-        Female
-    }
-
-    public enum ShipperStatus
-    {
-        Online,
-        Delivering,
-        Offline
     }
 }
