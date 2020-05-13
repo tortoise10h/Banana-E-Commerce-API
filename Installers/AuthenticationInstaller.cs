@@ -29,18 +29,18 @@ namespace Banana_E_Commerce_API.Installers
                 {
                     x.Events = new JwtBearerEvents
                     {
-                        OnTokenValidated = context =>
-                        {
-                            var userService = context.HttpContext.RequestServices.GetRequiredService<IUserService>();
-                            var userId = int.Parse(context.Principal.Identity.Name);
-                            var user = userService.GetById(userId);
-                            if (user == null)
-                            {
-                                // return unauthorized if user no longer exists
-                                context.Fail("Unauthorized");
-                            }
-                            return Task.CompletedTask;
-                        },
+                        // OnTokenValidated = context =>
+                        // {
+                        //     var userService = context.HttpContext.RequestServices.GetRequiredService<IUserService>();
+                        //     var userId = int.Parse(context.Principal.Identity.Name);
+                        //     var user = userService.GetById(userId);
+                        //     if (user == null)
+                        //     {
+                        //         // return unauthorized if user no longer exists
+                        //         context.Fail("Unauthorized");
+                        //     }
+                        //     return Task.CompletedTask;
+                        // },
                         OnMessageReceived = context =>
                         {
                             if (context.Request.Query.ContainsKey("access_token"))

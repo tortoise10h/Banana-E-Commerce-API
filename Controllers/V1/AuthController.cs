@@ -8,7 +8,9 @@ using Banana_E_Commerce_API.Contracts.V1;
 using Banana_E_Commerce_API.Contracts.V1.RequestModels.Auth;
 using Banana_E_Commerce_API.Contracts.V1.ResponseModels.Auth;
 using Banana_E_Commerce_API.Contracts.V1.ResponseModels.Users;
+using Banana_E_Commerce_API.CustomAttributes;
 using Banana_E_Commerce_API.Entities;
+using Banana_E_Commerce_API.Enums;
 using Banana_E_Commerce_API.Helpers;
 using Banana_E_Commerce_API.Services;
 using Microsoft.AspNetCore.Authorization;
@@ -44,9 +46,9 @@ namespace Banana_E_Commerce_API.Controllers.V1
 
         [AllowAnonymous]
         [HttpPost(ApiRoutes.Auth.Login)]
-        public IActionResult Login([FromBody] AuthenticateRequest model)
+        public async Task<IActionResult> Login([FromBody] AuthenticateRequest model)
         {
-            var result = _authService.Authenticate(model.Email, model.Password);
+            var result = await _authService.Authenticate(model.Email, model.Password);
 
             if (result.IsSuccess == false)
             {

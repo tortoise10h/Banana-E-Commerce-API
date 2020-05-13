@@ -10,6 +10,7 @@ using System.Text;
 using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
 using Banana_E_Commerce_API.Enums;
+using Microsoft.EntityFrameworkCore;
 
 namespace Banana_E_Commerce_API.Services
 {
@@ -18,7 +19,7 @@ namespace Banana_E_Commerce_API.Services
         Task<RegisterResponse> RegisterAsync(string email, string password, Customer customer);
         void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt);
         bool VerifyPasswordHash(string password, byte[] passwordHash, byte[] passwordSalt);
-        AuthenticateResult Authenticate(string email, string password);
+        Task<AuthenticateResult> Authenticate(string email, string password);
         string WriteTokenForLoginUser(string secretKey, UserResponse user);
     }
     public class AuthService : IAuthService
@@ -110,9 +111,12 @@ namespace Banana_E_Commerce_API.Services
         }
 
         // I'll make it async later
-        public AuthenticateResult Authenticate(string email, string password)
+        public async Task<AuthenticateResult> Authenticate(string email, string password)
         {
-            var user = _context.Users.SingleOrDefault(user => user.Email == email);
+            var user = await _context.Users
+                .Where(user => user.Email == email)
+                .Include(r => r.Role)
+                .FirstOrDefaultAsync();
 
             if (user == null)
             {
@@ -141,7 +145,8 @@ namespace Banana_E_Commerce_API.Services
                 {
                     RoleId = user.RoleId,
                     Email = user.Email,
-                    Id = user.Id
+                    Id = user.Id,
+                    Role = user.Role.RoleName
                 }
             };
         }
@@ -209,7 +214,8 @@ namespace Banana_E_Commerce_API.Services
                     new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                     new Claim(JwtRegisteredClaimNames.Email, user.Email),
                     new Claim(JwtRegisteredClaimNames.Sub, user.Email),
-                    new Claim("id", user.Id.ToString())
+                    new Claim("id", user.Id.ToString()),
+                    new Claim("role", user.Role.ToString())
                 }),
                 Expires = DateTime.UtcNow.AddHours(4),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
