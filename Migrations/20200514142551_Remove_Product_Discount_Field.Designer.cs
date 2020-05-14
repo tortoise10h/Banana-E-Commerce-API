@@ -4,14 +4,16 @@ using Banana_E_Commerce_API.Helpers;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Banana_E_Commerce_API.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20200514142551_Remove_Product_Discount_Field")]
+    partial class Remove_Product_Discount_Field
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -57,7 +59,7 @@ namespace Banana_E_Commerce_API.Migrations
 
                     b.HasIndex("CustomerId");
 
-                    b.ToTable("Addresses");
+                    b.ToTable("Address");
                 });
 
             modelBuilder.Entity("Banana_E_Commerce_API.Entities.Admin", b =>
@@ -92,7 +94,7 @@ namespace Banana_E_Commerce_API.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Admins");
+                    b.ToTable("Admin");
                 });
 
             modelBuilder.Entity("Banana_E_Commerce_API.Entities.Cart", b =>
@@ -164,7 +166,7 @@ namespace Banana_E_Commerce_API.Migrations
 
                     b.HasIndex("CreatedBy");
 
-                    b.ToTable("Categories");
+                    b.ToTable("Category");
                 });
 
             modelBuilder.Entity("Banana_E_Commerce_API.Entities.Customer", b =>
@@ -248,7 +250,7 @@ namespace Banana_E_Commerce_API.Migrations
 
                     b.HasIndex("SupplierId");
 
-                    b.ToTable("ImportBills");
+                    b.ToTable("ImportBill");
                 });
 
             modelBuilder.Entity("Banana_E_Commerce_API.Entities.ImportBillDetail", b =>
@@ -285,7 +287,7 @@ namespace Banana_E_Commerce_API.Migrations
 
                     b.HasIndex("SupplyProductId");
 
-                    b.ToTable("ImportBillDetails");
+                    b.ToTable("ImportBillDetail");
                 });
 
             modelBuilder.Entity("Banana_E_Commerce_API.Entities.Invoice", b =>
@@ -320,7 +322,7 @@ namespace Banana_E_Commerce_API.Migrations
                     b.HasIndex("ShipmentId")
                         .IsUnique();
 
-                    b.ToTable("Invoices");
+                    b.ToTable("Invoice");
                 });
 
             modelBuilder.Entity("Banana_E_Commerce_API.Entities.Manager", b =>
@@ -353,7 +355,7 @@ namespace Banana_E_Commerce_API.Migrations
                     b.HasIndex("UserId")
                         .IsUnique();
 
-                    b.ToTable("Managers");
+                    b.ToTable("Manager");
                 });
 
             modelBuilder.Entity("Banana_E_Commerce_API.Entities.Notification", b =>
@@ -390,7 +392,7 @@ namespace Banana_E_Commerce_API.Migrations
 
                     b.HasIndex("NotificationTo");
 
-                    b.ToTable("Notifications");
+                    b.ToTable("Notification");
                 });
 
             modelBuilder.Entity("Banana_E_Commerce_API.Entities.Order", b =>
@@ -446,7 +448,7 @@ namespace Banana_E_Commerce_API.Migrations
 
                     b.HasIndex("CustomerId");
 
-                    b.ToTable("Orders");
+                    b.ToTable("Order");
                 });
 
             modelBuilder.Entity("Banana_E_Commerce_API.Entities.OrderItem", b =>
@@ -474,48 +476,7 @@ namespace Banana_E_Commerce_API.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("OrderItems");
-                });
-
-            modelBuilder.Entity("Banana_E_Commerce_API.Entities.Payment", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int?>("AdminId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Code")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("Currency")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("ExportBy")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<double>("TotalAmount")
-                        .HasColumnType("float");
-
-                    b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AdminId");
-
-                    b.ToTable("Payments");
+                    b.ToTable("OrderItem");
                 });
 
             modelBuilder.Entity("Banana_E_Commerce_API.Entities.PaymentMethod", b =>
@@ -544,7 +505,7 @@ namespace Banana_E_Commerce_API.Migrations
 
                     b.HasIndex("CreatedBy");
 
-                    b.ToTable("PaymentMethods");
+                    b.ToTable("PaymentMethod");
                 });
 
             modelBuilder.Entity("Banana_E_Commerce_API.Entities.Product", b =>
@@ -572,7 +533,7 @@ namespace Banana_E_Commerce_API.Migrations
                     b.Property<double>("Price")
                         .HasColumnType("float");
 
-                    b.Property<int>("PriceCurrency")
+                    b.Property<int>("PriceCurrentcy")
                         .HasColumnType("int");
 
                     b.Property<double>("SalePrice")
@@ -621,7 +582,7 @@ namespace Banana_E_Commerce_API.Migrations
 
                     b.HasIndex("StorageManagerId");
 
-                    b.ToTable("ProductExportBills");
+                    b.ToTable("ProductExportBill");
                 });
 
             modelBuilder.Entity("Banana_E_Commerce_API.Entities.ProductExportDetail", b =>
@@ -646,7 +607,7 @@ namespace Banana_E_Commerce_API.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("ProductExportDetails");
+                    b.ToTable("ProductExportDetail");
                 });
 
             modelBuilder.Entity("Banana_E_Commerce_API.Entities.ProductFavorite", b =>
@@ -668,7 +629,7 @@ namespace Banana_E_Commerce_API.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("ProductFavorites");
+                    b.ToTable("ProductFavorite");
                 });
 
             modelBuilder.Entity("Banana_E_Commerce_API.Entities.ProductImage", b =>
@@ -700,7 +661,7 @@ namespace Banana_E_Commerce_API.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("ProductImages");
+                    b.ToTable("ProductImage");
                 });
 
             modelBuilder.Entity("Banana_E_Commerce_API.Entities.Rating", b =>
@@ -740,7 +701,7 @@ namespace Banana_E_Commerce_API.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("Rates");
+                    b.ToTable("Rating");
                 });
 
             modelBuilder.Entity("Banana_E_Commerce_API.Entities.Role", b =>
@@ -770,42 +731,42 @@ namespace Banana_E_Commerce_API.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2020, 5, 14, 14, 43, 0, 85, DateTimeKind.Utc).AddTicks(5129),
+                            CreatedAt = new DateTime(2020, 5, 14, 14, 25, 51, 146, DateTimeKind.Utc).AddTicks(9288),
                             IsDeleted = false,
                             RoleName = 0,
-                            UpdatedAt = new DateTime(2020, 5, 14, 14, 43, 0, 85, DateTimeKind.Utc).AddTicks(5608)
+                            UpdatedAt = new DateTime(2020, 5, 14, 14, 25, 51, 146, DateTimeKind.Utc).AddTicks(9739)
                         },
                         new
                         {
                             Id = 2,
-                            CreatedAt = new DateTime(2020, 5, 14, 14, 43, 0, 85, DateTimeKind.Utc).AddTicks(6425),
+                            CreatedAt = new DateTime(2020, 5, 14, 14, 25, 51, 147, DateTimeKind.Utc).AddTicks(498),
                             IsDeleted = false,
                             RoleName = 2,
-                            UpdatedAt = new DateTime(2020, 5, 14, 14, 43, 0, 85, DateTimeKind.Utc).AddTicks(6441)
+                            UpdatedAt = new DateTime(2020, 5, 14, 14, 25, 51, 147, DateTimeKind.Utc).AddTicks(515)
                         },
                         new
                         {
                             Id = 3,
-                            CreatedAt = new DateTime(2020, 5, 14, 14, 43, 0, 85, DateTimeKind.Utc).AddTicks(6483),
+                            CreatedAt = new DateTime(2020, 5, 14, 14, 25, 51, 147, DateTimeKind.Utc).AddTicks(550),
                             IsDeleted = false,
                             RoleName = 1,
-                            UpdatedAt = new DateTime(2020, 5, 14, 14, 43, 0, 85, DateTimeKind.Utc).AddTicks(6485)
+                            UpdatedAt = new DateTime(2020, 5, 14, 14, 25, 51, 147, DateTimeKind.Utc).AddTicks(551)
                         },
                         new
                         {
                             Id = 4,
-                            CreatedAt = new DateTime(2020, 5, 14, 14, 43, 0, 85, DateTimeKind.Utc).AddTicks(6487),
+                            CreatedAt = new DateTime(2020, 5, 14, 14, 25, 51, 147, DateTimeKind.Utc).AddTicks(554),
                             IsDeleted = false,
                             RoleName = 3,
-                            UpdatedAt = new DateTime(2020, 5, 14, 14, 43, 0, 85, DateTimeKind.Utc).AddTicks(6488)
+                            UpdatedAt = new DateTime(2020, 5, 14, 14, 25, 51, 147, DateTimeKind.Utc).AddTicks(555)
                         },
                         new
                         {
                             Id = 5,
-                            CreatedAt = new DateTime(2020, 5, 14, 14, 43, 0, 85, DateTimeKind.Utc).AddTicks(6490),
+                            CreatedAt = new DateTime(2020, 5, 14, 14, 25, 51, 147, DateTimeKind.Utc).AddTicks(557),
                             IsDeleted = false,
                             RoleName = 4,
-                            UpdatedAt = new DateTime(2020, 5, 14, 14, 43, 0, 85, DateTimeKind.Utc).AddTicks(6491)
+                            UpdatedAt = new DateTime(2020, 5, 14, 14, 25, 51, 147, DateTimeKind.Utc).AddTicks(558)
                         });
                 });
 
@@ -864,7 +825,7 @@ namespace Banana_E_Commerce_API.Migrations
 
                     b.HasIndex("ShipperId");
 
-                    b.ToTable("Shipments");
+                    b.ToTable("Shipment");
                 });
 
             modelBuilder.Entity("Banana_E_Commerce_API.Entities.Shipper", b =>
@@ -917,7 +878,7 @@ namespace Banana_E_Commerce_API.Migrations
                     b.HasIndex("UserId")
                         .IsUnique();
 
-                    b.ToTable("Shippers");
+                    b.ToTable("Shipper");
                 });
 
             modelBuilder.Entity("Banana_E_Commerce_API.Entities.Storage", b =>
@@ -958,7 +919,7 @@ namespace Banana_E_Commerce_API.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Storages");
+                    b.ToTable("Storage");
                 });
 
             modelBuilder.Entity("Banana_E_Commerce_API.Entities.StorageManager", b =>
@@ -1001,7 +962,7 @@ namespace Banana_E_Commerce_API.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("StorageManagers");
+                    b.ToTable("StorageManager");
                 });
 
             modelBuilder.Entity("Banana_E_Commerce_API.Entities.Supplier", b =>
@@ -1034,7 +995,7 @@ namespace Banana_E_Commerce_API.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Suppliers");
+                    b.ToTable("Supplier");
                 });
 
             modelBuilder.Entity("Banana_E_Commerce_API.Entities.SupplierPayment", b =>
@@ -1077,7 +1038,7 @@ namespace Banana_E_Commerce_API.Migrations
 
                     b.HasIndex("SupplierId");
 
-                    b.ToTable("SupplierPayments");
+                    b.ToTable("SupplierPayment");
                 });
 
             modelBuilder.Entity("Banana_E_Commerce_API.Entities.SupplyProduct", b =>
@@ -1119,7 +1080,7 @@ namespace Banana_E_Commerce_API.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("SupplyProducts");
+                    b.ToTable("SupplyProduct");
                 });
 
             modelBuilder.Entity("Banana_E_Commerce_API.Entities.User", b =>
@@ -1325,13 +1286,6 @@ namespace Banana_E_Commerce_API.Migrations
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("Banana_E_Commerce_API.Entities.Payment", b =>
-                {
-                    b.HasOne("Banana_E_Commerce_API.Entities.Admin", "Admin")
-                        .WithMany()
-                        .HasForeignKey("AdminId");
                 });
 
             modelBuilder.Entity("Banana_E_Commerce_API.Entities.PaymentMethod", b =>

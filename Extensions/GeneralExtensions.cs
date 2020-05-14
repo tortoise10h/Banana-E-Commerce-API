@@ -5,7 +5,7 @@ namespace Banana_E_Commerce_API.Extensions
 {
     public static class GeneralExtensions
     {
-        public static string GetUserId(this HttpContext httpContext)
+        public static string GetUserIdFromRequest(this HttpContext httpContext)
         {
             if (httpContext.User == null)
             {

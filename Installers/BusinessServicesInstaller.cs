@@ -11,6 +11,7 @@ namespace Banana_E_Commerce_API.Installers
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<ICustomerService, CustomerService>();
+            services.AddScoped<IProductService, ProductService>();
         }
     }
 }
