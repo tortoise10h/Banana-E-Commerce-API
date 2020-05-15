@@ -41,7 +41,7 @@ namespace Banana_E_Commerce_API
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public async void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
             {
@@ -78,6 +78,12 @@ namespace Banana_E_Commerce_API
             {
                 endpoints.MapControllers();
             });
+
+            using (var serviceScope = app.ApplicationServices.CreateScope())
+            {
+                await SampleData.Intitialize(serviceScope);
+
+            }
         }
     }
 }

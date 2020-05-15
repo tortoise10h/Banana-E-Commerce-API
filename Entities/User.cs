@@ -13,7 +13,6 @@ namespace Banana_E_Commerce_API.Entities
         public byte[] PasswordSalt { get; set; }
         public bool IsDeleted { get; set; }
         public DateTime CreatedAt { get; set; }
-        public int BannedBy { get; set; }
         public UserStatus Status { get; set; }
 
         public int RoleId { get; set; }

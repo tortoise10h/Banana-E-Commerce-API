@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Banana_E_Commerce_API.Entities;
+using Banana_E_Commerce_API.Enums;
 using Banana_E_Commerce_API.Helpers;
 
 namespace Banana_E_Commerce_API.Services
@@ -14,6 +15,7 @@ namespace Banana_E_Commerce_API.Services
         User GetById(int id);
         void Update(User user, string password);
         void Delete(int id);
+        Task<bool> CreateAsync(User user, string password);
     }
 
     public class UserService : IUserService
@@ -39,33 +41,23 @@ namespace Banana_E_Commerce_API.Services
             return _context.Users.Find(id);
         }
 
-        // public User Create(User user, string password)
-        // {
-        //     // validattion 
-        //     if (string.IsNullOrWhiteSpace(password))
-        //     {
-        //         throw new Exception("Password is required");
-        //     }
-        //     if (_context.Users.Any(x => x.Email == user.Email))
-        //     {
-        //         throw new Exception($"Email {user.Email} is already taken");
-        //     }
+        public async Task<bool> CreateAsync(User user, string password)
+        {
+            // hash user password process
+            byte[] passwordHash, passwordSalt;
+            _authService.CreatePasswordHash(password, out passwordHash, out passwordSalt);
 
-        //     // hash user password process
-        //     byte[] passwordHash, passwordSalt;
-        //     CreatePasswordHash(password, out passwordHash, out passwordSalt);
+            user.PasswordHash = passwordHash;
+            user.PasswordSalt = passwordSalt;
+            user.IsDeleted = false;
+            user.CreatedAt = DateTime.Now;
+            user.Status = UserStatus.Verified;
 
-        //     user.PasswordHash = passwordHash;
-        //     user.PasswordSalt = passwordSalt;
-        //     user.IsDeleted = false;
-        //     user.CreatedAt = DateTime.Now;
-        //     user.RoleId = 1;
+            await _context.Users.AddAsync(user);
+            var created = await _context.SaveChangesAsync();
 
-        //     _context.Users.Add(user);
-        //     _context.SaveChanges();
-
-        //     return user;
-        // }
+            return created > 0;
+        }
         public void Update(User userParam, string password)
         {
             var user = _context.Users.Find(userParam.Id);

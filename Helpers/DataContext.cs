@@ -47,6 +47,10 @@ namespace Banana_E_Commerce_API.Helpers
             Configuration = configuration;
         }
 
+        public DataContext()
+        {
+        }
+
         protected override void OnConfiguring(DbContextOptionsBuilder options)
         {
             // connect to database
