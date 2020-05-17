@@ -17,6 +17,7 @@ namespace Banana_E_Commerce_API.MapperProfiles
 
             /** Product */
             CreateMap<CreateProductRequest, Product>();
+            CreateMap<UpdateProductRequest, Product>();
 
             /** Category */
             CreateMap<CreateCategoryRequest, Category>();

@@ -10,6 +10,7 @@ namespace Banana_E_Commerce_API.MapperProfiles
         {
             CreateMap<PaginationQuery, PaginationFilter>();
             CreateMap<GetAllCategoriesQuery, GetAllCategoriesFilter>();
+            CreateMap<GetAllProductsQuery, GetAllProductsFilter>();
         }
     }
 }

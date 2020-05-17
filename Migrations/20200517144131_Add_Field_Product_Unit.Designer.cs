@@ -4,14 +4,16 @@ using Banana_E_Commerce_API.Helpers;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Banana_E_Commerce_API.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20200517144131_Add_Field_Product_Unit")]
+    partial class Add_Field_Product_Unit
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -575,9 +577,6 @@ namespace Banana_E_Commerce_API.Migrations
                     b.Property<int>("PriceCurrency")
                         .HasColumnType("int");
 
-                    b.Property<int>("ProductUnit")
-                        .HasColumnType("int");
-
                     b.Property<double>("Quantity")
                         .HasColumnType("float");
 
@@ -585,6 +584,9 @@ namespace Banana_E_Commerce_API.Migrations
                         .HasColumnType("float");
 
                     b.Property<int>("StorageId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Unit")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("UpdatedAt")
@@ -776,42 +778,42 @@ namespace Banana_E_Commerce_API.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2020, 5, 17, 15, 33, 44, 397, DateTimeKind.Utc).AddTicks(701),
+                            CreatedAt = new DateTime(2020, 5, 17, 14, 41, 30, 795, DateTimeKind.Utc).AddTicks(3438),
                             IsDeleted = false,
                             RoleName = 0,
-                            UpdatedAt = new DateTime(2020, 5, 17, 15, 33, 44, 397, DateTimeKind.Utc).AddTicks(1129)
+                            UpdatedAt = new DateTime(2020, 5, 17, 14, 41, 30, 795, DateTimeKind.Utc).AddTicks(3940)
                         },
                         new
                         {
                             Id = 2,
-                            CreatedAt = new DateTime(2020, 5, 17, 15, 33, 44, 397, DateTimeKind.Utc).AddTicks(1841),
+                            CreatedAt = new DateTime(2020, 5, 17, 14, 41, 30, 795, DateTimeKind.Utc).AddTicks(4826),
                             IsDeleted = false,
                             RoleName = 2,
-                            UpdatedAt = new DateTime(2020, 5, 17, 15, 33, 44, 397, DateTimeKind.Utc).AddTicks(1853)
+                            UpdatedAt = new DateTime(2020, 5, 17, 14, 41, 30, 795, DateTimeKind.Utc).AddTicks(4843)
                         },
                         new
                         {
                             Id = 3,
-                            CreatedAt = new DateTime(2020, 5, 17, 15, 33, 44, 397, DateTimeKind.Utc).AddTicks(1883),
+                            CreatedAt = new DateTime(2020, 5, 17, 14, 41, 30, 795, DateTimeKind.Utc).AddTicks(4902),
                             IsDeleted = false,
                             RoleName = 1,
-                            UpdatedAt = new DateTime(2020, 5, 17, 15, 33, 44, 397, DateTimeKind.Utc).AddTicks(1884)
+                            UpdatedAt = new DateTime(2020, 5, 17, 14, 41, 30, 795, DateTimeKind.Utc).AddTicks(4904)
                         },
                         new
                         {
                             Id = 4,
-                            CreatedAt = new DateTime(2020, 5, 17, 15, 33, 44, 397, DateTimeKind.Utc).AddTicks(1886),
+                            CreatedAt = new DateTime(2020, 5, 17, 14, 41, 30, 795, DateTimeKind.Utc).AddTicks(4906),
                             IsDeleted = false,
                             RoleName = 3,
-                            UpdatedAt = new DateTime(2020, 5, 17, 15, 33, 44, 397, DateTimeKind.Utc).AddTicks(1887)
+                            UpdatedAt = new DateTime(2020, 5, 17, 14, 41, 30, 795, DateTimeKind.Utc).AddTicks(4907)
                         },
                         new
                         {
                             Id = 5,
-                            CreatedAt = new DateTime(2020, 5, 17, 15, 33, 44, 397, DateTimeKind.Utc).AddTicks(1889),
+                            CreatedAt = new DateTime(2020, 5, 17, 14, 41, 30, 795, DateTimeKind.Utc).AddTicks(4909),
                             IsDeleted = false,
                             RoleName = 4,
-                            UpdatedAt = new DateTime(2020, 5, 17, 15, 33, 44, 397, DateTimeKind.Utc).AddTicks(1890)
+                            UpdatedAt = new DateTime(2020, 5, 17, 14, 41, 30, 795, DateTimeKind.Utc).AddTicks(4910)
                         });
                 });
 

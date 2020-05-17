@@ -10,6 +10,8 @@ namespace Banana_E_Commerce_API.Entities
         public string Name { get; set; }
         public double Price { get; set; }
         public double SalePrice { get; set; }
+        public double Quantity { get; set; }
+        public ProductUnit ProductUnit { get; set; }
         public PriceCurrency PriceCurrency { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }

@@ -32,9 +32,9 @@ namespace Banana_E_Commerce_API.Contracts.V1
         {
             public const string Create = Base + "/products";
             public const string GetAll = Base + "/products";
-            public const string GetById = Base + "/products/{id}";
-            public const string Update = Base + "/products/{id}";
-            public const string Delete = Base + "/products/{id}";
+            public const string GetById = Base + "/products/{productId}";
+            public const string Update = Base + "/products/{productId}";
+            public const string Delete = Base + "/products/{productId}";
         }
 
         public static class Category
