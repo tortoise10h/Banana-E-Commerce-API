@@ -2,7 +2,7 @@ namespace Banana_E_Commerce_API.Enums
 {
     public enum PriceCurrency
     {
-        Dollar = 0,
-        VND = 1
+        VND = 1,
+        Dollar = 2
     }
 }

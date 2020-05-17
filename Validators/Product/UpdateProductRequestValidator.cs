@@ -5,28 +5,24 @@ using FluentValidation;
 
 namespace Banana_E_Commerce_API.Validators.Product
 {
-    public class CreateProductRequestValidator : AbstractValidator<CreateProductRequest>
+    public class UpdateProductRequestValidator : AbstractValidator<UpdateProductRequest>
     {
-        public CreateProductRequestValidator()
+        public UpdateProductRequestValidator()
         {
             // Name
             RuleFor(x => x.Name)
-                .NotEmpty()
                 .MaximumLength(255);
-
-            // Quantity
-            RuleFor(x => x.Quantity)
-                .NotNull()
-                .GreaterThanOrEqualTo(0);
 
             // Price
             RuleFor(x => x.Price)
-                .NotNull()
                 .GreaterThanOrEqualTo(0);
 
             // Sale Price
             RuleFor(x => x.SalePrice)
-                .NotNull()
+                .GreaterThanOrEqualTo(0);
+
+            // Quantity
+            RuleFor(x => x.Quantity)
                 .GreaterThanOrEqualTo(0);
 
             // Price Currency
