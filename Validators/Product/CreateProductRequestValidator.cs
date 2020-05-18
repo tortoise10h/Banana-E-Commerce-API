@@ -38,6 +38,11 @@ namespace Banana_E_Commerce_API.Validators.Product
             RuleFor(x => x.ProductUnit)
                 .IsInEnum()
                 .WithMessage("Product Unit value is not valid");
+
+            // Origin
+            RuleFor(x => x.Origin)
+                .NotEmpty()
+                .MaximumLength(255);
         }
     }
 }
