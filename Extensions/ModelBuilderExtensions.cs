@@ -416,6 +416,23 @@ namespace Banana_E_Commerce_API.Extensions
                         IsDeleted = false
                     }
                 );
+
+            /** Storage Seed Data */
+            modelBuilder.Entity<Storage>()
+                .HasData(
+                    new Storage
+                    {
+                        Id = 1,
+                        Location = "Tiểu Vương Quốc Bình Chánh",
+                        Size = 1000.2,
+                        SizeUnit = "m2",
+                        Name = "Hoàng Khố",
+                        CreatedAt = DateTime.UtcNow,
+                        UpdatedAt = DateTime.UtcNow,
+                        IsDeleted = false,
+                        CreatedBy = 3
+                    }
+                );
         }
     }
 }

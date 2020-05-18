@@ -69,7 +69,7 @@ namespace Banana_E_Commerce_API.Helpers
                 await adminService.CreateAsync(adminUser3, admin3, "12345678");
             }
 
-            /** admin 1 */
+            /** admin 4 */
             var existedAdmin4 = context.Users.SingleOrDefault(u => u.Email == "linhjavadmin@gmail.com");
             Admin admin4 = new Admin
             {
@@ -86,7 +86,6 @@ namespace Banana_E_Commerce_API.Helpers
             {
                 await adminService.CreateAsync(adminUser4, admin4, "12345678");
             }
-
 
         }
     }
