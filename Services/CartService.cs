@@ -1,4 +1,9 @@
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Banana_E_Commerce_API.Contracts.V1.ResponseModels.Cart;
+using Banana_E_Commerce_API.Domains;
+using Banana_E_Commerce_API.Entities;
 using Banana_E_Commerce_API.Helpers;
 using Microsoft.EntityFrameworkCore;
 
@@ -6,21 +11,29 @@ namespace Banana_E_Commerce_API.Services
 {
     public interface ICartService
     {
-        AddToCartResult AddProductToCart(int productId, int cartId, int quantity);
+        Task<bool> CreateAsync(int customerId);
     }
 
     public class CartService : ICartService
     {
-        private DataContext _dataContext;
+        private DataContext _context;
 
-        public CartService(DataContext dataContext)
+        public CartService(DataContext context)
         {
-            _dataContext = dataContext;
+            _context = context;
         }
 
-        public AddToCartResult AddProductToCart(int productId, int cartId, int quantity)
+        public async Task<bool> CreateAsync(int customerId)
         {
-            throw new System.NotImplementedException();
+            Cart cart = new Cart
+            {
+                CustomerId = customerId
+            };
+
+            await _context.Carts.AddAsync(cart);
+            var created = await _context.SaveChangesAsync();
+
+            return created > 0;
         }
     }
 }

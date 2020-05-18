@@ -27,13 +27,16 @@ namespace Banana_E_Commerce_API.Services
     {
         private readonly DataContext _context;
         private readonly ICustomerService _customerService;
+        private readonly ICartService _cartService;
 
         public AuthService(
             DataContext context,
-            ICustomerService customerService)
+            ICustomerService customerService,
+            ICartService cartService)
         {
             _context = context;
             _customerService = customerService;
+            _cartService = cartService;
         }
 
         public async Task<RegisterResult> RegisterAsync(string email, string password, Customer customer)
@@ -72,14 +75,23 @@ namespace Banana_E_Commerce_API.Services
             {
                 try
                 {
+                    // Create user
                     await _context.Users.AddAsync(newUser);
                     var created = await _context.SaveChangesAsync();
                     var createUser = _context.Users.SingleOrDefault(u => u.Email == email);
 
 
+                    // create customer
                     customer.UserId = createUser.Id;
-                    var customerCreated = await _customerService.CreateAsync(customer);
-                    if (!customerCreated)
+                    var isCustomerCreated = await _customerService.CreateAsync(customer);
+                    if (!isCustomerCreated)
+                    {
+                        transaction.Dispose();
+                    }
+
+                    // create cart for customer
+                    var isCartCreated = await _cartService.CreateAsync(customer.Id);
+                    if (!isCartCreated)
                     {
                         transaction.Dispose();
                     }

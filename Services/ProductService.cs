@@ -46,6 +46,7 @@ namespace Banana_E_Commerce_API.Services
         {
             var queryable = _context.Products.AsQueryable();
 
+            queryable = queryable.Where(x => x.IsDeleted == false);
             queryable = AddFilterOnQuery(filter, queryable);
             return await queryable.CountAsync();
         }

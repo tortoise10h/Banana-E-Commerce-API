@@ -1,3 +1,5 @@
+using System;
+
 namespace Banana_E_Commerce_API.Entities
 {
     public class CartDetail
@@ -10,5 +12,7 @@ namespace Banana_E_Commerce_API.Entities
 
         public Product Product { get; set; }
         public int ProductId { get; set; }
+        public DateTime CreatedAt { get; set; }
+        public DateTime UpdatedAt { get; set; }
     }
 }

@@ -24,11 +24,5 @@ namespace Banana_E_Commerce_API.Controllers.V1
             _mapper = mapper;
             _appSettings = appSettings.Value;
         }
-
-        [HttpPost(ApiRoutes.Cart.AddToCart)]
-        public IActionResult AddToCart([FromBody] AddToCartRequest model)
-        {
-            return Ok();
-        }
     }
 }

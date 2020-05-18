@@ -36,7 +36,7 @@ namespace Banana_E_Commerce_API.Validators.Auth
             // Gender
             List<Gender> validGenderValues = new List<Gender>() { Gender.Male, Gender.Female, Gender.Other };
             RuleFor(x => x.Gender)
-                .NotEmpty()
+                .NotNull()
                 .Must(x => validGenderValues.Contains(x))
                     .WithMessage("Gender value is not valid");
 

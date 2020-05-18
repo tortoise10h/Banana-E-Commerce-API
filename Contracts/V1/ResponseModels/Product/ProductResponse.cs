@@ -9,6 +9,7 @@ namespace Banana_E_Commerce_API.Contracts.V1.ResponseModels.Product
         public double Price { get; set; }
         public double SalePrice { get; set; }
         public int Quantity { get; set; }
+        public ProductUnit ProductUnit { get; set; }
         public string Description { get; set; }
         public string Origin { get; set; }
         public PriceCurrency PriceCurrency { get; set; }
