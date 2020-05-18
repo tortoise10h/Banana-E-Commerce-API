@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Banana_E_Commerce_API.Enums;
 
 namespace Banana_E_Commerce_API.Domains
@@ -11,7 +12,7 @@ namespace Banana_E_Commerce_API.Domains
         public int Quantity { get; set; }
         public string OrderOption { get; set; }
         public PriceCurrency PriceCurrency { get; set; }
-        public int CategoryId { get; set; }
+        public List<int> CategoryIds { get; set; }
         public int StorageId { get; set; }
     }
 }

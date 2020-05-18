@@ -138,9 +138,9 @@ namespace Banana_E_Commerce_API.Services
                 queryable = queryable.Where(x => x.Name.Contains(filter.Name));
             }
 
-            if (filter?.CategoryId > 0)
+            if (filter?.CategoryIds.Count() > 0)
             {
-                queryable = queryable.Where(x => x.CategoryId == filter.CategoryId);
+                queryable = queryable.Where(x => filter.CategoryIds.Contains(x.CategoryId));
             }
 
             if (filter?.StorageId > 0)
