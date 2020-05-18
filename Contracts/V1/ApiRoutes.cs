@@ -12,9 +12,9 @@ namespace Banana_E_Commerce_API.Contracts.V1
         {
             public const string GetAll = Base + "/users";
             public const string Create = Base + "/users";
-            public const string Update = Base + "/users/{id}";
-            public const string Delete = Base + "/users/{id}";
-            public const string Get = Base + "/users/{id}";
+            public const string Update = Base + "/users/{userId}";
+            public const string Delete = Base + "/users/{userId}";
+            public const string Get = Base + "/users/{userId}";
         }
 
         public static class Auth

@@ -16,10 +16,14 @@ using Banana_E_Commerce_API.Contracts.V1;
 using Banana_E_Commerce_API.Contracts.V1.RequestModels.Users;
 using Banana_E_Commerce_API.Contracts.V1.ResponseModels.Users;
 using System.Threading.Tasks;
+using Banana_E_Commerce_API.Contracts.V1.ResponseModels;
+using Banana_E_Commerce_API.CustomAttributes;
+using Banana_E_Commerce_API.Enums;
+using Banana_E_Commerce_API.Extensions;
 
 namespace Banana_E_Commerce_API.Controllers
 {
-    [Authorize]
+    [AuthorizeRoles(RoleNameEnum.Admin, RoleNameEnum.Customer)]
     public class UsersController : ControllerBase
     {
         private IUserService _userService;
@@ -38,19 +42,33 @@ namespace Banana_E_Commerce_API.Controllers
         }
 
         [HttpGet(ApiRoutes.Users.Get)]
-        public IActionResult GetById(int id)
+        public async Task<IActionResult> GetById(int userId)
         {
-            var user = _userService.GetById(id);
-            var model = _mapper.Map<UserResponse>(user);
-            return Ok(model);
+            var requestedUserId = int.Parse(HttpContext.GetUserIdFromRequest());
+            var isUserOwnInfo = await _userService.IsUserOwnInfo(userId, requestedUserId);
+
+            if (!isUserOwnInfo)
+            {
+                return Unauthorized();
+            }
+
+            var result = await _userService.GetByIdAsync(userId);
+            var userResponse = _mapper.Map<UserResponse>(result);
+
+            if (result != null)
+            {
+                return Ok(new Response<UserResponse>(userResponse));
+            }
+
+            return NotFound();
         }
 
-        [HttpGet(ApiRoutes.Users.GetAll)]
-        public IActionResult GetAll()
-        {
-            var users = _userService.GetAll();
-            var userResponses = _mapper.Map<List<UserResponse>>(users);
-            return Ok(userResponses);
-        }
+        // [HttpGet(ApiRoutes.Users.GetAll)]
+        // public IActionResult GetAll()
+        // {
+        //     var users = _userService.GetAllAsync();
+        //     var userResponses = _mapper.Map<List<UserResponse>>(users);
+        //     return Ok(userResponses);
+        // }
     }
 }

@@ -21,7 +21,7 @@ using Microsoft.Extensions.Options;
 
 namespace Banana_E_Commerce_API.Controllers.V1
 {
-    [AuthorizeRoles(RoleNameEnum.Admin)]
+    [AuthorizeRoles(RoleNameEnum.Admin, RoleNameEnum.Customer)]
     public class CategoryController : ControllerBase
     {
         private readonly ICategoryService _categoryService;
@@ -42,6 +42,7 @@ namespace Banana_E_Commerce_API.Controllers.V1
             _uriService = uriService;
         }
 
+        [AuthorizeRoles(RoleNameEnum.Admin)]
         [HttpPost(ApiRoutes.Category.Create)]
         public async Task<IActionResult> Create([FromBody] CreateCategoryRequest model)
         {
@@ -68,6 +69,7 @@ namespace Banana_E_Commerce_API.Controllers.V1
                 new Response<CategoryResponse>(categoryResponse));
         }
 
+        [AuthorizeRoles(RoleNameEnum.Admin)]
         [HttpPut(ApiRoutes.Category.Update)]
         public async Task<IActionResult> Update([FromRoute] int categoryId, [FromBody] UpdateCategoryRequest updateModel)
         {

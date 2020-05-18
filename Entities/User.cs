@@ -20,6 +20,8 @@ namespace Banana_E_Commerce_API.Entities
 
         public Manager Manager { get; set; }
         public Customer Customer { get; set; }
+        public Admin Admin { get; set; }
+        public StorageManager StorageManager { get; set; }
         public Shipper Shipper { get; set; }
         public ICollection<Notification> Notifications { get; set; }
 

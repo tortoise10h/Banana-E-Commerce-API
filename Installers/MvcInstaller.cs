@@ -4,6 +4,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using FluentValidation.AspNetCore;
 using Banana_E_Commerce_API.Filters;
+using Newtonsoft.Json.Serialization;
 
 namespace Banana_E_Commerce_API.Installers
 {
@@ -37,6 +38,7 @@ namespace Banana_E_Commerce_API.Installers
                         };
                     })
                 .AddFluentValidation(config => config.RegisterValidatorsFromAssemblyContaining<Startup>());
+
         }
     }
 }

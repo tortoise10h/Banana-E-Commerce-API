@@ -11,12 +11,13 @@ using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
 using Banana_E_Commerce_API.Enums;
 using Microsoft.EntityFrameworkCore;
+using Banana_E_Commerce_API.Contracts.V1.ResponseModels.Role;
 
 namespace Banana_E_Commerce_API.Services
 {
     public interface IAuthService
     {
-        Task<RegisterResponse> RegisterAsync(string email, string password, Customer customer);
+        Task<RegisterResult> RegisterAsync(string email, string password, Customer customer);
         void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt);
         bool VerifyPasswordHash(string password, byte[] passwordHash, byte[] passwordSalt);
         Task<AuthenticateResult> Authenticate(string email, string password);
@@ -35,14 +36,14 @@ namespace Banana_E_Commerce_API.Services
             _customerService = customerService;
         }
 
-        public async Task<RegisterResponse> RegisterAsync(string email, string password, Customer customer)
+        public async Task<RegisterResult> RegisterAsync(string email, string password, Customer customer)
         {
             var existedUser = _context.Users.SingleOrDefault(u => u.Email == email);
             var customerRole = _context.Roles.SingleOrDefault(r => r.RoleName == RoleNameEnum.Customer);
 
             if (existedUser != null)
             {
-                return new RegisterResponse
+                return new RegisterResult
                 {
                     IsSuccess = false,
                     Errors = new[]
@@ -88,7 +89,7 @@ namespace Banana_E_Commerce_API.Services
                 catch (System.Exception)
                 {
 
-                    return new RegisterResponse
+                    return new RegisterResult
                     {
                         IsSuccess = false,
                         Errors = new[]
@@ -99,24 +100,70 @@ namespace Banana_E_Commerce_API.Services
                 }
             }
 
-            return new RegisterResponse
+            return new RegisterResult
             {
                 IsSuccess = true,
-                user = new UserResponse
-                {
-                    Email = email,
-                    RoleId = newUser.RoleId
-                }
+                User = newUser
             };
         }
 
-        // I'll make it async later
         public async Task<AuthenticateResult> Authenticate(string email, string password)
         {
             var user = await _context.Users
                 .Where(user => user.Email == email)
-                .Include(r => r.Role)
+                .Include(user => user.Role)
                 .FirstOrDefaultAsync();
+
+            switch (user.Role.RoleName)
+            {
+                case RoleNameEnum.Admin:
+                    {
+                        user = await _context.Users
+                            .Where(u => u.Id == user.Id)
+                            .Include(u => u.Admin)
+                            .Include(user => user.Role)
+                            .FirstOrDefaultAsync();
+                        break;
+                    }
+                case RoleNameEnum.Manager:
+                    {
+                        user = await _context.Users
+                            .Where(u => u.Id == user.Id)
+                            .Include(u => u.Manager)
+                            .Include(user => user.Role)
+                            .FirstOrDefaultAsync();
+                        break;
+                    }
+                case RoleNameEnum.Customer:
+                    {
+                        user = await _context.Users
+                            .Where(u => u.Id == user.Id)
+                            .Include(u => u.Customer)
+                            .Include(user => user.Role)
+                            .FirstOrDefaultAsync();
+                        break;
+                    }
+                case RoleNameEnum.StorageManager:
+                    {
+                        user = await _context.Users
+                            .Where(u => u.Id == user.Id)
+                            .Include(user => user.Role)
+                            .Include(u => u.StorageManager)
+                            .FirstOrDefaultAsync();
+                        break;
+                    }
+                case RoleNameEnum.Shipper:
+                    {
+                        user = await _context.Users
+                            .Where(u => u.Id == user.Id)
+                            .Include(user => user.Role)
+                            .Include(u => u.Shipper)
+                            .FirstOrDefaultAsync();
+                        break;
+                    }
+
+                default: break;
+            }
 
             if (user == null)
             {
@@ -141,13 +188,7 @@ namespace Banana_E_Commerce_API.Services
             return new AuthenticateResult
             {
                 IsSuccess = true,
-                User = new UserResponse
-                {
-                    RoleId = user.RoleId,
-                    Email = user.Email,
-                    Id = user.Id,
-                    Role = user.Role.RoleName
-                }
+                User = user
             };
         }
 
@@ -215,7 +256,7 @@ namespace Banana_E_Commerce_API.Services
                     new Claim(JwtRegisteredClaimNames.Email, user.Email),
                     new Claim(JwtRegisteredClaimNames.Sub, user.Email),
                     new Claim("id", user.Id.ToString()),
-                    new Claim("role", user.Role.ToString())
+                    new Claim("role", user.Role.RoleName.ToString())
                 }),
                 Expires = DateTime.UtcNow.AddHours(4),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)

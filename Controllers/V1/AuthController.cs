@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Banana_E_Commerce_API.Contracts.V1;
 using Banana_E_Commerce_API.Contracts.V1.RequestModels.Auth;
+using Banana_E_Commerce_API.Contracts.V1.ResponseModels;
 using Banana_E_Commerce_API.Contracts.V1.ResponseModels.Auth;
 using Banana_E_Commerce_API.Contracts.V1.ResponseModels.Users;
 using Banana_E_Commerce_API.CustomAttributes;
@@ -60,14 +61,16 @@ namespace Banana_E_Commerce_API.Controllers.V1
                 );
             }
 
+            var userResponse = _mapper.Map<UserResponse>(result.User);
+
             // generate JWT token for login user
-            string token = _authService.WriteTokenForLoginUser(_appSettings.SecretKey, result.User);
+            string token = _authService.WriteTokenForLoginUser(_appSettings.SecretKey, userResponse);
 
             return Ok(
                 new AuthenticateSuccessResponse
                 {
                     Token = token,
-                    User = result.User
+                    User = userResponse
                 }
             );
         }
@@ -88,7 +91,9 @@ namespace Banana_E_Commerce_API.Controllers.V1
                 });
             }
 
-            return Ok(registerResult);
+            var userResponse = _mapper.Map<UserResponse>(registerResult.User);
+
+            return Ok(new Response<UserResponse>(userResponse));
         }
     }
 }
