@@ -38,8 +38,8 @@ namespace Banana_E_Commerce_API.Services
 
         public async Task<AddToCartResult> AddProductToCartAsync(CartDetail cartDetail)
         {
-            cartDetail.CreatedAt = DateTime.Now;
-            cartDetail.UpdatedAt = DateTime.Now;
+            cartDetail.CreatedAt = DateTime.UtcNow;
+            cartDetail.UpdatedAt = DateTime.UtcNow;
 
             // check product exists
             var product = await _context.Products

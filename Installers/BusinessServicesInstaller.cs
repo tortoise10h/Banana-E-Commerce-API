@@ -2,6 +2,7 @@ using Banana_E_Commerce_API.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Tokens;
 
 namespace Banana_E_Commerce_API.Installers
 {
