@@ -118,7 +118,7 @@ namespace Banana_E_Commerce_API.Services
             user.PasswordHash = passwordHash;
             user.PasswordSalt = passwordSalt;
             user.IsDeleted = false;
-            user.CreatedAt = DateTime.Now;
+            user.CreatedAt = DateTime.UtcNow;
             user.Status = UserStatus.Verified;
 
             await _context.Users.AddAsync(user);

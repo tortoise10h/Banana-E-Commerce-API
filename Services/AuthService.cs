@@ -12,6 +12,7 @@ using System.Security.Claims;
 using Banana_E_Commerce_API.Enums;
 using Microsoft.EntityFrameworkCore;
 using Banana_E_Commerce_API.Contracts.V1.ResponseModels.Role;
+using AutoMapper;
 
 namespace Banana_E_Commerce_API.Services
 {
@@ -21,22 +22,37 @@ namespace Banana_E_Commerce_API.Services
         void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt);
         bool VerifyPasswordHash(string password, byte[] passwordHash, byte[] passwordSalt);
         Task<AuthenticateResult> Authenticate(string email, string password);
-        string WriteTokenForLoginUser(string secretKey, UserResponse user);
+        Task<WriteTokenForLoginUserResult> WriteTokenForLoginUser(
+            string secretKey,
+            UserResponse user,
+            TimeSpan tokenLifeTime);
+        Task<WriteTokenForLoginUserResult> RefreshTokenAsync(
+            string token,
+            string refreshToken,
+            TimeSpan tokenLifeTime,
+            string secretKey
+        );
     }
     public class AuthService : IAuthService
     {
         private readonly DataContext _context;
         private readonly ICustomerService _customerService;
         private readonly ICartService _cartService;
+        private readonly TokenValidationParameters _tokenValidationParameters;
+        private readonly IMapper _mapper;
 
         public AuthService(
             DataContext context,
             ICustomerService customerService,
-            ICartService cartService)
+            ICartService cartService,
+            TokenValidationParameters tokenValidationParameters,
+            IMapper mapper)
         {
             _context = context;
             _customerService = customerService;
             _cartService = cartService;
+            _tokenValidationParameters = tokenValidationParameters;
+            _mapper = mapper;
         }
 
         public async Task<RegisterResult> RegisterAsync(string email, string password, Customer customer)
@@ -61,7 +77,7 @@ namespace Banana_E_Commerce_API.Services
             {
                 Email = email,
                 IsDeleted = false,
-                CreatedAt = DateTime.Now,
+                CreatedAt = DateTime.UtcNow,
                 Status = UserStatus.Verified,
                 RoleId = customerRole.Id
             };
@@ -257,7 +273,10 @@ namespace Banana_E_Commerce_API.Services
             return true;
         }
 
-        public string WriteTokenForLoginUser(string secretKey, UserResponse user)
+        public async Task<WriteTokenForLoginUserResult> WriteTokenForLoginUser(
+            string secretKey,
+            UserResponse user,
+            TimeSpan tokenLifeTime)
         {
             // generate JWT token
             var tokenHandler = new JwtSecurityTokenHandler();
@@ -271,14 +290,172 @@ namespace Banana_E_Commerce_API.Services
                     new Claim("id", user.Id.ToString()),
                     new Claim("role", user.Role.RoleName.ToString())
                 }),
-                Expires = DateTime.UtcNow.AddHours(4),
+                Expires = DateTime.UtcNow.Add(tokenLifeTime),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
 
             var token = tokenHandler.CreateToken(tokenDescriptor);
             var tokenString = tokenHandler.WriteToken(token);
 
-            return tokenString;
+            var refreshToken = new RefreshToken
+            {
+                Token = Guid.NewGuid().ToString(),
+                JwtId = token.Id,
+                UserId = user.Id,
+                CreatedAt = DateTime.UtcNow,
+                ExpiryDate = DateTime.UtcNow.AddDays(7),
+                IsUsed = false,
+                IsValidated = true
+            };
+
+            await _context.RefreshToken.AddAsync(refreshToken);
+            await _context.SaveChangesAsync();
+
+            return new WriteTokenForLoginUserResult
+            {
+                IsSuccess = true,
+                Token = tokenString,
+                RefreshToken = refreshToken.Token,
+                User = user
+            };
+        }
+
+        public async Task<WriteTokenForLoginUserResult> RefreshTokenAsync(
+            string token,
+            string refreshToken,
+            TimeSpan tokenLifeTime,
+            string secretKey)
+        {
+            var validatedToken = GetPrincipalFromToken(token);
+
+            if (validatedToken == null)
+            {
+                return new WriteTokenForLoginUserResult
+                {
+                    IsSuccess = false,
+                    Errors = new[] { "Invalid token" }
+                };
+            }
+
+            // check the expiry time of token
+            // by compare the expiry time and current time
+            // if the expiry time smaller than current time => token has been expired
+            var expiryDateUnix =
+                long.Parse(validatedToken.Claims
+                    .Single(x => x.Type == JwtRegisteredClaimNames.Exp).Value);
+            var expiryDateTimeUtc = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc)
+                .AddSeconds(expiryDateUnix);
+            if (expiryDateTimeUtc > DateTime.UtcNow)
+            {
+                return new WriteTokenForLoginUserResult
+                {
+                    IsSuccess = false,
+                    Errors = new[] { "This token hasn't expired yet" }
+                };
+            }
+
+            var jti =
+                validatedToken.Claims
+                    .Single(x => x.Type == JwtRegisteredClaimNames.Jti).Value;
+
+            var storedRefreshToken = await _context.RefreshToken
+                .SingleOrDefaultAsync(x => x.Token == refreshToken);
+
+            if (storedRefreshToken == null)
+            {
+                return new WriteTokenForLoginUserResult
+                {
+                    IsSuccess = false,
+                    Errors = new[] { "This refresh token does not exist" }
+                };
+            }
+
+            if (DateTime.UtcNow > storedRefreshToken.ExpiryDate)
+            {
+                return new WriteTokenForLoginUserResult
+                {
+                    IsSuccess = false,
+                    Errors = new[] { "This refresh token has expired" }
+                };
+            }
+
+            if (storedRefreshToken.IsValidated == false)
+            {
+                return new WriteTokenForLoginUserResult
+                {
+                    IsSuccess = false,
+                    Errors = new[] { "This refresh token has been invalidated" }
+                };
+            }
+
+            if (storedRefreshToken.IsUsed == true)
+            {
+                return new WriteTokenForLoginUserResult
+                {
+                    IsSuccess = false,
+                    Errors = new[] { "This refresh token has been used" }
+                };
+            }
+
+            if (storedRefreshToken.JwtId != jti)
+            {
+                return new WriteTokenForLoginUserResult
+                {
+                    IsSuccess = false,
+                    Errors = new[] { "This refresh token does not match this JWT" }
+                };
+            }
+
+            storedRefreshToken.IsUsed = true;
+            _context.RefreshToken.Update(storedRefreshToken);
+            await _context.SaveChangesAsync();
+
+            var userId = int.Parse(validatedToken.Claims
+                    .Single(x => x.Type == "id").Value);
+            var user = await _context.Users
+                .Where(x => x.Id == userId)
+                .Include(x => x.Role)
+                .FirstOrDefaultAsync();
+
+            var userResponse = _mapper.Map<UserResponse>(user);
+
+            return await WriteTokenForLoginUser(
+                secretKey,
+                userResponse,
+                tokenLifeTime
+            );
+        }
+
+        private ClaimsPrincipal GetPrincipalFromToken(string token)
+        {
+            var tokenHandler = new JwtSecurityTokenHandler();
+
+            try
+            {
+                var principal = tokenHandler.ValidateToken(
+                    token,
+                    _tokenValidationParameters,
+                    out var validatedToken);
+
+                if (!IsJwtWithValidSecurityAlgorithm(validatedToken))
+                {
+                    return null;
+                }
+
+                return principal;
+            }
+            catch
+            {
+
+                return null;
+            }
+        }
+
+        private bool IsJwtWithValidSecurityAlgorithm(SecurityToken validatedToken)
+        {
+            return (validatedToken is JwtSecurityToken jwtSecurityToken) &&
+                jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256,
+                    StringComparison.InvariantCultureIgnoreCase);
         }
     }
 }

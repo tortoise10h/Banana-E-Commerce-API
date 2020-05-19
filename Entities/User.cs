@@ -24,6 +24,7 @@ namespace Banana_E_Commerce_API.Entities
         public StorageManager StorageManager { get; set; }
         public Shipper Shipper { get; set; }
         public ICollection<Notification> Notifications { get; set; }
+        public ICollection<RefreshToken> RefreshTokens { get; set; }
 
     }
 

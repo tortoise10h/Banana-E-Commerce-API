@@ -64,13 +64,28 @@ namespace Banana_E_Commerce_API.Controllers.V1
             var userResponse = _mapper.Map<UserResponse>(result.User);
 
             // generate JWT token for login user
-            string token = _authService.WriteTokenForLoginUser(_appSettings.SecretKey, userResponse);
+            var writeTokenResult = await _authService
+                .WriteTokenForLoginUser(
+                    _appSettings.SecretKey,
+                    userResponse,
+                    _appSettings.TokenLifeTime);
+
+            if (writeTokenResult.IsSuccess == false)
+            {
+                return BadRequest(
+                    new AuthenticateFailedResponse
+                    {
+                        Errors = new[] { "Login error, please try again" }
+                    }
+                );
+            }
 
             return Ok(
                 new AuthenticateSuccessResponse
                 {
-                    Token = token,
-                    User = userResponse
+                    Token = writeTokenResult.Token,
+                    User = userResponse,
+                    RefreshToken = writeTokenResult.RefreshToken
                 }
             );
         }
@@ -94,6 +109,35 @@ namespace Banana_E_Commerce_API.Controllers.V1
             var userResponse = _mapper.Map<UserResponse>(registerResult.User);
 
             return Ok(new Response<UserResponse>(userResponse));
+        }
+
+        [HttpPost(ApiRoutes.Auth.Refresh)]
+        public async Task<IActionResult> Refresh([FromBody] RefreshTokenRequest model)
+        {
+            var result = await _authService.RefreshTokenAsync(
+                model.Token,
+                model.RefreshToken,
+                _appSettings.TokenLifeTime,
+                _appSettings.SecretKey
+            );
+
+            if (result.IsSuccess == false)
+            {
+                return BadRequest(
+                    new AuthenticateFailedResponse
+                    {
+                        Errors = result.Errors
+                    }
+                );
+            }
+            return Ok(
+                new AuthenticateSuccessResponse
+                {
+                    Token = result.Token,
+                    User = result.User,
+                    RefreshToken = result.RefreshToken
+                }
+            );
         }
     }
 }

@@ -39,6 +39,7 @@ namespace Banana_E_Commerce_API.Helpers
         public DbSet<Supplier> Suppliers { get; set; }
         public DbSet<SupplierPayment> SupplierPayments { get; set; }
         public DbSet<SupplyProduct> SupplyProducts { get; set; }
+        public DbSet<RefreshToken> RefreshToken { get; set; }
 
 
         public DataContext(DbContextOptions options, IConfiguration configuration)
