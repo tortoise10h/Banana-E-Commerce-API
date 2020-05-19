@@ -21,7 +21,7 @@ using Microsoft.Extensions.Options;
 
 namespace Banana_E_Commerce_API.Controllers.V1
 {
-    [AuthorizeRoles(RoleNameEnum.Admin, RoleNameEnum.Customer)]
+    // [AuthorizeRoles(RoleNameEnum.Admin, RoleNameEnum.Customer)]
     public class CategoryController : ControllerBase
     {
         private readonly ICategoryService _categoryService;

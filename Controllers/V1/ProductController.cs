@@ -19,7 +19,7 @@ using System.Collections.Generic;
 
 namespace Banana_E_Commerce_API.Controllers.V1
 {
-    [AuthorizeRoles(RoleNameEnum.Admin, RoleNameEnum.Customer)]
+    // [AuthorizeRoles(RoleNameEnum.Admin, RoleNameEnum.Customer)]
     public class ProductController : ControllerBase
     {
         private readonly IProductService _productService;
