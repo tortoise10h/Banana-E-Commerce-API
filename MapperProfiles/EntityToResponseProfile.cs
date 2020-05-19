@@ -11,6 +11,7 @@ using Banana_E_Commerce_API.Contracts.V1.ResponseModels.Shipper;
 using Banana_E_Commerce_API.Contracts.V1.ResponseModels.Storage;
 using Banana_E_Commerce_API.Contracts.V1.ResponseModels.StorageManager;
 using Banana_E_Commerce_API.Contracts.V1.ResponseModels.Users;
+using Banana_E_Commerce_API.Contracts.V1.ResponseModels.Address;
 using Banana_E_Commerce_API.Entities;
 
 namespace Banana_E_Commerce_API.MapperProfiles
@@ -42,6 +43,8 @@ namespace Banana_E_Commerce_API.MapperProfiles
             CreateMap<Cart, CartResponse>();
 
             CreateMap<CartDetail, CartDetailResponse>();
+
+            CreateMap<Address, AddressResponse>();
         }
     }
 }

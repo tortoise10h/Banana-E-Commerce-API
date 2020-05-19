@@ -19,6 +19,7 @@ namespace Banana_E_Commerce_API.Installers
             services.AddScoped<IStorageService, StorageService>();
             services.AddScoped<ICartService, CartService>();
             services.AddScoped<ICartDetailService, CartDetailService>();
+            services.AddScoped<IAddressService, AddressService>();
 
             services.AddSingleton<IUriService>(provider =>
             {

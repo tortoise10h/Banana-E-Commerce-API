@@ -63,5 +63,14 @@ namespace Banana_E_Commerce_API.Contracts.V1
             public const string Update = Base + "/cartDetails/{cartDetailId}";
             public const string Delete = Base + "/cartDetails/{cartDetailId}";
         }
+
+         public static class Address
+        {
+            public const string Create = Base + "/addresses";
+            public const string GetAll = Base + "/addresses";
+            public const string GetById = Base + "/addresses/{addressId}";
+            public const string Update = Base + "/addresses/{addressId}";
+            public const string Delete = Base + "/addresses/{addressId}";
+        }
     }
 }
