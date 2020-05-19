@@ -12,7 +12,7 @@ namespace Banana_E_Commerce_API.Contracts.V1.RequestModels.Queries
         public FilterOrder Order { get; set; }
         public string OrderOption { get; set; }
         public PriceCurrency PriceCurrency { get; set; }
-        public List<int> CategoryIds { get; set; }
+        public int[] CategoryIds { get; set; }
         public int StorageId { get; set; }
     }
 }

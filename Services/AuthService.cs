@@ -151,6 +151,7 @@ namespace Banana_E_Commerce_API.Services
                         user = await _context.Users
                             .Where(u => u.Id == user.Id)
                             .Include(u => u.Customer)
+                                .ThenInclude(u => u.Cart)
                             .Include(user => user.Role)
                             .FirstOrDefaultAsync();
                         break;

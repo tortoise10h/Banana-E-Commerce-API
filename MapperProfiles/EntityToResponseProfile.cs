@@ -1,4 +1,5 @@
 using AutoMapper;
+using Banana_E_Commerce_API.Contracts.V1.RequestModels.Cart;
 using Banana_E_Commerce_API.Contracts.V1.ResponseModels.Admin;
 using Banana_E_Commerce_API.Contracts.V1.ResponseModels.CartDetailModels;
 using Banana_E_Commerce_API.Contracts.V1.ResponseModels.Category;
@@ -37,6 +38,8 @@ namespace Banana_E_Commerce_API.MapperProfiles
             CreateMap<Shipper, ShipperResponse>();
 
             CreateMap<Role, RoleResponse>();
+
+            CreateMap<Cart, CartResponse>();
 
             CreateMap<CartDetail, CartDetailResponse>();
         }

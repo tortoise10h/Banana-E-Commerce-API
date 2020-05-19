@@ -1,4 +1,5 @@
 using System;
+using Banana_E_Commerce_API.Contracts.V1.RequestModels.Cart;
 using Banana_E_Commerce_API.Enums;
 
 namespace Banana_E_Commerce_API.Contracts.V1.ResponseModels.Customer
@@ -10,5 +11,6 @@ namespace Banana_E_Commerce_API.Contracts.V1.ResponseModels.Customer
         public DateTime Birthday { get; set; }
         public Gender Gender { get; set; }
         public string Phone { get; set; }
+        public CartResponse Cart { get; set; }
     }
 }
