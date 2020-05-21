@@ -134,6 +134,7 @@ namespace Banana_E_Commerce_API.Services
 
             var skip = (pagination.PageNumber - 1) * pagination.PageSize;
             return await queryable
+                .Include(x => x.Product)
                 .Skip(skip)
                 .Take(pagination.PageSize)
                 .ToListAsync();
@@ -141,7 +142,10 @@ namespace Banana_E_Commerce_API.Services
 
         public async Task<CartDetail> GetByIdAsync(int cartDetailId)
         {
-            return await _context.CartDetails.SingleOrDefaultAsync(x => x.Id == cartDetailId);
+            return await _context.CartDetails
+                .Where(x => x.Id == cartDetailId)
+                .Include(x => x.Product)
+                .FirstOrDefaultAsync();
         }
 
         public async Task<bool> UpdateAsync(CartDetail cartDetail)
