@@ -89,7 +89,9 @@ namespace Banana_E_Commerce_API.Controllers.V1
         }
 
         [HttpPut(ApiRoutes.CartDetail.Update)]
-        public async Task<IActionResult> Update([FromRoute] int cartDetailId, [FromBody] UpdateCartDetailRequest updateModel)
+        public async Task<IActionResult> Update(
+            [FromRoute] int cartDetailId,
+            [FromBody] UpdateCartDetailRequest updateModel)
         {
             var cartDetailEntity = await _cartDetailService.GetByIdAsync(cartDetailId);
 
@@ -136,6 +138,20 @@ namespace Banana_E_Commerce_API.Controllers.V1
             {
                 var cartDetailResponse = _mapper.Map<CartDetailResponse>(cartDetail);
                 return Ok(new Response<CartDetailResponse>(cartDetailResponse));
+            }
+
+            return NotFound();
+        }
+
+        [HttpDelete(ApiRoutes.CartDetail.DeleteAll)]
+        public async Task<IActionResult> DeleteAll()
+        {
+            var requestedUserId = int.Parse(HttpContext.GetUserIdFromRequest());
+            var isDeleted = await _cartDetailService.DeleteAllAsync(requestedUserId);
+
+            if (isDeleted)
+            {
+                return NoContent();
             }
 
             return NotFound();

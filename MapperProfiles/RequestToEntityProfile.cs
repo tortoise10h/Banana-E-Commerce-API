@@ -31,6 +31,7 @@ namespace Banana_E_Commerce_API.MapperProfiles
 
             /** Cart Detail */
             CreateMap<AddProductToCartRequest, CartDetail>();
+            CreateMap<UpdateCartDetailRequest, CartDetail>();
 
             /** Address */
             CreateMap<CreateAddressRequest, Address>();

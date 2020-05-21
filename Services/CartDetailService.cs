@@ -23,6 +23,7 @@ namespace Banana_E_Commerce_API.Services
             PaginationFilter pagination,
             GetAllCartDetailsFilter filter = null
         );
+        Task<bool> DeleteAllAsync(int requestedUserId);
     }
 
     public class CartDetailService : ICartDetailService
@@ -106,6 +107,28 @@ namespace Banana_E_Commerce_API.Services
 
             queryable = AddFilterOnQuery(filter, queryable);
             return await queryable.CountAsync();
+        }
+
+        public async Task<bool> DeleteAllAsync(int requestedUserId)
+        {
+            var customer = await _context.Customers
+                .Where(x => x.UserId == requestedUserId)
+                .Include(x => x.Cart)
+                .FirstOrDefaultAsync();
+
+            if (customer == null || customer.Cart == null)
+            {
+                return false;
+            }
+
+            var deletedCartDetails = await _context.CartDetails
+                .Where(x => x.CartId == customer.Cart.Id)
+                .ToListAsync();
+
+            _context.CartDetails.RemoveRange(deletedCartDetails);
+            var deleted = await _context.SaveChangesAsync();
+
+            return deleted > 0;
         }
 
         public async Task<bool> DeleteAsync(int cartDetailId)
