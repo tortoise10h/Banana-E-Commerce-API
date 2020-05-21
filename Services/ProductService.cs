@@ -8,13 +8,19 @@ using Banana_E_Commerce_API.Domains;
 using Banana_E_Commerce_API.Entities;
 using Banana_E_Commerce_API.Extensions;
 using Banana_E_Commerce_API.Helpers;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 
 namespace Banana_E_Commerce_API.Services
 {
     public interface IProductService
     {
-        Task<CreateProductResult> CreateAsync(Product product, int createdProductUserId);
+        Task<CreateProductResult> CreateAsync(
+            Product product,
+            int createdProductUserId,
+            IEnumerable<IFormFile> images,
+            string productImageDir,
+            string appRootDir);
         Task<bool> UpdateAsync(Product product);
         Task<Product> GetByIdAsync(int productId);
         Task<IEnumerable<Product>> GetAllAsync(
@@ -30,13 +36,16 @@ namespace Banana_E_Commerce_API.Services
     {
         private readonly DataContext _context;
         private readonly IMapper _mapper;
+        private readonly IProductImageService _productImageService;
 
         public ProductService(
             DataContext context,
-            IMapper mapper)
+            IMapper mapper,
+            IProductImageService productImageService)
         {
             _context = context;
             _mapper = mapper;
+            _productImageService = productImageService;
         }
 
         public async Task<int> CountAllAsync(
@@ -51,7 +60,12 @@ namespace Banana_E_Commerce_API.Services
             return await queryable.CountAsync();
         }
 
-        public async Task<CreateProductResult> CreateAsync(Product product, int createdProductUserId)
+        public async Task<CreateProductResult> CreateAsync(
+            Product product,
+            int createdProductUserId,
+            IEnumerable<IFormFile> images,
+            string productImageDir,
+            string appRootDir)
         {
             var createdAdmin = await _context.Admins.SingleOrDefaultAsync(x => x.UserId == createdProductUserId);
 
@@ -82,16 +96,45 @@ namespace Banana_E_Commerce_API.Services
                 };
             }
 
-            await _context.Products.AddAsync(product);
-            var created = await _context.SaveChangesAsync();
-
-            if (!(created > 0))
+            using (var transaction = _context.Database.BeginTransaction())
             {
-                return new CreateProductResult
+                try
                 {
-                    IsSuccess = false,
-                    Errors = new[] { "Created product error" }
-                };
+                    /** Create product */
+                    await _context.Products.AddAsync(product);
+                    var created = await _context.SaveChangesAsync();
+                    if (!(created > 0))
+                    {
+                        transaction.Dispose();
+                    }
+
+                    /** Create Images of product */
+                    // only work if images are existed
+                    if (images.Count() > 0)
+                    {
+                        var createProductImageResult = await _productImageService.UploadMultipleProductImages(
+                            appRootDir,
+                            productImageDir,
+                            product.Id,
+                            images
+                        );
+
+                        if (createProductImageResult.IsSuccess == false)
+                        {
+                            transaction.Dispose();
+                        }
+                    }
+
+                    await transaction.CommitAsync();
+                }
+                catch (System.Exception)
+                {
+                    return new CreateProductResult
+                    {
+                        IsSuccess = false,
+                        Errors = new[] { "Created product error, please try again" }
+                    };
+                }
             }
 
             return new CreateProductResult
@@ -112,12 +155,17 @@ namespace Banana_E_Commerce_API.Services
             return await queryable
                 .Skip(skip)
                 .Take(pagination.PageSize)
+                .Include(x => x.ProductImages)
                 .ToListAsync();
         }
 
         public async Task<Product> GetByIdAsync(int productId)
         {
-            return await _context.Products.SingleOrDefaultAsync(x => x.Id == productId);
+            return await _context.Products
+                .Where(x => x.Id == productId &&
+                    x.IsDeleted == false)
+                .Include(x => x.ProductImages)
+                .FirstOrDefaultAsync();
         }
 
         public async Task<bool> UpdateAsync(Product product)
@@ -133,6 +181,8 @@ namespace Banana_E_Commerce_API.Services
             IQueryable<Product> queryable
         )
         {
+            queryable = queryable.Where(x => x.IsDeleted == false);
+
             if (!string.IsNullOrEmpty(filter?.Name))
             {
                 queryable = queryable.Where(x => x.Name.Contains(filter.Name));

@@ -20,6 +20,7 @@ namespace Banana_E_Commerce_API.Installers
             services.AddScoped<ICartService, CartService>();
             services.AddScoped<ICartDetailService, CartDetailService>();
             services.AddScoped<IAddressService, AddressService>();
+            services.AddScoped<IProductImageService, ProductImageService>();
 
             services.AddSingleton<IUriService>(provider =>
             {

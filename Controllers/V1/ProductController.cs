@@ -16,6 +16,7 @@ using Banana_E_Commerce_API.Contracts.V1.ResponseModels;
 using Banana_E_Commerce_API.Contracts.V1.RequestModels.Queries;
 using Banana_E_Commerce_API.Domains;
 using System.Collections.Generic;
+using Microsoft.AspNetCore.Hosting;
 
 namespace Banana_E_Commerce_API.Controllers.V1
 {
@@ -26,29 +27,36 @@ namespace Banana_E_Commerce_API.Controllers.V1
         private readonly IUriService _uriService;
         private IMapper _mapper;
         private readonly IOptions<AppSettings> _appSettings;
+        private readonly IWebHostEnvironment _env;
 
         public ProductController(
             IProductService productService,
             IUriService uriService,
             IMapper mapper,
-            IOptions<AppSettings> appSettings
-
+            IOptions<AppSettings> appSettings,
+            IWebHostEnvironment env
         )
         {
             _productService = productService;
             _uriService = uriService;
             _mapper = mapper;
             _appSettings = appSettings;
+            _env = env;
         }
 
         [AuthorizeRoles(RoleNameEnum.Admin)]
         [HttpPost(ApiRoutes.Product.Create)]
-        public async Task<IActionResult> Create([FromBody] CreateProductRequest model)
+        public async Task<IActionResult> Create([FromForm] CreateProductRequest model)
         {
             var createdProductUserId = int.Parse(HttpContext.GetUserIdFromRequest());
             var productEntity = _mapper.Map<Product>(model);
 
-            var result = await _productService.CreateAsync(productEntity, createdProductUserId);
+            var result = await _productService.CreateAsync(
+                productEntity,
+                createdProductUserId,
+                model.Images,
+                _appSettings.Value.ProductImageDir,
+                _env.ContentRootPath);
 
             if (!result.IsSuccess)
             {

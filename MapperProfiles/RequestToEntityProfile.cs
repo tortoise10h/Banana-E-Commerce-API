@@ -7,6 +7,7 @@ using Banana_E_Commerce_API.Contracts.V1.RequestModels.Queries;
 using Banana_E_Commerce_API.Contracts.V1.RequestModels.Storage;
 using Banana_E_Commerce_API.Contracts.V1.RequestModels.Address;
 using Banana_E_Commerce_API.Entities;
+using Banana_E_Commerce_API.Contracts.V1.RequestModels.ProductImage;
 
 namespace Banana_E_Commerce_API.MapperProfiles
 {
@@ -36,6 +37,9 @@ namespace Banana_E_Commerce_API.MapperProfiles
             /** Address */
             CreateMap<CreateAddressRequest, Address>();
             CreateMap<UpdateAddressRequest, Address>();
+
+            /** Product Image */
+            CreateMap<CreateProductImageRequest, ProductImage>();
         }
     }
 }
