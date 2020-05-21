@@ -142,6 +142,26 @@ namespace Banana_E_Commerce_API.Services
                 .Include(user => user.Role)
                 .FirstOrDefaultAsync();
 
+
+            if (user == null)
+            {
+                return new AuthenticateResult
+                {
+                    IsSuccess = false,
+                    Errors = new[] { "This user does not exist" }
+                };
+            }
+
+            // check if password is correct 
+            if (!VerifyPasswordHash(password, user.PasswordHash, user.PasswordSalt))
+            {
+                return new AuthenticateResult
+                {
+                    IsSuccess = false,
+                    Errors = new[] { "The email or password is incorrect" }
+                };
+            }
+
             switch (user.Role.RoleName)
             {
                 case RoleNameEnum.Admin:
@@ -192,25 +212,6 @@ namespace Banana_E_Commerce_API.Services
                     }
 
                 default: break;
-            }
-
-            if (user == null)
-            {
-                return new AuthenticateResult
-                {
-                    IsSuccess = false,
-                    Errors = new[] { "This user does not exist" }
-                };
-            }
-
-            // check if password is correct 
-            if (!VerifyPasswordHash(password, user.PasswordHash, user.PasswordSalt))
-            {
-                return new AuthenticateResult
-                {
-                    IsSuccess = false,
-                    Errors = new[] { "The email or password is incorrect" }
-                };
             }
 
             // authenticate successful
