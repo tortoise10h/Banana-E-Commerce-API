@@ -103,10 +103,10 @@ namespace Banana_E_Commerce_API.Controllers.V1
             // map modified fields from request model to entity
             _mapper.Map<UpdateCartDetailRequest, CartDetail>(updateModel, cartDetailEntity);
 
-            var isCartDetailUpdated = await _cartDetailService.UpdateAsync(cartDetailEntity);
+            var updateResult = await _cartDetailService.UpdateAsync(cartDetailEntity);
 
             var cartDetailResponse = _mapper.Map<CartDetailResponse>(cartDetailEntity);
-            if (isCartDetailUpdated)
+            if (updateResult.IsSuccess)
             {
                 return Ok(new Response<CartDetailResponse>(cartDetailResponse));
             }

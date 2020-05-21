@@ -13,7 +13,7 @@ namespace Banana_E_Commerce_API.Services
     public interface ICartDetailService
     {
         Task<AddToCartResult> AddProductToCartAsync(CartDetail cartDetail);
-        Task<bool> UpdateAsync(CartDetail cartDetail);
+        Task<UpdateCartDetailResult> UpdateAsync(CartDetail cartDetail);
         Task<bool> DeleteAsync(int cartDetailId);
         Task<CartDetail> GetByIdAsync(int cartDetailId);
         Task<IEnumerable<CartDetail>> GetAllAsync(
@@ -80,6 +80,20 @@ namespace Banana_E_Commerce_API.Services
                 };
             }
 
+            /** If new item has productId and cartId match the existing item
+            * then update the quantity of the old item instead of create the new item
+            */
+            var handleAddExistedItemResult = await handleAddExistedItem(cartDetail, product);
+            if (handleAddExistedItemResult != null)
+            {
+                return new AddToCartResult
+                {
+                    IsSuccess = true,
+                    CartDetail = handleAddExistedItemResult
+                };
+            }
+
+
             await _context.CartDetails.AddAsync(cartDetail);
             var created = await _context.SaveChangesAsync();
 
@@ -97,6 +111,34 @@ namespace Banana_E_Commerce_API.Services
                 IsSuccess = true,
                 CartDetail = cartDetail
             };
+        }
+
+        private async Task<CartDetail> handleAddExistedItem(CartDetail cartDetail, Product product)
+        {
+            var existingCartDetail = await _context.CartDetails
+                .SingleOrDefaultAsync(c =>
+                    c.ProductId == cartDetail.ProductId &&
+                    c.CartId == cartDetail.CartId);
+            int newQuantity = cartDetail.Quantity + existingCartDetail.Quantity;
+
+            if (newQuantity > product.Quantity)
+            {
+                return null;
+            }
+
+            existingCartDetail.Quantity = newQuantity;
+            if (existingCartDetail != null)
+            {
+                var result = await UpdateAsync(existingCartDetail);
+                if (result.IsSuccess)
+                {
+                    return existingCartDetail;
+                }
+
+                return null;
+            }
+
+            return null;
         }
 
         public async Task<int> CountAllAsync(
@@ -171,12 +213,27 @@ namespace Banana_E_Commerce_API.Services
                 .FirstOrDefaultAsync();
         }
 
-        public async Task<bool> UpdateAsync(CartDetail cartDetail)
+        public async Task<UpdateCartDetailResult> UpdateAsync(CartDetail cartDetail)
         {
+            /** handle quantity of product */
+            var product = await _context.Products
+                .SingleOrDefaultAsync(p => p.Id == cartDetail.ProductId);
+            if (cartDetail.Quantity > product.Quantity)
+            {
+                return new UpdateCartDetailResult
+                {
+                    IsSuccess = false,
+                    Errors = new[] { "The quantity of product is not enought" }
+                };
+            }
+
             _context.CartDetails.Update(cartDetail);
             var updated = await _context.SaveChangesAsync();
 
-            return updated > 0;
+            return new UpdateCartDetailResult
+            {
+                IsSuccess = true
+            };
         }
 
         private IQueryable<CartDetail> AddFilterOnQuery(
