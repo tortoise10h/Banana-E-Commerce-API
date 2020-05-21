@@ -1,4 +1,6 @@
+using System.Collections.Generic;
 using Banana_E_Commerce_API.Enums;
+using Microsoft.AspNetCore.Http;
 
 namespace Banana_E_Commerce_API.Contracts.V1.RequestModels.Product
 {
@@ -14,6 +16,7 @@ namespace Banana_E_Commerce_API.Contracts.V1.RequestModels.Product
         public PriceCurrency PriceCurrency { get; set; }
         public int CategoryId { get; set; }
         public int StorageId { get; set; }
+        public IEnumerable<IFormFile> Images { get; set; }
 
     }
 }

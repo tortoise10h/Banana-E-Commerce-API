@@ -1,7 +1,10 @@
 using System.Collections.Generic;
+using System.Linq;
 using Banana_E_Commerce_API.Contracts.V1.RequestModels.Product;
 using Banana_E_Commerce_API.Enums;
+using Banana_E_Commerce_API.Validators.ProductImage;
 using FluentValidation;
+using Microsoft.AspNetCore.Http;
 
 namespace Banana_E_Commerce_API.Validators.Product
 {
@@ -43,6 +46,11 @@ namespace Banana_E_Commerce_API.Validators.Product
             RuleFor(x => x.Origin)
                 .NotEmpty()
                 .MaximumLength(255);
+
+            // Images
+            RuleForEach(x => x.Images)
+                .SetValidator(new ImageUploadValidator());
+
         }
     }
 }
