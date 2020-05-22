@@ -56,7 +56,7 @@ namespace Banana_E_Commerce_API.Controllers.V1
                 });
             }
 
-            var cartDetailResponse = _mapper.Map<CartDetailResponse>(cartDetailEntity);
+            var cartDetailResponse = _mapper.Map<CartDetailResponse>(result.CartDetail);
 
             var locationUri = _uriService.GetByIdUri(
                 ApiRoutes.Product.GetById.Replace("{cartDetailId}", cartDetailEntity.Id.ToString())
