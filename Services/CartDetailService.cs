@@ -119,16 +119,17 @@ namespace Banana_E_Commerce_API.Services
                 .SingleOrDefaultAsync(c =>
                     c.ProductId == cartDetail.ProductId &&
                     c.CartId == cartDetail.CartId);
-            int newQuantity = cartDetail.Quantity + existingCartDetail.Quantity;
 
-            if (newQuantity > product.Quantity)
-            {
-                return null;
-            }
-
-            existingCartDetail.Quantity = newQuantity;
             if (existingCartDetail != null)
             {
+                int newQuantity = cartDetail.Quantity + existingCartDetail.Quantity;
+
+                if (newQuantity > product.Quantity)
+                {
+                    return null;
+                }
+
+                existingCartDetail.Quantity = newQuantity;
                 var result = await UpdateAsync(existingCartDetail);
                 if (result.IsSuccess)
                 {
