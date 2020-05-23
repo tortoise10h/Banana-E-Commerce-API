@@ -5,6 +5,7 @@ using Banana_E_Commerce_API.Contracts.V1;
 using Banana_E_Commerce_API.Contracts.V1.RequestModels.Address;
 using Banana_E_Commerce_API.Contracts.V1.ResponseModels;
 using Banana_E_Commerce_API.Contracts.V1.ResponseModels.Address;
+using Banana_E_Commerce_API.Contracts.V1.RequestModels.Queries;
 using Banana_E_Commerce_API.CustomAttributes;
 using Banana_E_Commerce_API.Entities;
 using Banana_E_Commerce_API.Enums;
@@ -13,6 +14,8 @@ using Banana_E_Commerce_API.Helpers;
 using Banana_E_Commerce_API.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
+using Banana_E_Commerce_API.Domains;
+using System.Collections.Generic;
 
 namespace Banana_E_Commerce_API.Controllers.V1
 {
@@ -69,6 +72,29 @@ namespace Banana_E_Commerce_API.Controllers.V1
                 return Ok(new Response<AddressResponse>(addressResponse));
             }
             return NotFound();
+        }
+
+        [HttpGet(ApiRoutes.Address.GetAll)]
+        public async Task<IActionResult> GetAll(
+            [FromQuery] GetAllAddressesQuery filterModel,
+            [FromQuery] PaginationQuery paginModel)
+        {
+            var pagination = _mapper.Map<PaginationFilter>(paginModel);
+            var filter = _mapper.Map<GetAllAddressesFilter>(filterModel);
+            var userId = int.Parse(HttpContext.GetUserIdFromRequest());
+            var addresses = await _addressService.GetAllAsync(userId, pagination, filter);
+            int totalAddresses = await _addressService.CountAllAsync(pagination, filter);
+            var responseAddress = _mapper.Map<List<AddressResponse>>(addresses);
+
+            var paginationAddressesResponse = PaginationHelpers.CreatePaginatedResponse(
+                _uriService,
+                pagination,
+                responseAddress,
+                totalAddresses,
+                ApiRoutes.Address.GetAll
+            );
+
+            return Ok(paginationAddressesResponse);
         }
 
         [HttpPut(ApiRoutes.Address.Update)]

@@ -25,7 +25,9 @@ namespace Banana_E_Commerce_API.Validators.Address
             
             // Name
             RuleFor(x => x.Name)
-                .MaximumLength(255);
+                .MaximumLength(255)
+                .Matches(@"[a-zA-z]")
+                    .WithMessage("Name only allow letter characters");
 
             // Phone
             RuleFor(x => x.Phone)
