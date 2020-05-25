@@ -80,12 +80,16 @@ namespace Banana_E_Commerce_API.Controllers.V1
                 );
             }
 
+
+            var exp = DateTime.UtcNow.Add(_appSettings.TokenLifeTime);
+
             return Ok(
                 new AuthenticateSuccessResponse
                 {
                     Token = writeTokenResult.Token,
                     User = userResponse,
-                    RefreshToken = writeTokenResult.RefreshToken
+                    RefreshToken = writeTokenResult.RefreshToken,
+                    Exp = exp
                 }
             );
         }
@@ -130,12 +134,16 @@ namespace Banana_E_Commerce_API.Controllers.V1
                     }
                 );
             }
+
+            var exp = DateTime.UtcNow.AddDays(7);
+
             return Ok(
                 new AuthenticateSuccessResponse
                 {
                     Token = result.Token,
                     User = result.User,
-                    RefreshToken = result.RefreshToken
+                    RefreshToken = result.RefreshToken,
+                    Exp = exp
                 }
             );
         }

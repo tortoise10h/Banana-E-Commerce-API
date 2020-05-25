@@ -1,3 +1,4 @@
+using System;
 using Banana_E_Commerce_API.Contracts.V1.ResponseModels.Users;
 
 namespace Banana_E_Commerce_API.Contracts.V1.ResponseModels.Auth
@@ -7,5 +8,6 @@ namespace Banana_E_Commerce_API.Contracts.V1.ResponseModels.Auth
         public string Token { get; set; }
         public UserResponse User { get; set; }
         public string RefreshToken { get; set; }
+        public DateTime Exp { get; set; }
     }
 }
