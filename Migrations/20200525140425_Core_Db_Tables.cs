@@ -3,29 +3,28 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Banana_E_Commerce_API.Migrations
 {
-    public partial class FullyDatabase : Migration
+    public partial class Core_Db_Tables : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Role",
+                name: "Roles",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    RoleName = table.Column<string>(nullable: true),
-                    CreatedBy = table.Column<int>(nullable: false),
+                    RoleName = table.Column<int>(nullable: false),
                     CreatedAt = table.Column<DateTime>(nullable: false),
                     UpdatedAt = table.Column<DateTime>(nullable: false),
-                    Is_deleted = table.Column<bool>(nullable: false)
+                    IsDeleted = table.Column<bool>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Role", x => x.Id);
+                    table.PrimaryKey("PK_Roles", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Supplier",
+                name: "Suppliers",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
@@ -40,7 +39,7 @@ namespace Banana_E_Commerce_API.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Supplier", x => x.Id);
+                    table.PrimaryKey("PK_Suppliers", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -54,7 +53,6 @@ namespace Banana_E_Commerce_API.Migrations
                     PasswordSalt = table.Column<byte[]>(nullable: true),
                     IsDeleted = table.Column<bool>(nullable: false),
                     CreatedAt = table.Column<DateTime>(nullable: false),
-                    BannedBy = table.Column<int>(nullable: false),
                     Status = table.Column<int>(nullable: false),
                     RoleId = table.Column<int>(nullable: false)
                 },
@@ -62,21 +60,21 @@ namespace Banana_E_Commerce_API.Migrations
                 {
                     table.PrimaryKey("PK_Users", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Users_Role_RoleId",
+                        name: "FK_Users_Roles_RoleId",
                         column: x => x.RoleId,
-                        principalTable: "Role",
+                        principalTable: "Roles",
                         principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
-                name: "Admin",
+                name: "Admins",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(nullable: true),
                     Phone = table.Column<string>(nullable: true),
-                    Gender = table.Column<string>(nullable: true),
+                    Gender = table.Column<int>(nullable: false),
                     CreatedAt = table.Column<DateTime>(nullable: false),
                     UpdatedAt = table.Column<DateTime>(nullable: false),
                     IsDeleted = table.Column<bool>(nullable: false),
@@ -84,9 +82,9 @@ namespace Banana_E_Commerce_API.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Admin", x => x.Id);
+                    table.PrimaryKey("PK_Admins", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Admin_Users_UserId",
+                        name: "FK_Admins_Users_UserId",
                         column: x => x.UserId,
                         principalTable: "Users",
                         principalColumn: "Id",
@@ -94,14 +92,14 @@ namespace Banana_E_Commerce_API.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Customer",
+                name: "Customers",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(nullable: true),
                     Birthday = table.Column<DateTime>(nullable: false),
-                    Gender = table.Column<string>(nullable: true),
+                    Gender = table.Column<int>(nullable: false),
                     Phone = table.Column<string>(nullable: true),
                     CreatedAt = table.Column<DateTime>(nullable: false),
                     UpdatedAt = table.Column<DateTime>(nullable: false),
@@ -110,16 +108,16 @@ namespace Banana_E_Commerce_API.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Customer", x => x.Id);
+                    table.PrimaryKey("PK_Customers", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Customer_Users_UserId",
+                        name: "FK_Customers_Users_UserId",
                         column: x => x.UserId,
                         principalTable: "Users",
                         principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
-                name: "Manager",
+                name: "Managers",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
@@ -133,16 +131,38 @@ namespace Banana_E_Commerce_API.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Manager", x => x.Id);
+                    table.PrimaryKey("PK_Managers", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Manager_Users_UserId",
+                        name: "FK_Managers_Users_UserId",
                         column: x => x.UserId,
                         principalTable: "Users",
                         principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
-                name: "Category",
+                name: "RefreshToken",
+                columns: table => new
+                {
+                    Token = table.Column<string>(nullable: false),
+                    JwtId = table.Column<string>(nullable: true),
+                    CreatedAt = table.Column<DateTime>(nullable: false),
+                    ExpiryDate = table.Column<DateTime>(nullable: false),
+                    IsUsed = table.Column<bool>(nullable: false),
+                    IsValidated = table.Column<bool>(nullable: false),
+                    UserId = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_RefreshToken", x => x.Token);
+                    table.ForeignKey(
+                        name: "FK_RefreshToken_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Categories",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
@@ -155,16 +175,45 @@ namespace Banana_E_Commerce_API.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Category", x => x.Id);
+                    table.PrimaryKey("PK_Categories", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Category_Admin_CreatedBy",
+                        name: "FK_Categories_Admins_CreatedBy",
                         column: x => x.CreatedBy,
-                        principalTable: "Admin",
+                        principalTable: "Admins",
                         principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
-                name: "PaymentMethod",
+                name: "Notifications",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Type = table.Column<int>(nullable: false),
+                    Description = table.Column<string>(nullable: true),
+                    CreatedAt = table.Column<DateTime>(nullable: false),
+                    UpdatedAt = table.Column<DateTime>(nullable: false),
+                    IsDeleted = table.Column<bool>(nullable: false),
+                    CreatedBy = table.Column<int>(nullable: false),
+                    NotificationTo = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Notifications", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Notifications_Admins_CreatedBy",
+                        column: x => x.CreatedBy,
+                        principalTable: "Admins",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Notifications_Users_NotificationTo",
+                        column: x => x.NotificationTo,
+                        principalTable: "Users",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "PaymentMethods",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
@@ -177,16 +226,43 @@ namespace Banana_E_Commerce_API.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_PaymentMethod", x => x.Id);
+                    table.PrimaryKey("PK_PaymentMethods", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_PaymentMethod_Admin_CreatedBy",
+                        name: "FK_PaymentMethods_Admins_CreatedBy",
                         column: x => x.CreatedBy,
-                        principalTable: "Admin",
+                        principalTable: "Admins",
                         principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
-                name: "Shipper",
+                name: "Payments",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    TotalAmount = table.Column<double>(nullable: false),
+                    Currency = table.Column<int>(nullable: false),
+                    Code = table.Column<string>(nullable: true),
+                    Description = table.Column<string>(nullable: true),
+                    CreatedAt = table.Column<DateTime>(nullable: false),
+                    UpdatedAt = table.Column<DateTime>(nullable: false),
+                    IsDeleted = table.Column<bool>(nullable: false),
+                    AdminId = table.Column<int>(nullable: true),
+                    ExportBy = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Payments", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Payments_Admins_AdminId",
+                        column: x => x.AdminId,
+                        principalTable: "Admins",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Shippers",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
@@ -206,22 +282,22 @@ namespace Banana_E_Commerce_API.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Shipper", x => x.Id);
+                    table.PrimaryKey("PK_Shippers", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Shipper_Admin_AdminId",
+                        name: "FK_Shippers_Admins_AdminId",
                         column: x => x.AdminId,
-                        principalTable: "Admin",
+                        principalTable: "Admins",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Shipper_Users_UserId",
+                        name: "FK_Shippers_Users_UserId",
                         column: x => x.UserId,
                         principalTable: "Users",
                         principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
-                name: "Storage",
+                name: "Storages",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
@@ -238,17 +314,17 @@ namespace Banana_E_Commerce_API.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Storage", x => x.Id);
+                    table.PrimaryKey("PK_Storages", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Storage_Admin_UserId",
+                        name: "FK_Storages_Admins_UserId",
                         column: x => x.UserId,
-                        principalTable: "Admin",
+                        principalTable: "Admins",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
-                name: "SupplierPayment",
+                name: "SupplierPayments",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
@@ -265,21 +341,21 @@ namespace Banana_E_Commerce_API.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_SupplierPayment", x => x.Id);
+                    table.PrimaryKey("PK_SupplierPayments", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_SupplierPayment_Admin_CreatedBy",
+                        name: "FK_SupplierPayments_Admins_CreatedBy",
                         column: x => x.CreatedBy,
-                        principalTable: "Admin",
+                        principalTable: "Admins",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_SupplierPayment_Supplier_SupplierId",
+                        name: "FK_SupplierPayments_Suppliers_SupplierId",
                         column: x => x.SupplierId,
-                        principalTable: "Supplier",
+                        principalTable: "Suppliers",
                         principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
-                name: "Address",
+                name: "Addresses",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
@@ -289,6 +365,7 @@ namespace Banana_E_Commerce_API.Migrations
                     Ward = table.Column<string>(nullable: true),
                     StreetLocation = table.Column<string>(nullable: true),
                     Name = table.Column<string>(nullable: true),
+                    Phone = table.Column<string>(nullable: true),
                     CreatedAt = table.Column<DateTime>(nullable: false),
                     UpdatedAt = table.Column<DateTime>(nullable: false),
                     IsDeleted = table.Column<bool>(nullable: false),
@@ -296,11 +373,11 @@ namespace Banana_E_Commerce_API.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Address", x => x.Id);
+                    table.PrimaryKey("PK_Addresses", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Address_Customer_CustomerId",
+                        name: "FK_Addresses_Customers_CustomerId",
                         column: x => x.CustomerId,
-                        principalTable: "Customer",
+                        principalTable: "Customers",
                         principalColumn: "Id");
                 });
 
@@ -316,14 +393,14 @@ namespace Banana_E_Commerce_API.Migrations
                 {
                     table.PrimaryKey("PK_Carts", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Carts_Customer_CustomerId",
+                        name: "FK_Carts_Customers_CustomerId",
                         column: x => x.CustomerId,
-                        principalTable: "Customer",
+                        principalTable: "Customers",
                         principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
-                name: "Product",
+                name: "Products",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
@@ -331,8 +408,11 @@ namespace Banana_E_Commerce_API.Migrations
                     Name = table.Column<string>(nullable: true),
                     Price = table.Column<double>(nullable: false),
                     SalePrice = table.Column<double>(nullable: false),
-                    DiscountPrice = table.Column<double>(nullable: false),
-                    PriceCurrentcy = table.Column<int>(nullable: false),
+                    Quantity = table.Column<double>(nullable: false),
+                    Description = table.Column<string>(nullable: true),
+                    Origin = table.Column<string>(nullable: true),
+                    ProductUnit = table.Column<int>(nullable: false),
+                    PriceCurrency = table.Column<int>(nullable: false),
                     CreatedAt = table.Column<DateTime>(nullable: false),
                     UpdatedAt = table.Column<DateTime>(nullable: false),
                     IsDeleted = table.Column<bool>(nullable: false),
@@ -342,26 +422,26 @@ namespace Banana_E_Commerce_API.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Product", x => x.Id);
+                    table.PrimaryKey("PK_Products", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Product_Category_CategoryId",
+                        name: "FK_Products_Categories_CategoryId",
                         column: x => x.CategoryId,
-                        principalTable: "Category",
+                        principalTable: "Categories",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_Product_Admin_CreatedBy",
+                        name: "FK_Products_Admins_CreatedBy",
                         column: x => x.CreatedBy,
-                        principalTable: "Admin",
+                        principalTable: "Admins",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_Product_Storage_StorageId",
+                        name: "FK_Products_Storages_StorageId",
                         column: x => x.StorageId,
-                        principalTable: "Storage",
+                        principalTable: "Storages",
                         principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
-                name: "StorageManager",
+                name: "StorageManagers",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
@@ -378,14 +458,14 @@ namespace Banana_E_Commerce_API.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_StorageManager", x => x.Id);
+                    table.PrimaryKey("PK_StorageManagers", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_StorageManager_Storage_StorageId",
+                        name: "FK_StorageManagers_Storages_StorageId",
                         column: x => x.StorageId,
-                        principalTable: "Storage",
+                        principalTable: "Storages",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_StorageManager_Users_UserId",
+                        name: "FK_StorageManagers_Users_UserId",
                         column: x => x.UserId,
                         principalTable: "Users",
                         principalColumn: "Id",
@@ -393,7 +473,7 @@ namespace Banana_E_Commerce_API.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Order",
+                name: "Orders",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
@@ -414,16 +494,16 @@ namespace Banana_E_Commerce_API.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Order", x => x.Id);
+                    table.PrimaryKey("PK_Orders", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Order_Address_AddressId",
+                        name: "FK_Orders_Addresses_AddressId",
                         column: x => x.AddressId,
-                        principalTable: "Address",
+                        principalTable: "Addresses",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_Order_Customer_CustomerId",
+                        name: "FK_Orders_Customers_CustomerId",
                         column: x => x.CustomerId,
-                        principalTable: "Customer",
+                        principalTable: "Customers",
                         principalColumn: "Id");
                 });
 
@@ -435,7 +515,9 @@ namespace Banana_E_Commerce_API.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Quantity = table.Column<int>(nullable: false),
                     CartId = table.Column<int>(nullable: false),
-                    ProductId = table.Column<int>(nullable: false)
+                    ProductId = table.Column<int>(nullable: false),
+                    CreatedAt = table.Column<DateTime>(nullable: false),
+                    UpdatedAt = table.Column<DateTime>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -446,14 +528,14 @@ namespace Banana_E_Commerce_API.Migrations
                         principalTable: "Carts",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_CartDetails_Product_ProductId",
+                        name: "FK_CartDetails_Products_ProductId",
                         column: x => x.ProductId,
-                        principalTable: "Product",
+                        principalTable: "Products",
                         principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
-                name: "ProductFavorite",
+                name: "ProductFavorites",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
@@ -463,21 +545,21 @@ namespace Banana_E_Commerce_API.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ProductFavorite", x => x.Id);
+                    table.PrimaryKey("PK_ProductFavorites", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_ProductFavorite_Customer_CustomerId",
+                        name: "FK_ProductFavorites_Customers_CustomerId",
                         column: x => x.CustomerId,
-                        principalTable: "Customer",
+                        principalTable: "Customers",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_ProductFavorite_Product_ProductId",
+                        name: "FK_ProductFavorites_Products_ProductId",
                         column: x => x.ProductId,
-                        principalTable: "Product",
+                        principalTable: "Products",
                         principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
-                name: "ProductImage",
+                name: "ProductImages",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
@@ -491,16 +573,16 @@ namespace Banana_E_Commerce_API.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ProductImage", x => x.Id);
+                    table.PrimaryKey("PK_ProductImages", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_ProductImage_Product_ProductId",
+                        name: "FK_ProductImages_Products_ProductId",
                         column: x => x.ProductId,
-                        principalTable: "Product",
+                        principalTable: "Products",
                         principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
-                name: "Rating",
+                name: "Rates",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
@@ -516,21 +598,21 @@ namespace Banana_E_Commerce_API.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Rating", x => x.Id);
+                    table.PrimaryKey("PK_Rates", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Rating_Customer_CustomerId",
+                        name: "FK_Rates_Customers_CustomerId",
                         column: x => x.CustomerId,
-                        principalTable: "Customer",
+                        principalTable: "Customers",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_Rating_Product_ProductId",
+                        name: "FK_Rates_Products_ProductId",
                         column: x => x.ProductId,
-                        principalTable: "Product",
+                        principalTable: "Products",
                         principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
-                name: "SupplyProduct",
+                name: "SupplyProducts",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
@@ -546,19 +628,19 @@ namespace Banana_E_Commerce_API.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_SupplyProduct", x => x.Id);
+                    table.PrimaryKey("PK_SupplyProducts", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_SupplyProduct_Product_ProductId",
+                        name: "FK_SupplyProducts_Products_ProductId",
                         column: x => x.ProductId,
-                        principalTable: "Product",
+                        principalTable: "Products",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_SupplyProduct_Supplier_SupplierId",
+                        name: "FK_SupplyProducts_Suppliers_SupplierId",
                         column: x => x.SupplierId,
-                        principalTable: "Supplier",
+                        principalTable: "Suppliers",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_SupplyProduct_Users_UserId",
+                        name: "FK_SupplyProducts_Users_UserId",
                         column: x => x.UserId,
                         principalTable: "Users",
                         principalColumn: "Id",
@@ -566,7 +648,7 @@ namespace Banana_E_Commerce_API.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "ImportBill",
+                name: "ImportBills",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
@@ -583,26 +665,26 @@ namespace Banana_E_Commerce_API.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ImportBill", x => x.Id);
+                    table.PrimaryKey("PK_ImportBills", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_ImportBill_Storage_StorageId",
+                        name: "FK_ImportBills_Storages_StorageId",
                         column: x => x.StorageId,
-                        principalTable: "Storage",
+                        principalTable: "Storages",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_ImportBill_StorageManager_StorageManagerId",
+                        name: "FK_ImportBills_StorageManagers_StorageManagerId",
                         column: x => x.StorageManagerId,
-                        principalTable: "StorageManager",
+                        principalTable: "StorageManagers",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_ImportBill_Supplier_SupplierId",
+                        name: "FK_ImportBills_Suppliers_SupplierId",
                         column: x => x.SupplierId,
-                        principalTable: "Supplier",
+                        principalTable: "Suppliers",
                         principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
-                name: "ProductExportBill",
+                name: "ProductExportBills",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
@@ -615,16 +697,16 @@ namespace Banana_E_Commerce_API.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ProductExportBill", x => x.Id);
+                    table.PrimaryKey("PK_ProductExportBills", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_ProductExportBill_StorageManager_StorageManagerId",
+                        name: "FK_ProductExportBills_StorageManagers_StorageManagerId",
                         column: x => x.StorageManagerId,
-                        principalTable: "StorageManager",
+                        principalTable: "StorageManagers",
                         principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
-                name: "OrderItem",
+                name: "OrderItems",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
@@ -636,21 +718,21 @@ namespace Banana_E_Commerce_API.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_OrderItem", x => x.Id);
+                    table.PrimaryKey("PK_OrderItems", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_OrderItem_Order_OrderId",
+                        name: "FK_OrderItems_Orders_OrderId",
                         column: x => x.OrderId,
-                        principalTable: "Order",
+                        principalTable: "Orders",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_OrderItem_Product_ProductId",
+                        name: "FK_OrderItems_Products_ProductId",
                         column: x => x.ProductId,
-                        principalTable: "Product",
+                        principalTable: "Products",
                         principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
-                name: "ImportBillDetail",
+                name: "ImportBillDetails",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
@@ -665,21 +747,21 @@ namespace Banana_E_Commerce_API.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ImportBillDetail", x => x.Id);
+                    table.PrimaryKey("PK_ImportBillDetails", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_ImportBillDetail_ImportBill_ImportBillId",
+                        name: "FK_ImportBillDetails_ImportBills_ImportBillId",
                         column: x => x.ImportBillId,
-                        principalTable: "ImportBill",
+                        principalTable: "ImportBills",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_ImportBillDetail_SupplyProduct_SupplyProductId",
+                        name: "FK_ImportBillDetails_SupplyProducts_SupplyProductId",
                         column: x => x.SupplyProductId,
-                        principalTable: "SupplyProduct",
+                        principalTable: "SupplyProducts",
                         principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
-                name: "ProductExportDetail",
+                name: "ProductExportDetails",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
@@ -690,21 +772,21 @@ namespace Banana_E_Commerce_API.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ProductExportDetail", x => x.Id);
+                    table.PrimaryKey("PK_ProductExportDetails", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_ProductExportDetail_ProductExportBill_ExportBillId",
+                        name: "FK_ProductExportDetails_ProductExportBills_ExportBillId",
                         column: x => x.ExportBillId,
-                        principalTable: "ProductExportBill",
+                        principalTable: "ProductExportBills",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_ProductExportDetail_Product_ProductId",
+                        name: "FK_ProductExportDetails_Products_ProductId",
                         column: x => x.ProductId,
-                        principalTable: "Product",
+                        principalTable: "Products",
                         principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
-                name: "Shipment",
+                name: "Shipments",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
@@ -724,31 +806,31 @@ namespace Banana_E_Commerce_API.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Shipment", x => x.Id);
+                    table.PrimaryKey("PK_Shipments", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Shipment_Admin_CreatedBy",
+                        name: "FK_Shipments_Admins_CreatedBy",
                         column: x => x.CreatedBy,
-                        principalTable: "Admin",
+                        principalTable: "Admins",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_Shipment_Order_OrderId",
+                        name: "FK_Shipments_Orders_OrderId",
                         column: x => x.OrderId,
-                        principalTable: "Order",
+                        principalTable: "Orders",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_Shipment_ProductExportBill_ProductExportBillId",
+                        name: "FK_Shipments_ProductExportBills_ProductExportBillId",
                         column: x => x.ProductExportBillId,
-                        principalTable: "ProductExportBill",
+                        principalTable: "ProductExportBills",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_Shipment_Shipper_ShipperId",
+                        name: "FK_Shipments_Shippers_ShipperId",
                         column: x => x.ShipperId,
-                        principalTable: "Shipper",
+                        principalTable: "Shippers",
                         principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
-                name: "Invoice",
+                name: "Invoices",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
@@ -762,28 +844,41 @@ namespace Banana_E_Commerce_API.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Invoice", x => x.Id);
+                    table.PrimaryKey("PK_Invoices", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Invoice_PaymentMethod_PaymentMethodId",
+                        name: "FK_Invoices_PaymentMethods_PaymentMethodId",
                         column: x => x.PaymentMethodId,
-                        principalTable: "PaymentMethod",
+                        principalTable: "PaymentMethods",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_Invoice_Shipment_ShipmentId",
+                        name: "FK_Invoices_Shipments_ShipmentId",
                         column: x => x.ShipmentId,
-                        principalTable: "Shipment",
+                        principalTable: "Shipments",
                         principalColumn: "Id");
                 });
 
+            migrationBuilder.InsertData(
+                table: "Roles",
+                columns: new[] { "Id", "CreatedAt", "IsDeleted", "RoleName", "UpdatedAt" },
+                values: new object[,]
+                {
+                    { 1, new DateTime(2020, 5, 25, 14, 4, 24, 336, DateTimeKind.Utc).AddTicks(979), false, 0, new DateTime(2020, 5, 25, 14, 4, 24, 336, DateTimeKind.Utc).AddTicks(1754) },
+                    { 2, new DateTime(2020, 5, 25, 14, 4, 24, 336, DateTimeKind.Utc).AddTicks(3233), false, 2, new DateTime(2020, 5, 25, 14, 4, 24, 336, DateTimeKind.Utc).AddTicks(3257) },
+                    { 3, new DateTime(2020, 5, 25, 14, 4, 24, 336, DateTimeKind.Utc).AddTicks(3353), false, 1, new DateTime(2020, 5, 25, 14, 4, 24, 336, DateTimeKind.Utc).AddTicks(3356) },
+                    { 4, new DateTime(2020, 5, 25, 14, 4, 24, 336, DateTimeKind.Utc).AddTicks(3359), false, 3, new DateTime(2020, 5, 25, 14, 4, 24, 336, DateTimeKind.Utc).AddTicks(3361) },
+                    { 5, new DateTime(2020, 5, 25, 14, 4, 24, 336, DateTimeKind.Utc).AddTicks(3363), false, 4, new DateTime(2020, 5, 25, 14, 4, 24, 336, DateTimeKind.Utc).AddTicks(3365) }
+                });
+
             migrationBuilder.CreateIndex(
-                name: "IX_Address_CustomerId",
-                table: "Address",
+                name: "IX_Addresses_CustomerId",
+                table: "Addresses",
                 column: "CustomerId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Admin_UserId",
-                table: "Admin",
-                column: "UserId");
+                name: "IX_Admins_UserId",
+                table: "Admins",
+                column: "UserId",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_CartDetails_CartId",
@@ -802,210 +897,231 @@ namespace Banana_E_Commerce_API.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Category_CreatedBy",
-                table: "Category",
+                name: "IX_Categories_CreatedBy",
+                table: "Categories",
                 column: "CreatedBy");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Customer_UserId",
-                table: "Customer",
+                name: "IX_Customers_UserId",
+                table: "Customers",
                 column: "UserId",
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_ImportBill_StorageId",
-                table: "ImportBill",
-                column: "StorageId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ImportBill_StorageManagerId",
-                table: "ImportBill",
-                column: "StorageManagerId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ImportBill_SupplierId",
-                table: "ImportBill",
-                column: "SupplierId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ImportBillDetail_ImportBillId",
-                table: "ImportBillDetail",
+                name: "IX_ImportBillDetails_ImportBillId",
+                table: "ImportBillDetails",
                 column: "ImportBillId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ImportBillDetail_SupplyProductId",
-                table: "ImportBillDetail",
+                name: "IX_ImportBillDetails_SupplyProductId",
+                table: "ImportBillDetails",
                 column: "SupplyProductId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Invoice_PaymentMethodId",
-                table: "Invoice",
+                name: "IX_ImportBills_StorageId",
+                table: "ImportBills",
+                column: "StorageId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ImportBills_StorageManagerId",
+                table: "ImportBills",
+                column: "StorageManagerId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ImportBills_SupplierId",
+                table: "ImportBills",
+                column: "SupplierId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Invoices_PaymentMethodId",
+                table: "Invoices",
                 column: "PaymentMethodId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Invoice_ShipmentId",
-                table: "Invoice",
+                name: "IX_Invoices_ShipmentId",
+                table: "Invoices",
                 column: "ShipmentId",
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Manager_UserId",
-                table: "Manager",
+                name: "IX_Managers_UserId",
+                table: "Managers",
                 column: "UserId",
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Order_AddressId",
-                table: "Order",
+                name: "IX_Notifications_CreatedBy",
+                table: "Notifications",
+                column: "CreatedBy");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Notifications_NotificationTo",
+                table: "Notifications",
+                column: "NotificationTo");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_OrderItems_OrderId",
+                table: "OrderItems",
+                column: "OrderId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_OrderItems_ProductId",
+                table: "OrderItems",
+                column: "ProductId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Orders_AddressId",
+                table: "Orders",
                 column: "AddressId",
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Order_CustomerId",
-                table: "Order",
+                name: "IX_Orders_CustomerId",
+                table: "Orders",
                 column: "CustomerId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_OrderItem_OrderId",
-                table: "OrderItem",
-                column: "OrderId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_OrderItem_ProductId",
-                table: "OrderItem",
-                column: "ProductId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_PaymentMethod_CreatedBy",
-                table: "PaymentMethod",
+                name: "IX_PaymentMethods_CreatedBy",
+                table: "PaymentMethods",
                 column: "CreatedBy");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Product_CategoryId",
-                table: "Product",
-                column: "CategoryId");
+                name: "IX_Payments_AdminId",
+                table: "Payments",
+                column: "AdminId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Product_CreatedBy",
-                table: "Product",
-                column: "CreatedBy");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Product_StorageId",
-                table: "Product",
-                column: "StorageId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ProductExportBill_StorageManagerId",
-                table: "ProductExportBill",
+                name: "IX_ProductExportBills_StorageManagerId",
+                table: "ProductExportBills",
                 column: "StorageManagerId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ProductExportDetail_ExportBillId",
-                table: "ProductExportDetail",
+                name: "IX_ProductExportDetails_ExportBillId",
+                table: "ProductExportDetails",
                 column: "ExportBillId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ProductExportDetail_ProductId",
-                table: "ProductExportDetail",
+                name: "IX_ProductExportDetails_ProductId",
+                table: "ProductExportDetails",
                 column: "ProductId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ProductFavorite_CustomerId",
-                table: "ProductFavorite",
+                name: "IX_ProductFavorites_CustomerId",
+                table: "ProductFavorites",
                 column: "CustomerId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ProductFavorite_ProductId",
-                table: "ProductFavorite",
+                name: "IX_ProductFavorites_ProductId",
+                table: "ProductFavorites",
                 column: "ProductId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ProductImage_ProductId",
-                table: "ProductImage",
+                name: "IX_ProductImages_ProductId",
+                table: "ProductImages",
                 column: "ProductId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Rating_CustomerId",
-                table: "Rating",
-                column: "CustomerId");
+                name: "IX_Products_CategoryId",
+                table: "Products",
+                column: "CategoryId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Rating_ProductId",
-                table: "Rating",
-                column: "ProductId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Shipment_CreatedBy",
-                table: "Shipment",
+                name: "IX_Products_CreatedBy",
+                table: "Products",
                 column: "CreatedBy");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Shipment_OrderId",
-                table: "Shipment",
+                name: "IX_Products_StorageId",
+                table: "Products",
+                column: "StorageId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Rates_CustomerId",
+                table: "Rates",
+                column: "CustomerId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Rates_ProductId",
+                table: "Rates",
+                column: "ProductId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_RefreshToken_UserId",
+                table: "RefreshToken",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Shipments_CreatedBy",
+                table: "Shipments",
+                column: "CreatedBy");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Shipments_OrderId",
+                table: "Shipments",
                 column: "OrderId",
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Shipment_ProductExportBillId",
-                table: "Shipment",
+                name: "IX_Shipments_ProductExportBillId",
+                table: "Shipments",
                 column: "ProductExportBillId",
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Shipment_ShipperId",
-                table: "Shipment",
+                name: "IX_Shipments_ShipperId",
+                table: "Shipments",
                 column: "ShipperId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Shipper_AdminId",
-                table: "Shipper",
+                name: "IX_Shippers_AdminId",
+                table: "Shippers",
                 column: "AdminId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Shipper_UserId",
-                table: "Shipper",
+                name: "IX_Shippers_UserId",
+                table: "Shippers",
                 column: "UserId",
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Storage_UserId",
-                table: "Storage",
-                column: "UserId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_StorageManager_StorageId",
-                table: "StorageManager",
+                name: "IX_StorageManagers_StorageId",
+                table: "StorageManagers",
                 column: "StorageId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_StorageManager_UserId",
-                table: "StorageManager",
+                name: "IX_StorageManagers_UserId",
+                table: "StorageManagers",
+                column: "UserId",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Storages_UserId",
+                table: "Storages",
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_SupplierPayment_CreatedBy",
-                table: "SupplierPayment",
+                name: "IX_SupplierPayments_CreatedBy",
+                table: "SupplierPayments",
                 column: "CreatedBy");
 
             migrationBuilder.CreateIndex(
-                name: "IX_SupplierPayment_SupplierId",
-                table: "SupplierPayment",
+                name: "IX_SupplierPayments_SupplierId",
+                table: "SupplierPayments",
                 column: "SupplierId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_SupplyProduct_ProductId",
-                table: "SupplyProduct",
+                name: "IX_SupplyProducts_ProductId",
+                table: "SupplyProducts",
                 column: "ProductId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_SupplyProduct_SupplierId",
-                table: "SupplyProduct",
+                name: "IX_SupplyProducts_SupplierId",
+                table: "SupplyProducts",
                 column: "SupplierId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_SupplyProduct_UserId",
-                table: "SupplyProduct",
+                name: "IX_SupplyProducts_UserId",
+                table: "SupplyProducts",
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
@@ -1020,85 +1136,94 @@ namespace Banana_E_Commerce_API.Migrations
                 name: "CartDetails");
 
             migrationBuilder.DropTable(
-                name: "ImportBillDetail");
+                name: "ImportBillDetails");
 
             migrationBuilder.DropTable(
-                name: "Invoice");
+                name: "Invoices");
 
             migrationBuilder.DropTable(
-                name: "Manager");
+                name: "Managers");
 
             migrationBuilder.DropTable(
-                name: "OrderItem");
+                name: "Notifications");
 
             migrationBuilder.DropTable(
-                name: "ProductExportDetail");
+                name: "OrderItems");
 
             migrationBuilder.DropTable(
-                name: "ProductFavorite");
+                name: "Payments");
 
             migrationBuilder.DropTable(
-                name: "ProductImage");
+                name: "ProductExportDetails");
 
             migrationBuilder.DropTable(
-                name: "Rating");
+                name: "ProductFavorites");
 
             migrationBuilder.DropTable(
-                name: "SupplierPayment");
+                name: "ProductImages");
+
+            migrationBuilder.DropTable(
+                name: "Rates");
+
+            migrationBuilder.DropTable(
+                name: "RefreshToken");
+
+            migrationBuilder.DropTable(
+                name: "SupplierPayments");
 
             migrationBuilder.DropTable(
                 name: "Carts");
 
             migrationBuilder.DropTable(
-                name: "ImportBill");
+                name: "ImportBills");
 
             migrationBuilder.DropTable(
-                name: "SupplyProduct");
+                name: "SupplyProducts");
 
             migrationBuilder.DropTable(
-                name: "PaymentMethod");
+                name: "PaymentMethods");
 
             migrationBuilder.DropTable(
-                name: "Shipment");
+                name: "Shipments");
 
             migrationBuilder.DropTable(
-                name: "Product");
+                name: "Products");
 
             migrationBuilder.DropTable(
-                name: "Supplier");
+                name: "Suppliers");
 
             migrationBuilder.DropTable(
-                name: "Order");
+                name: "Orders");
 
             migrationBuilder.DropTable(
-                name: "ProductExportBill");
+                name: "ProductExportBills");
 
             migrationBuilder.DropTable(
-                name: "Shipper");
+                name: "Shippers");
 
             migrationBuilder.DropTable(
-                name: "Category");
+                name: "Categories");
 
             migrationBuilder.DropTable(
-                name: "Address");
+                name: "Addresses");
 
             migrationBuilder.DropTable(
-                name: "StorageManager");
+                name: "StorageManagers");
 
             migrationBuilder.DropTable(
-                name: "Customer");
+                name: "Customers");
 
             migrationBuilder.DropTable(
-                name: "Storage");
+                name: "Storages");
 
             migrationBuilder.DropTable(
-                name: "Admin");
+                name: "Admins");
 
             migrationBuilder.DropTable(
                 name: "Users");
 
             migrationBuilder.DropTable(
-                name: "Role");
+                name: "Roles");
         }
     }
 }

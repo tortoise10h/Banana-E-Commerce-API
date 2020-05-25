@@ -444,7 +444,7 @@ namespace Banana_E_Commerce_API.Extensions
                     }
                 );
 
-            /** Category Seed Data */
+            // /** Category Seed Data */
             modelBuilder.Entity<Category>()
                 .HasData(
                     new Category
