@@ -250,7 +250,7 @@ namespace Banana_E_Commerce_API.Services
                 return new UpdateCartDetailResult
                 {
                     IsSuccess = false,
-                    Errors = new[] { "The quantity of product is not enought" }
+                    Errors = new[] { "The quantity of product is not enough" }
                 };
             }
 

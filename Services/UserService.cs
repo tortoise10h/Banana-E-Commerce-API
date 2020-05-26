@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Banana_E_Commerce_API.Contracts.V1.ResponseModels.Admin;
 using Banana_E_Commerce_API.Contracts.V1.ResponseModels.Customer;
+using Banana_E_Commerce_API.Contracts.V1.ResponseModels.Users;
 using Banana_E_Commerce_API.Domains;
 using Banana_E_Commerce_API.Entities;
 using Banana_E_Commerce_API.Enums;
@@ -23,10 +24,11 @@ namespace Banana_E_Commerce_API.Services
             GetAllUserFilter filter = null
         );
         Task<User> GetByIdAsync(int userId);
-        void Update(User user, string password);
+        Task<UpdateUserPasswordResult> UpdateUserPassword(User user, string oldPassword, string newPassword, string confirmPassword);
         void Delete(int id);
         Task<bool> CreateAsync(User user, string password);
         Task<bool> IsUserOwnInfo(int userId, int requestedUserId);
+        Task<bool> IsAdmin(int userId);
     }
 
     public class UserService : IUserService
@@ -49,9 +51,16 @@ namespace Banana_E_Commerce_API.Services
 
         public async Task<User> GetByIdAsync(int userId)
         {
-            var user = await _context.Users.SingleOrDefaultAsync(x => x.Id == userId);
-            var roleOfUser = await _context.Roles.SingleOrDefaultAsync(x => x.Id == user.RoleId);
-            var roleName = roleOfUser.RoleName;
+            var user = await _context.Users
+                .Where(x => x.Id == userId)
+                .Include(x => x.Role)
+                .FirstOrDefaultAsync();
+            if (user == null)
+            {
+                return null;
+            }
+            
+            var roleName = user.Role.RoleName;
 
             User userAndInfo = null;
 
@@ -117,41 +126,62 @@ namespace Banana_E_Commerce_API.Services
 
             return created > 0;
         }
-        public void Update(User userParam, string password)
+        public async Task<UpdateUserPasswordResult> UpdateUserPassword(
+            User user, 
+            string oldPassword, 
+            string newPassword, 
+            string confirmPassword)
         {
-            var user = _context.Users.Find(userParam.Id);
+            var userInfo = await _context.Users.SingleOrDefaultAsync(u => u.Id == user.Id && u.IsDeleted == false);
 
-            if (user == null)
+            if (userInfo == null)
             {
-                throw new Exception("User is not existed");
-            }
-
-            // update email if it has changed
-            if (!string.IsNullOrWhiteSpace(userParam.Email) && userParam.Email != user.Email)
-            {
-                // throw error if email is already taken
-                if (_context.Users.Any(x => x.Email == user.Email))
+                return new UpdateUserPasswordResult
                 {
-                    throw new Exception($"Email {userParam.Email} is already taken");
-                }
-
-                user.Email = userParam.Email;
+                    IsSuccess = false,
+                    Errors = new[] { "User is not existed" }
+                };
+            }
+        
+            // verify old password
+            if (!_authService.VerifyPasswordHash(oldPassword, userInfo.PasswordHash, userInfo.PasswordSalt))
+            {
+                return new UpdateUserPasswordResult
+                {
+                    IsSuccess = false,
+                    Errors = new[] { "Old password is not correct" }
+                };
             }
 
-            // update password if provided
-            if (!string.IsNullOrWhiteSpace(password))
+            // verify password and confirm password
+            if (newPassword != confirmPassword)
+            {
+                return new UpdateUserPasswordResult
+                {
+                    IsSuccess = false,
+                    Errors = new[] { "New password and confirm password do not match" }
+                };
+            }
+
+            // update new password
+            if (!string.IsNullOrWhiteSpace(newPassword))
             {
                 byte[] passwordHash, passwordSalt;
-                _authService.CreatePasswordHash(password, out passwordHash, out passwordSalt);
+                _authService.CreatePasswordHash(newPassword, out passwordHash, out passwordSalt);
 
                 user.PasswordHash = passwordHash;
                 user.PasswordSalt = passwordSalt;
             }
 
             _context.Users.Update(user);
-            _context.SaveChanges();
+            var updated = await _context.SaveChangesAsync();
 
+            return new UpdateUserPasswordResult
+                {
+                    IsSuccess = true,
+                };
         }
+        
         public void Delete(int id)
         {
             var user = _context.Users.Find(id);
@@ -186,6 +216,17 @@ namespace Banana_E_Commerce_API.Services
             var user = await _context.Users.SingleOrDefaultAsync(user => user.Id == userId);
 
             return user.Id == requestedUserId;
+        }
+
+        public async Task<bool> IsAdmin(int userId)
+        {
+            var admin = await _context.Admins.SingleOrDefaultAsync(a => a.UserId == userId);
+
+            if (admin == null)
+            {
+                return false;
+            }
+            return true;
         }
     }
 }

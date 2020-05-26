@@ -6,12 +6,14 @@ using Banana_E_Commerce_API.Contracts.V1.RequestModels.Product;
 using Banana_E_Commerce_API.Contracts.V1.RequestModels.Queries;
 using Banana_E_Commerce_API.Contracts.V1.RequestModels.Storage;
 using Banana_E_Commerce_API.Contracts.V1.RequestModels.Address;
+using Banana_E_Commerce_API.Contracts.V1.RequestModels.Users;
 using Banana_E_Commerce_API.Entities;
 using Banana_E_Commerce_API.Contracts.V1.RequestModels.ProductImage;
 using Banana_E_Commerce_API.Contracts.V1.RequestModels.RequestImportProduct;
 using Banana_E_Commerce_API.Contracts.V1.RequestModels.RequestImportDetail;
 using Banana_E_Commerce_API.Contracts.V1.RequestModels.ImportBill;
 using Banana_E_Commerce_API.Contracts.V1.RequestModels.ImportBillDetail;
+using Banana_E_Commerce_API.Contracts.V1.RequestModels.Customer;
 
 namespace Banana_E_Commerce_API.MapperProfiles
 {
@@ -61,6 +63,11 @@ namespace Banana_E_Commerce_API.MapperProfiles
             /** ImportBillDetail */
             CreateMap<CreateImportBillDetailRequest, ImportBillDetail>();
 
+            /** User **/
+            CreateMap<UpdateUserPasswordRequest, User>();
+
+            //** Customer **/
+            CreateMap<UpdateCustomerInfoRequest, Customer>();
         }
     }
 }

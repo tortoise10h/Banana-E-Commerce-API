@@ -17,6 +17,12 @@ namespace Banana_E_Commerce_API.Contracts.V1
             public const string Get = Base + "/users/{userId}";
         }
 
+        public static class Customer
+        {
+            public const string Update = Base + "/customers/{customerId}";
+            public const string GetById = Base + "/customers/{customerId}";
+        }
+
         public static class Auth
         {
             public const string Login = Base + "/login";
