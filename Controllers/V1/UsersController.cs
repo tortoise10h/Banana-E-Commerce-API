@@ -46,10 +46,11 @@ namespace Banana_E_Commerce_API.Controllers
         {
             var requestedUserId = int.Parse(HttpContext.GetUserIdFromRequest());
             var isUserOwnInfo = await _userService.IsUserOwnInfo(userId, requestedUserId);
+            var isAdmin = await _userService.IsAdmin(requestedUserId);
 
-            if (!isUserOwnInfo)
-            {
-                return Unauthorized();
+            if (!isUserOwnInfo && !isAdmin)
+            {   
+                return Unauthorized("You don\'t have a permission");
             }
 
             var result = await _userService.GetByIdAsync(userId);
@@ -63,12 +64,40 @@ namespace Banana_E_Commerce_API.Controllers
             return NotFound();
         }
 
-        // [HttpGet(ApiRoutes.Users.GetAll)]
-        // public IActionResult GetAll()
-        // {
-        //     var users = _userService.GetAllAsync();
-        //     var userResponses = _mapper.Map<List<UserResponse>>(users);
-        //     return Ok(userResponses);
-        // }
+        [HttpPut(ApiRoutes.Users.Update)]
+        public async Task<IActionResult> UpdateUserPassword(
+            [FromRoute] int userId,
+            [FromBody] UpdateUserPasswordRequest updateModel)
+        {
+            var userEntity = await _userService.GetByIdAsync(userId);
+            
+            if (userEntity == null)
+            {
+                return NotFound();
+            }
+
+            var id = int.Parse(HttpContext.GetUserIdFromRequest());
+            var isUserOwnInfo = await _userService.IsUserOwnInfo(userId, id);
+
+            if (!isUserOwnInfo)
+            {   
+                return Unauthorized("You don\'t have a permission");
+            }
+
+            _mapper.Map<UpdateUserPasswordRequest, User>(updateModel, userEntity);
+
+            var isUserUpdated = await _userService.UpdateUserPassword(userEntity, updateModel.oldPassword, updateModel.newPassword, updateModel.confirmPassword);
+            if (!isUserUpdated.IsSuccess)
+            {
+                return BadRequest(new UpdateUserPasswordResult
+                {
+                    Errors = isUserUpdated.Errors
+                });
+            }
+
+            var userResponse = _mapper.Map<UserResponse>(userEntity);
+            return Ok("Update password successfully");
+
+        }
     }
 }
