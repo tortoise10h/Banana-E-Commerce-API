@@ -13,9 +13,8 @@ namespace Banana_E_Commerce_API.Validators.CartDetail
                 .GreaterThan(0);
 
             // ProductId
-            RuleFor(x => x.ProductId)
-              .NotNull()
-              .GreaterThan(0);
+            RuleFor(x => x.ProductTierId)
+              .NotEmpty();
 
             // Quantity
             RuleFor(x => x.Quantity)

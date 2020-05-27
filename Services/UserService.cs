@@ -89,15 +89,6 @@ namespace Banana_E_Commerce_API.Services
                             .FirstOrDefaultAsync();
                         break;
                     }
-                case RoleNameEnum.Shipper:
-                    {
-                        userAndInfo = await _context.Users
-                            .Where(u => u.Id == userId)
-                            .Include(u => u.Shipper)
-                            .FirstOrDefaultAsync();
-                        break;
-                    }
-
                 default:
                     {
                         userAndInfo = user;

@@ -43,11 +43,11 @@ namespace Banana_E_Commerce_API.Services
             cartDetail.UpdatedAt = DateTime.UtcNow;
 
             // check product exists
-            var product = await _context.Products
+            var productTier = await _context.ProductTiers
                 .SingleOrDefaultAsync(p =>
-                    p.Id == cartDetail.ProductId &&
+                    p.Id == cartDetail.ProductTierId &&
                     p.IsDeleted == false);
-            if (product == null)
+            if (productTier == null)
             {
                 return new AddToCartResult
                 {
@@ -55,7 +55,6 @@ namespace Banana_E_Commerce_API.Services
                     Errors = new[] { "Product is not existed" }
                 };
             }
-
 
             // check cart exists
             var cart = await _context.Carts
@@ -71,7 +70,7 @@ namespace Banana_E_Commerce_API.Services
             }
 
             // validate valid quantity
-            if (cartDetail.Quantity > product.Quantity)
+            if (cartDetail.Quantity > productTier.Quantity)
             {
                 return new AddToCartResult
                 {
@@ -83,7 +82,7 @@ namespace Banana_E_Commerce_API.Services
             /** If new item has productId and cartId match the existing item
             * then update the quantity of the old item instead of create the new item
             */
-            var handleAddExistedItemResult = await handleAddExistedItem(cartDetail, product);
+            var handleAddExistedItemResult = await handleAddExistedItem(cartDetail, productTier);
             if (handleAddExistedItemResult != null)
             {
                 return new AddToCartResult
@@ -113,18 +112,20 @@ namespace Banana_E_Commerce_API.Services
             };
         }
 
-        private async Task<CartDetail> handleAddExistedItem(CartDetail cartDetail, Product product)
+        private async Task<CartDetail> handleAddExistedItem(
+            CartDetail cartDetail,
+            ProductTier productTier)
         {
             var existingCartDetail = await _context.CartDetails
                 .SingleOrDefaultAsync(c =>
-                    c.ProductId == cartDetail.ProductId &&
+                    c.ProductTierId == cartDetail.ProductTierId &&
                     c.CartId == cartDetail.CartId);
 
             if (existingCartDetail != null)
             {
                 int newQuantity = cartDetail.Quantity + existingCartDetail.Quantity;
 
-                if (newQuantity > product.Quantity)
+                if (newQuantity > productTier.Quantity)
                 {
                     return null;
                 }
@@ -200,8 +201,9 @@ namespace Banana_E_Commerce_API.Services
 
             var skip = (pagination.PageNumber - 1) * pagination.PageSize;
             return await queryable
-                .Include(cDetail => cDetail.Product)
-                    .ThenInclude(product => product.ProductImages)
+                .Include(cDetail => cDetail.ProductTier)
+                    .ThenInclude(productTier => productTier.Product)
+                        .ThenInclude(product => product.ProductImages)
                 .Skip(skip)
                 .Take(pagination.PageSize)
                 .ToListAsync();
@@ -211,17 +213,18 @@ namespace Banana_E_Commerce_API.Services
         {
             return await _context.CartDetails
                 .Where(cDetail => cDetail.Id == cartDetailId)
-                .Include(cDetail => cDetail.Product)
-                    .ThenInclude(product => product.ProductImages)
+                .Include(cDetail => cDetail.ProductTier)
+                    .ThenInclude(productTier => productTier.Product)
+                        .ThenInclude(product => product.ProductImages)
                 .FirstOrDefaultAsync();
         }
 
         public async Task<UpdateCartDetailResult> UpdateAsync(CartDetail cartDetail)
         {
             /** handle quantity of product */
-            var product = await _context.Products
-                .SingleOrDefaultAsync(p => p.Id == cartDetail.ProductId);
-            if (cartDetail.Quantity > product.Quantity)
+            var productTier = await _context.ProductTiers
+                .SingleOrDefaultAsync(p => p.Id == cartDetail.ProductTierId);
+            if (cartDetail.Quantity > productTier.Quantity)
             {
                 return new UpdateCartDetailResult
                 {

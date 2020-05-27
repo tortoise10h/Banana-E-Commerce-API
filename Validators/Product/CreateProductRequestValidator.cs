@@ -23,7 +23,7 @@ namespace Banana_E_Commerce_API.Validators.Product
                 .GreaterThanOrEqualTo(0);
 
             // Price
-            RuleFor(x => x.Price)
+            RuleFor(x => x.EntryPrice)
                 .NotNull()
                 .GreaterThanOrEqualTo(0);
 
@@ -42,6 +42,16 @@ namespace Banana_E_Commerce_API.Validators.Product
                 .IsInEnum()
                 .WithMessage("Product Unit value is not valid");
 
+            // StorageId
+            RuleFor(x => x.StorageId)
+                .NotNull()
+                .GreaterThan(0); ;
+
+            // CategoryId
+            RuleFor(x => x.CategoryId)
+                .NotNull()
+                .GreaterThan(0);
+
             // Origin
             RuleFor(x => x.Origin)
                 .NotEmpty()
@@ -51,6 +61,25 @@ namespace Banana_E_Commerce_API.Validators.Product
             RuleForEach(x => x.Images)
                 .SetValidator(new ImageUploadValidator());
 
+            // PricePerKg
+            RuleFor(x => x.PricePerKg)
+                .NotNull()
+                .GreaterThanOrEqualTo(0);
+
+            // SalePrice
+            RuleFor(x => x.SalePrice)
+                .NotNull()
+                .GreaterThanOrEqualTo(0);
+
+            // KgSale
+            RuleFor(x => x.KgSale)
+                .NotNull()
+                .GreaterThanOrEqualTo(0);
+
+            // DiscountPercentage
+            RuleFor(x => x.DiscountPercentage)
+                .NotNull()
+                .GreaterThanOrEqualTo(0);
         }
     }
 }
