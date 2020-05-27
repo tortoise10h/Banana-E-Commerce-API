@@ -9,12 +9,11 @@ namespace Banana_E_Commerce_API.Entities
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
         public bool IsDeleted { get; set; }
-
-        public StorageManager StorageManager { get; set; }
+        public int RequestExportProductId { get; set; }
         public int StorageManagerId { get; set; }
 
-        public Shipment Shipment { get; set; }
-        public int ShipmentId { get; set; }
+        public StorageManager StorageManager { get; set; }
+        public RequestExportProduct RequestExportProduct { get; set; }
 
         public ICollection<ProductExportDetail> ProductExportDetails { get; set; }
 

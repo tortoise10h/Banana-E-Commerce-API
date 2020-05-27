@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Banana_E_Commerce_API.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20200525140425_Core_Db_Tables")]
-    partial class Core_Db_Tables
+    [Migration("20200528080909_Tier_Seed_Data")]
+    partial class Tier_Seed_Data
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -132,7 +132,7 @@ namespace Banana_E_Commerce_API.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("ProductId")
+                    b.Property<int>("ProductTierId")
                         .HasColumnType("int");
 
                     b.Property<int>("Quantity")
@@ -145,7 +145,7 @@ namespace Banana_E_Commerce_API.Migrations
 
                     b.HasIndex("CartId");
 
-                    b.HasIndex("ProductId");
+                    b.HasIndex("ProductTierId");
 
                     b.ToTable("CartDetails");
                 });
@@ -177,6 +177,44 @@ namespace Banana_E_Commerce_API.Migrations
                     b.HasIndex("CreatedBy");
 
                     b.ToTable("Categories");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            CreatedAt = new DateTime(2020, 5, 28, 8, 9, 8, 736, DateTimeKind.Utc).AddTicks(5121),
+                            CreatedBy = 1,
+                            IsDeleted = false,
+                            Name = "Trái Cây Việt",
+                            UpdatedAt = new DateTime(2020, 5, 28, 8, 9, 8, 736, DateTimeKind.Utc).AddTicks(5517)
+                        },
+                        new
+                        {
+                            Id = 2,
+                            CreatedAt = new DateTime(2020, 5, 28, 8, 9, 8, 736, DateTimeKind.Utc).AddTicks(6576),
+                            CreatedBy = 2,
+                            IsDeleted = false,
+                            Name = "Trái Cây Nhập",
+                            UpdatedAt = new DateTime(2020, 5, 28, 8, 9, 8, 736, DateTimeKind.Utc).AddTicks(6602)
+                        },
+                        new
+                        {
+                            Id = 3,
+                            CreatedAt = new DateTime(2020, 5, 28, 8, 9, 8, 736, DateTimeKind.Utc).AddTicks(6633),
+                            CreatedBy = 3,
+                            IsDeleted = false,
+                            Name = "Trái Cây Sấy Khô",
+                            UpdatedAt = new DateTime(2020, 5, 28, 8, 9, 8, 736, DateTimeKind.Utc).AddTicks(6635)
+                        },
+                        new
+                        {
+                            Id = 4,
+                            CreatedAt = new DateTime(2020, 5, 28, 8, 9, 8, 736, DateTimeKind.Utc).AddTicks(6637),
+                            CreatedBy = 4,
+                            IsDeleted = false,
+                            Name = "Mứt Trái Cây>",
+                            UpdatedAt = new DateTime(2020, 5, 28, 8, 9, 8, 736, DateTimeKind.Utc).AddTicks(6639)
+                        });
                 });
 
             modelBuilder.Entity("Banana_E_Commerce_API.Entities.Customer", b =>
@@ -237,13 +275,13 @@ namespace Banana_E_Commerce_API.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
+                    b.Property<int>("RequestImportProductId")
+                        .HasColumnType("int");
+
                     b.Property<int>("StorageId")
                         .HasColumnType("int");
 
                     b.Property<int>("StorageManagerId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("SupplierId")
                         .HasColumnType("int");
 
                     b.Property<double>("TotalAmount")
@@ -254,11 +292,11 @@ namespace Banana_E_Commerce_API.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("RequestImportProductId");
+
                     b.HasIndex("StorageId");
 
                     b.HasIndex("StorageManagerId");
-
-                    b.HasIndex("SupplierId");
 
                     b.ToTable("ImportBills");
                 });
@@ -282,11 +320,11 @@ namespace Banana_E_Commerce_API.Migrations
                     b.Property<double>("Price")
                         .HasColumnType("float");
 
-                    b.Property<int>("Quantity")
+                    b.Property<int>("ProductId")
                         .HasColumnType("int");
 
-                    b.Property<int>("SupplyProductId")
-                        .HasColumnType("int");
+                    b.Property<double>("Quantity")
+                        .HasColumnType("float");
 
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("datetime2");
@@ -295,9 +333,40 @@ namespace Banana_E_Commerce_API.Migrations
 
                     b.HasIndex("ImportBillId");
 
-                    b.HasIndex("SupplyProductId");
+                    b.HasIndex("ProductId");
 
                     b.ToTable("ImportBillDetails");
+                });
+
+            modelBuilder.Entity("Banana_E_Commerce_API.Entities.ImportProductReport", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("CreatedBy")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("NextImportTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ReportImageLocation")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("RequestImportProductId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CreatedBy");
+
+                    b.HasIndex("RequestImportProductId");
+
+                    b.ToTable("ImportProductReports");
                 });
 
             modelBuilder.Entity("Banana_E_Commerce_API.Entities.Invoice", b =>
@@ -332,7 +401,7 @@ namespace Banana_E_Commerce_API.Migrations
                     b.HasIndex("ShipmentId")
                         .IsUnique();
 
-                    b.ToTable("Invoices");
+                    b.ToTable("Invoice");
                 });
 
             modelBuilder.Entity("Banana_E_Commerce_API.Entities.Manager", b =>
@@ -471,7 +540,7 @@ namespace Banana_E_Commerce_API.Migrations
                     b.Property<int>("OrderId")
                         .HasColumnType("int");
 
-                    b.Property<int>("ProductId")
+                    b.Property<int>("ProductTierId")
                         .HasColumnType("int");
 
                     b.Property<int>("Quantity")
@@ -484,7 +553,7 @@ namespace Banana_E_Commerce_API.Migrations
 
                     b.HasIndex("OrderId");
 
-                    b.HasIndex("ProductId");
+                    b.HasIndex("ProductTierId");
 
                     b.ToTable("OrderItems");
                 });
@@ -578,6 +647,9 @@ namespace Banana_E_Commerce_API.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<double>("EntryPrice")
+                        .HasColumnType("float");
+
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
@@ -587,20 +659,11 @@ namespace Banana_E_Commerce_API.Migrations
                     b.Property<string>("Origin")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<double>("Price")
-                        .HasColumnType("float");
-
                     b.Property<int>("PriceCurrency")
                         .HasColumnType("int");
 
                     b.Property<int>("ProductUnit")
                         .HasColumnType("int");
-
-                    b.Property<double>("Quantity")
-                        .HasColumnType("float");
-
-                    b.Property<double>("SalePrice")
-                        .HasColumnType("float");
 
                     b.Property<int>("StorageId")
                         .HasColumnType("int");
@@ -617,6 +680,376 @@ namespace Banana_E_Commerce_API.Migrations
                     b.HasIndex("StorageId");
 
                     b.ToTable("Products");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            CategoryId = 1,
+                            CreatedAt = new DateTime(2020, 5, 28, 8, 9, 8, 736, DateTimeKind.Utc).AddTicks(9675),
+                            CreatedBy = 1,
+                            Description = "Bơ 034 từ Việt Nam, Đắk Lắk",
+                            EntryPrice = 60000.0,
+                            IsDeleted = false,
+                            Name = "Bơ 034",
+                            Origin = "Việt Nam, Đắk Lắk",
+                            PriceCurrency = 1,
+                            ProductUnit = 7,
+                            StorageId = 1,
+                            UpdatedAt = new DateTime(2020, 5, 28, 8, 9, 8, 737, DateTimeKind.Utc).AddTicks(34)
+                        },
+                        new
+                        {
+                            Id = 2,
+                            CategoryId = 1,
+                            CreatedAt = new DateTime(2020, 5, 28, 8, 9, 8, 737, DateTimeKind.Utc).AddTicks(1809),
+                            CreatedBy = 2,
+                            Description = "Bơ Sáp từ Việt Nam, Đắk Lắk",
+                            EntryPrice = 58000.0,
+                            IsDeleted = false,
+                            Name = "Bơ Sáp",
+                            Origin = "Việt Nam, Đắk Lắk",
+                            PriceCurrency = 1,
+                            ProductUnit = 7,
+                            StorageId = 1,
+                            UpdatedAt = new DateTime(2020, 5, 28, 8, 9, 8, 737, DateTimeKind.Utc).AddTicks(1823)
+                        },
+                        new
+                        {
+                            Id = 3,
+                            CategoryId = 1,
+                            CreatedAt = new DateTime(2020, 5, 28, 8, 9, 8, 737, DateTimeKind.Utc).AddTicks(1875),
+                            CreatedBy = 3,
+                            Description = "Bưởi Da Xanh từ Việt Nam, Đồng Nai, Tân Triều",
+                            EntryPrice = 30000.0,
+                            IsDeleted = false,
+                            Name = "Bưởi Da Xanh",
+                            Origin = "Việt Nam, Đồng Nai, Tân Triều",
+                            PriceCurrency = 1,
+                            ProductUnit = 3,
+                            StorageId = 1,
+                            UpdatedAt = new DateTime(2020, 5, 28, 8, 9, 8, 737, DateTimeKind.Utc).AddTicks(1877)
+                        },
+                        new
+                        {
+                            Id = 4,
+                            CategoryId = 1,
+                            CreatedAt = new DateTime(2020, 5, 28, 8, 9, 8, 737, DateTimeKind.Utc).AddTicks(1881),
+                            CreatedBy = 3,
+                            Description = "Có sắc tố đặc biệt, rất hiệu dụng trong quá trình chống oxy hóa",
+                            EntryPrice = 65000.0,
+                            IsDeleted = false,
+                            Name = "Cà Chua Đen",
+                            Origin = "Hà Nội",
+                            PriceCurrency = 1,
+                            ProductUnit = 7,
+                            StorageId = 1,
+                            UpdatedAt = new DateTime(2020, 5, 28, 8, 9, 8, 737, DateTimeKind.Utc).AddTicks(1882)
+                        },
+                        new
+                        {
+                            Id = 5,
+                            CategoryId = 1,
+                            CreatedAt = new DateTime(2020, 5, 28, 8, 9, 8, 737, DateTimeKind.Utc).AddTicks(1885),
+                            CreatedBy = 4,
+                            Description = "Cam Sành Miền Tây",
+                            EntryPrice = 15000.0,
+                            IsDeleted = false,
+                            Name = "Cam Sành",
+                            Origin = "Miền Tây",
+                            PriceCurrency = 1,
+                            ProductUnit = 7,
+                            StorageId = 1,
+                            UpdatedAt = new DateTime(2020, 5, 28, 8, 9, 8, 737, DateTimeKind.Utc).AddTicks(1887)
+                        },
+                        new
+                        {
+                            Id = 6,
+                            CategoryId = 1,
+                            CreatedAt = new DateTime(2020, 5, 28, 8, 9, 8, 737, DateTimeKind.Utc).AddTicks(1889),
+                            CreatedBy = 1,
+                            Description = "Chanh đào tươi Đà Lạt",
+                            EntryPrice = 40000.0,
+                            IsDeleted = false,
+                            Name = "Chanh Đào Tươi",
+                            Origin = "Đà Lạt",
+                            PriceCurrency = 1,
+                            ProductUnit = 7,
+                            StorageId = 1,
+                            UpdatedAt = new DateTime(2020, 5, 28, 8, 9, 8, 737, DateTimeKind.Utc).AddTicks(1891)
+                        },
+                        new
+                        {
+                            Id = 7,
+                            CategoryId = 1,
+                            CreatedAt = new DateTime(2020, 5, 28, 8, 9, 8, 737, DateTimeKind.Utc).AddTicks(1893),
+                            CreatedBy = 2,
+                            Description = "Chôm chôm nhãn",
+                            EntryPrice = 35000.0,
+                            IsDeleted = false,
+                            Name = "Chôm Chôm Nhãn",
+                            Origin = "Đồng Bằng Sông Cửu Long",
+                            PriceCurrency = 1,
+                            ProductUnit = 7,
+                            StorageId = 1,
+                            UpdatedAt = new DateTime(2020, 5, 28, 8, 9, 8, 737, DateTimeKind.Utc).AddTicks(1894)
+                        },
+                        new
+                        {
+                            Id = 8,
+                            CategoryId = 1,
+                            CreatedAt = new DateTime(2020, 5, 28, 8, 9, 8, 737, DateTimeKind.Utc).AddTicks(1897),
+                            CreatedBy = 3,
+                            Description = "Nhãn Lồng",
+                            EntryPrice = 25000.0,
+                            IsDeleted = false,
+                            Name = "Nhãn Lồng",
+                            Origin = "Hưng Yên",
+                            PriceCurrency = 1,
+                            ProductUnit = 7,
+                            StorageId = 1,
+                            UpdatedAt = new DateTime(2020, 5, 28, 8, 9, 8, 737, DateTimeKind.Utc).AddTicks(1899)
+                        },
+                        new
+                        {
+                            Id = 9,
+                            CategoryId = 1,
+                            CreatedAt = new DateTime(2020, 5, 28, 8, 9, 8, 737, DateTimeKind.Utc).AddTicks(1902),
+                            CreatedBy = 4,
+                            Description = "Thanh Long Ruột Đỏ",
+                            EntryPrice = 22000.0,
+                            IsDeleted = false,
+                            Name = "Thanh Long Ruột Đỏ",
+                            Origin = "Bình Thuận",
+                            PriceCurrency = 1,
+                            ProductUnit = 7,
+                            StorageId = 1,
+                            UpdatedAt = new DateTime(2020, 5, 28, 8, 9, 8, 737, DateTimeKind.Utc).AddTicks(1904)
+                        },
+                        new
+                        {
+                            Id = 10,
+                            CategoryId = 1,
+                            CreatedAt = new DateTime(2020, 5, 28, 8, 9, 8, 737, DateTimeKind.Utc).AddTicks(1906),
+                            CreatedBy = 1,
+                            Description = "Thanh long ruột trắng",
+                            EntryPrice = 25000.0,
+                            IsDeleted = false,
+                            Name = "Thanh Long Ruột Trắng",
+                            Origin = "Bình Thuận",
+                            PriceCurrency = 1,
+                            ProductUnit = 7,
+                            StorageId = 1,
+                            UpdatedAt = new DateTime(2020, 5, 28, 8, 9, 8, 737, DateTimeKind.Utc).AddTicks(1907)
+                        },
+                        new
+                        {
+                            Id = 11,
+                            CategoryId = 1,
+                            CreatedAt = new DateTime(2020, 5, 28, 8, 9, 8, 737, DateTimeKind.Utc).AddTicks(1910),
+                            CreatedBy = 2,
+                            Description = "Dâu tây đà lạt giống Mỹ",
+                            EntryPrice = 120000.0,
+                            IsDeleted = false,
+                            Name = "Dâu Tây Đà Lạt",
+                            Origin = "Đà Lạt",
+                            PriceCurrency = 1,
+                            ProductUnit = 7,
+                            StorageId = 1,
+                            UpdatedAt = new DateTime(2020, 5, 28, 8, 9, 8, 737, DateTimeKind.Utc).AddTicks(1912)
+                        },
+                        new
+                        {
+                            Id = 12,
+                            CategoryId = 1,
+                            CreatedAt = new DateTime(2020, 5, 28, 8, 9, 8, 737, DateTimeKind.Utc).AddTicks(1915),
+                            CreatedBy = 3,
+                            Description = "Dưa lưới Bình Dương",
+                            EntryPrice = 30000.0,
+                            IsDeleted = false,
+                            Name = "Dưa Lưới",
+                            Origin = "Bình Dương",
+                            PriceCurrency = 1,
+                            ProductUnit = 7,
+                            StorageId = 1,
+                            UpdatedAt = new DateTime(2020, 5, 28, 8, 9, 8, 737, DateTimeKind.Utc).AddTicks(1916)
+                        },
+                        new
+                        {
+                            Id = 13,
+                            CategoryId = 2,
+                            CreatedAt = new DateTime(2020, 5, 28, 8, 9, 8, 737, DateTimeKind.Utc).AddTicks(1919),
+                            CreatedBy = 4,
+                            Description = "Dưa Pepino Mexico",
+                            EntryPrice = 45000.0,
+                            IsDeleted = false,
+                            Name = "Dưới Pepino",
+                            Origin = "Mexico",
+                            PriceCurrency = 1,
+                            ProductUnit = 7,
+                            StorageId = 1,
+                            UpdatedAt = new DateTime(2020, 5, 28, 8, 9, 8, 737, DateTimeKind.Utc).AddTicks(1920)
+                        },
+                        new
+                        {
+                            Id = 14,
+                            CategoryId = 2,
+                            CreatedAt = new DateTime(2020, 5, 28, 8, 9, 8, 737, DateTimeKind.Utc).AddTicks(2018),
+                            CreatedBy = 1,
+                            Description = "Cherry Mỹ",
+                            EntryPrice = 310000.0,
+                            IsDeleted = false,
+                            Name = "Cherry Mỹ",
+                            Origin = "Mỹ",
+                            PriceCurrency = 1,
+                            ProductUnit = 7,
+                            StorageId = 1,
+                            UpdatedAt = new DateTime(2020, 5, 28, 8, 9, 8, 737, DateTimeKind.Utc).AddTicks(2019)
+                        },
+                        new
+                        {
+                            Id = 15,
+                            CategoryId = 2,
+                            CreatedAt = new DateTime(2020, 5, 28, 8, 9, 8, 737, DateTimeKind.Utc).AddTicks(2022),
+                            CreatedBy = 2,
+                            Description = "Việt Quất Mỹ",
+                            EntryPrice = 380000.0,
+                            IsDeleted = false,
+                            Name = "Việt Quất Mỹ",
+                            Origin = "Mỹ",
+                            PriceCurrency = 1,
+                            ProductUnit = 7,
+                            StorageId = 1,
+                            UpdatedAt = new DateTime(2020, 5, 28, 8, 9, 8, 737, DateTimeKind.Utc).AddTicks(2023)
+                        },
+                        new
+                        {
+                            Id = 16,
+                            CategoryId = 2,
+                            CreatedAt = new DateTime(2020, 5, 28, 8, 9, 8, 737, DateTimeKind.Utc).AddTicks(2026),
+                            CreatedBy = 3,
+                            Description = "Dưa Lê Hàn",
+                            EntryPrice = 180000.0,
+                            IsDeleted = false,
+                            Name = "Dưa Lê Hàn",
+                            Origin = "Hàn Quốc",
+                            PriceCurrency = 1,
+                            ProductUnit = 7,
+                            StorageId = 1,
+                            UpdatedAt = new DateTime(2020, 5, 28, 8, 9, 8, 737, DateTimeKind.Utc).AddTicks(2027)
+                        },
+                        new
+                        {
+                            Id = 17,
+                            CategoryId = 2,
+                            CreatedAt = new DateTime(2020, 5, 28, 8, 9, 8, 737, DateTimeKind.Utc).AddTicks(2029),
+                            CreatedBy = 4,
+                            Description = "Táo New Zealand",
+                            EntryPrice = 200000.0,
+                            IsDeleted = false,
+                            Name = "Táo New Zealand",
+                            Origin = "New Zealand",
+                            PriceCurrency = 1,
+                            ProductUnit = 7,
+                            StorageId = 1,
+                            UpdatedAt = new DateTime(2020, 5, 28, 8, 9, 8, 737, DateTimeKind.Utc).AddTicks(2030)
+                        },
+                        new
+                        {
+                            Id = 18,
+                            CategoryId = 2,
+                            CreatedAt = new DateTime(2020, 5, 28, 8, 9, 8, 737, DateTimeKind.Utc).AddTicks(2033),
+                            CreatedBy = 1,
+                            Description = "Kiwi Vàng New Zealand ",
+                            EntryPrice = 130000.0,
+                            IsDeleted = false,
+                            Name = "Kiwi Vàng New Zealand ",
+                            Origin = "New Zealand",
+                            PriceCurrency = 1,
+                            ProductUnit = 7,
+                            StorageId = 1,
+                            UpdatedAt = new DateTime(2020, 5, 28, 8, 9, 8, 737, DateTimeKind.Utc).AddTicks(2034)
+                        },
+                        new
+                        {
+                            Id = 19,
+                            CategoryId = 2,
+                            CreatedAt = new DateTime(2020, 5, 28, 8, 9, 8, 737, DateTimeKind.Utc).AddTicks(2036),
+                            CreatedBy = 2,
+                            Description = "Nho xanh Úc",
+                            EntryPrice = 320000.0,
+                            IsDeleted = false,
+                            Name = "Nho xanh Úc",
+                            Origin = "Úc",
+                            PriceCurrency = 1,
+                            ProductUnit = 7,
+                            StorageId = 1,
+                            UpdatedAt = new DateTime(2020, 5, 28, 8, 9, 8, 737, DateTimeKind.Utc).AddTicks(2037)
+                        },
+                        new
+                        {
+                            Id = 20,
+                            CategoryId = 2,
+                            CreatedAt = new DateTime(2020, 5, 28, 8, 9, 8, 737, DateTimeKind.Utc).AddTicks(2040),
+                            CreatedBy = 3,
+                            Description = "Dâu Anh Đào Nhật",
+                            EntryPrice = 610000.0,
+                            IsDeleted = false,
+                            Name = "Dâu Anh Đào Nhật",
+                            Origin = "Nhật Bản",
+                            PriceCurrency = 1,
+                            ProductUnit = 8,
+                            StorageId = 1,
+                            UpdatedAt = new DateTime(2020, 5, 28, 8, 9, 8, 737, DateTimeKind.Utc).AddTicks(2041)
+                        },
+                        new
+                        {
+                            Id = 21,
+                            CategoryId = 2,
+                            CreatedAt = new DateTime(2020, 5, 28, 8, 9, 8, 737, DateTimeKind.Utc).AddTicks(2043),
+                            CreatedBy = 4,
+                            Description = "Dưa Hấu Luna Piena Nhật",
+                            EntryPrice = 170000.0,
+                            IsDeleted = false,
+                            Name = "Dưa Hấu Luna Piena Nhật",
+                            Origin = "Nhật Bản",
+                            PriceCurrency = 1,
+                            ProductUnit = 3,
+                            StorageId = 1,
+                            UpdatedAt = new DateTime(2020, 5, 28, 8, 9, 8, 737, DateTimeKind.Utc).AddTicks(2044)
+                        },
+                        new
+                        {
+                            Id = 22,
+                            CategoryId = 2,
+                            CreatedAt = new DateTime(2020, 5, 28, 8, 9, 8, 737, DateTimeKind.Utc).AddTicks(2047),
+                            CreatedBy = 1,
+                            Description = "Sầu Riêng Muthong Thái",
+                            EntryPrice = 100000.0,
+                            IsDeleted = false,
+                            Name = "Sầu Riêng Muthong Thái",
+                            Origin = "Thái Lan",
+                            PriceCurrency = 1,
+                            ProductUnit = 7,
+                            StorageId = 1,
+                            UpdatedAt = new DateTime(2020, 5, 28, 8, 9, 8, 737, DateTimeKind.Utc).AddTicks(2048)
+                        },
+                        new
+                        {
+                            Id = 23,
+                            CategoryId = 2,
+                            CreatedAt = new DateTime(2020, 5, 28, 8, 9, 8, 737, DateTimeKind.Utc).AddTicks(2051),
+                            CreatedBy = 2,
+                            Description = "Bơ Úc (Bơ Hass)",
+                            EntryPrice = 140000.0,
+                            IsDeleted = false,
+                            Name = "Bơ Úc (Bơ Hass)",
+                            Origin = "Úc",
+                            PriceCurrency = 1,
+                            ProductUnit = 7,
+                            StorageId = 1,
+                            UpdatedAt = new DateTime(2020, 5, 28, 8, 9, 8, 737, DateTimeKind.Utc).AddTicks(2054)
+                        });
                 });
 
             modelBuilder.Entity("Banana_E_Commerce_API.Entities.ProductExportBill", b =>
@@ -632,7 +1065,7 @@ namespace Banana_E_Commerce_API.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<int>("ShipmentId")
+                    b.Property<int>("RequestExportProductId")
                         .HasColumnType("int");
 
                     b.Property<int>("StorageManagerId")
@@ -642,6 +1075,8 @@ namespace Banana_E_Commerce_API.Migrations
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("RequestExportProductId");
 
                     b.HasIndex("StorageManagerId");
 
@@ -658,17 +1093,20 @@ namespace Banana_E_Commerce_API.Migrations
                     b.Property<int>("ExportBillId")
                         .HasColumnType("int");
 
-                    b.Property<int>("ProductId")
+                    b.Property<double>("Price")
+                        .HasColumnType("float");
+
+                    b.Property<int>("ProductTierId")
                         .HasColumnType("int");
 
-                    b.Property<int>("Quantity")
-                        .HasColumnType("int");
+                    b.Property<double>("Quantity")
+                        .HasColumnType("float");
 
                     b.HasKey("Id");
 
                     b.HasIndex("ExportBillId");
 
-                    b.HasIndex("ProductId");
+                    b.HasIndex("ProductTierId");
 
                     b.ToTable("ProductExportDetails");
                 });
@@ -683,14 +1121,14 @@ namespace Banana_E_Commerce_API.Migrations
                     b.Property<int>("CustomerId")
                         .HasColumnType("int");
 
-                    b.Property<int>("ProductId")
+                    b.Property<int>("ProductTierId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
                     b.HasIndex("CustomerId");
 
-                    b.HasIndex("ProductId");
+                    b.HasIndex("ProductTierId");
 
                     b.ToTable("ProductFavorites");
                 });
@@ -727,6 +1165,58 @@ namespace Banana_E_Commerce_API.Migrations
                     b.ToTable("ProductImages");
                 });
 
+            modelBuilder.Entity("Banana_E_Commerce_API.Entities.ProductTier", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<double>("AfterDiscountPrice")
+                        .HasColumnType("float");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("DiscountPercentage")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<double>("KgSale")
+                        .HasColumnType("float");
+
+                    b.Property<int>("PriceCurrency")
+                        .HasColumnType("int");
+
+                    b.Property<double>("PricePerKg")
+                        .HasColumnType("float");
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
+                    b.Property<double>("Quantity")
+                        .HasColumnType("float");
+
+                    b.Property<double>("SalePrice")
+                        .HasColumnType("float");
+
+                    b.Property<int>("TierId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProductId");
+
+                    b.HasIndex("TierId");
+
+                    b.ToTable("ProductTiers");
+                });
+
             modelBuilder.Entity("Banana_E_Commerce_API.Entities.Rating", b =>
                 {
                     b.Property<int>("Id")
@@ -749,7 +1239,7 @@ namespace Banana_E_Commerce_API.Migrations
                     b.Property<int>("Like")
                         .HasColumnType("int");
 
-                    b.Property<int>("ProductId")
+                    b.Property<int>("ProductTierId")
                         .HasColumnType("int");
 
                     b.Property<int>("StarNum")
@@ -762,7 +1252,7 @@ namespace Banana_E_Commerce_API.Migrations
 
                     b.HasIndex("CustomerId");
 
-                    b.HasIndex("ProductId");
+                    b.HasIndex("ProductTierId");
 
                     b.ToTable("Rates");
                 });
@@ -797,6 +1287,111 @@ namespace Banana_E_Commerce_API.Migrations
                     b.ToTable("RefreshToken");
                 });
 
+            modelBuilder.Entity("Banana_E_Commerce_API.Entities.RequestExportDetail", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("ProductTierId")
+                        .HasColumnType("int");
+
+                    b.Property<double>("Quantity")
+                        .HasColumnType("float");
+
+                    b.Property<int>("RequestExportProductId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProductTierId");
+
+                    b.HasIndex("RequestExportProductId");
+
+                    b.ToTable("RequestExportDetails");
+                });
+
+            modelBuilder.Entity("Banana_E_Commerce_API.Entities.RequestExportProduct", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("CreatedBy")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("OrderId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CreatedBy");
+
+                    b.HasIndex("OrderId")
+                        .IsUnique();
+
+                    b.ToTable("RequestExportProducts");
+                });
+
+            modelBuilder.Entity("Banana_E_Commerce_API.Entities.RequestImportDetail", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("ProductTierId")
+                        .HasColumnType("int");
+
+                    b.Property<double>("Quantity")
+                        .HasColumnType("float");
+
+                    b.Property<int>("RequestImportProductId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProductTierId");
+
+                    b.HasIndex("RequestImportProductId");
+
+                    b.ToTable("RequestImportDetails");
+                });
+
+            modelBuilder.Entity("Banana_E_Commerce_API.Entities.RequestImportProduct", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("CreatedBy")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("OrderId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CreatedBy");
+
+                    b.ToTable("RequestImportProducts");
+                });
+
             modelBuilder.Entity("Banana_E_Commerce_API.Entities.Role", b =>
                 {
                     b.Property<int>("Id")
@@ -824,42 +1419,34 @@ namespace Banana_E_Commerce_API.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2020, 5, 25, 14, 4, 24, 336, DateTimeKind.Utc).AddTicks(979),
+                            CreatedAt = new DateTime(2020, 5, 28, 8, 9, 8, 734, DateTimeKind.Utc).AddTicks(4049),
                             IsDeleted = false,
                             RoleName = 0,
-                            UpdatedAt = new DateTime(2020, 5, 25, 14, 4, 24, 336, DateTimeKind.Utc).AddTicks(1754)
+                            UpdatedAt = new DateTime(2020, 5, 28, 8, 9, 8, 734, DateTimeKind.Utc).AddTicks(4495)
                         },
                         new
                         {
                             Id = 2,
-                            CreatedAt = new DateTime(2020, 5, 25, 14, 4, 24, 336, DateTimeKind.Utc).AddTicks(3233),
+                            CreatedAt = new DateTime(2020, 5, 28, 8, 9, 8, 734, DateTimeKind.Utc).AddTicks(5231),
                             IsDeleted = false,
-                            RoleName = 2,
-                            UpdatedAt = new DateTime(2020, 5, 25, 14, 4, 24, 336, DateTimeKind.Utc).AddTicks(3257)
+                            RoleName = 1,
+                            UpdatedAt = new DateTime(2020, 5, 28, 8, 9, 8, 734, DateTimeKind.Utc).AddTicks(5247)
                         },
                         new
                         {
                             Id = 3,
-                            CreatedAt = new DateTime(2020, 5, 25, 14, 4, 24, 336, DateTimeKind.Utc).AddTicks(3353),
+                            CreatedAt = new DateTime(2020, 5, 28, 8, 9, 8, 734, DateTimeKind.Utc).AddTicks(5283),
                             IsDeleted = false,
-                            RoleName = 1,
-                            UpdatedAt = new DateTime(2020, 5, 25, 14, 4, 24, 336, DateTimeKind.Utc).AddTicks(3356)
+                            RoleName = 2,
+                            UpdatedAt = new DateTime(2020, 5, 28, 8, 9, 8, 734, DateTimeKind.Utc).AddTicks(5285)
                         },
                         new
                         {
                             Id = 4,
-                            CreatedAt = new DateTime(2020, 5, 25, 14, 4, 24, 336, DateTimeKind.Utc).AddTicks(3359),
+                            CreatedAt = new DateTime(2020, 5, 28, 8, 9, 8, 734, DateTimeKind.Utc).AddTicks(5287),
                             IsDeleted = false,
                             RoleName = 3,
-                            UpdatedAt = new DateTime(2020, 5, 25, 14, 4, 24, 336, DateTimeKind.Utc).AddTicks(3361)
-                        },
-                        new
-                        {
-                            Id = 5,
-                            CreatedAt = new DateTime(2020, 5, 25, 14, 4, 24, 336, DateTimeKind.Utc).AddTicks(3363),
-                            IsDeleted = false,
-                            RoleName = 4,
-                            UpdatedAt = new DateTime(2020, 5, 25, 14, 4, 24, 336, DateTimeKind.Utc).AddTicks(3365)
+                            UpdatedAt = new DateTime(2020, 5, 28, 8, 9, 8, 734, DateTimeKind.Utc).AddTicks(5288)
                         });
                 });
 
@@ -869,6 +1456,9 @@ namespace Banana_E_Commerce_API.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int?>("AdminId")
+                        .HasColumnType("int");
 
                     b.Property<string>("City")
                         .HasColumnType("nvarchar(max)");
@@ -908,17 +1498,15 @@ namespace Banana_E_Commerce_API.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CreatedBy");
+                    b.HasIndex("AdminId");
 
-                    b.HasIndex("OrderId")
-                        .IsUnique();
+                    b.HasIndex("OrderId");
 
-                    b.HasIndex("ProductExportBillId")
-                        .IsUnique();
+                    b.HasIndex("ProductExportBillId");
 
                     b.HasIndex("ShipperId");
 
-                    b.ToTable("Shipments");
+                    b.ToTable("Shipment");
                 });
 
             modelBuilder.Entity("Banana_E_Commerce_API.Entities.Shipper", b =>
@@ -971,7 +1559,7 @@ namespace Banana_E_Commerce_API.Migrations
                     b.HasIndex("UserId")
                         .IsUnique();
 
-                    b.ToTable("Shippers");
+                    b.ToTable("Shipper");
                 });
 
             modelBuilder.Entity("Banana_E_Commerce_API.Entities.Storage", b =>
@@ -1013,6 +1601,20 @@ namespace Banana_E_Commerce_API.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("Storages");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            CreatedAt = new DateTime(2020, 5, 28, 8, 9, 8, 736, DateTimeKind.Utc).AddTicks(1128),
+                            CreatedBy = 3,
+                            IsDeleted = false,
+                            Location = "Tiểu Vương Quốc Bình Chánh",
+                            Name = "Hoàng Khố",
+                            Size = 1000.2,
+                            SizeUnit = "m2",
+                            UpdatedAt = new DateTime(2020, 5, 28, 8, 9, 8, 736, DateTimeKind.Utc).AddTicks(2434)
+                        });
                 });
 
             modelBuilder.Entity("Banana_E_Commerce_API.Entities.StorageManager", b =>
@@ -1059,122 +1661,36 @@ namespace Banana_E_Commerce_API.Migrations
                     b.ToTable("StorageManagers");
                 });
 
-            modelBuilder.Entity("Banana_E_Commerce_API.Entities.Supplier", b =>
+            modelBuilder.Entity("Banana_E_Commerce_API.Entities.Tier", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("Address")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ContactName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Email")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Suppliers");
-                });
-
-            modelBuilder.Entity("Banana_E_Commerce_API.Entities.SupplierPayment", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Code")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("CreatedBy")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Currency")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<int>("SupplierId")
-                        .HasColumnType("int");
-
-                    b.Property<double>("TotalAmount")
-                        .HasColumnType("float");
-
-                    b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CreatedBy");
-
-                    b.HasIndex("SupplierId");
-
-                    b.ToTable("SupplierPayments");
-                });
-
-            modelBuilder.Entity("Banana_E_Commerce_API.Entities.SupplyProduct", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("CreatedBy")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<int>("Price")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ProductId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("SupplierId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int?>("UserId")
+                    b.Property<int>("TierOption")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ProductId");
+                    b.ToTable("Tiers");
 
-                    b.HasIndex("SupplierId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("SupplyProducts");
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            IsDeleted = false,
+                            TierOption = 1
+                        },
+                        new
+                        {
+                            Id = 2,
+                            IsDeleted = false,
+                            TierOption = 2
+                        });
                 });
 
             modelBuilder.Entity("Banana_E_Commerce_API.Entities.User", b =>
@@ -1228,7 +1744,7 @@ namespace Banana_E_Commerce_API.Migrations
                     b.HasOne("Banana_E_Commerce_API.Entities.User", "User")
                         .WithOne("Admin")
                         .HasForeignKey("Banana_E_Commerce_API.Entities.Admin", "UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
                 });
 
@@ -1249,9 +1765,9 @@ namespace Banana_E_Commerce_API.Migrations
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
-                    b.HasOne("Banana_E_Commerce_API.Entities.Product", "Product")
+                    b.HasOne("Banana_E_Commerce_API.Entities.ProductTier", "ProductTier")
                         .WithMany("CartDetails")
-                        .HasForeignKey("ProductId")
+                        .HasForeignKey("ProductTierId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
                 });
@@ -1276,6 +1792,12 @@ namespace Banana_E_Commerce_API.Migrations
 
             modelBuilder.Entity("Banana_E_Commerce_API.Entities.ImportBill", b =>
                 {
+                    b.HasOne("Banana_E_Commerce_API.Entities.RequestImportProduct", "RequestImportProduct")
+                        .WithMany("ImportBills")
+                        .HasForeignKey("RequestImportProductId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
                     b.HasOne("Banana_E_Commerce_API.Entities.Storage", "Storage")
                         .WithMany("ImportBills")
                         .HasForeignKey("StorageId")
@@ -1285,12 +1807,6 @@ namespace Banana_E_Commerce_API.Migrations
                     b.HasOne("Banana_E_Commerce_API.Entities.StorageManager", "StorageManager")
                         .WithMany("ImportBills")
                         .HasForeignKey("StorageManagerId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.HasOne("Banana_E_Commerce_API.Entities.Supplier", "Supplier")
-                        .WithMany("ImportBills")
-                        .HasForeignKey("SupplierId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
                 });
@@ -1303,9 +1819,24 @@ namespace Banana_E_Commerce_API.Migrations
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
-                    b.HasOne("Banana_E_Commerce_API.Entities.SupplyProduct", "SupplyProduct")
+                    b.HasOne("Banana_E_Commerce_API.Entities.Product", "Product")
                         .WithMany("ImportBillDetails")
-                        .HasForeignKey("SupplyProductId")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Banana_E_Commerce_API.Entities.ImportProductReport", b =>
+                {
+                    b.HasOne("Banana_E_Commerce_API.Entities.StorageManager", "StorageManager")
+                        .WithMany("ImportProductReports")
+                        .HasForeignKey("CreatedBy")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("Banana_E_Commerce_API.Entities.RequestImportProduct", "RequestImportProduct")
+                        .WithMany("ImportProductReports")
+                        .HasForeignKey("RequestImportProductId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
                 });
@@ -1315,13 +1846,13 @@ namespace Banana_E_Commerce_API.Migrations
                     b.HasOne("Banana_E_Commerce_API.Entities.PaymentMethod", "PaymentMethod")
                         .WithMany("Invoices")
                         .HasForeignKey("PaymentMethodId")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Banana_E_Commerce_API.Entities.Shipment", "Shipment")
                         .WithOne("Invoice")
                         .HasForeignKey("Banana_E_Commerce_API.Entities.Invoice", "ShipmentId")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
@@ -1372,9 +1903,9 @@ namespace Banana_E_Commerce_API.Migrations
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
-                    b.HasOne("Banana_E_Commerce_API.Entities.Product", "Product")
+                    b.HasOne("Banana_E_Commerce_API.Entities.ProductTier", "ProductTier")
                         .WithMany("OrderItems")
-                        .HasForeignKey("ProductId")
+                        .HasForeignKey("ProductTierId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
                 });
@@ -1418,6 +1949,12 @@ namespace Banana_E_Commerce_API.Migrations
 
             modelBuilder.Entity("Banana_E_Commerce_API.Entities.ProductExportBill", b =>
                 {
+                    b.HasOne("Banana_E_Commerce_API.Entities.RequestExportProduct", "RequestExportProduct")
+                        .WithMany("ProductExportBills")
+                        .HasForeignKey("RequestExportProductId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
                     b.HasOne("Banana_E_Commerce_API.Entities.StorageManager", "StorageManager")
                         .WithMany("ProductExportBills")
                         .HasForeignKey("StorageManagerId")
@@ -1433,9 +1970,9 @@ namespace Banana_E_Commerce_API.Migrations
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
-                    b.HasOne("Banana_E_Commerce_API.Entities.Product", "Product")
+                    b.HasOne("Banana_E_Commerce_API.Entities.ProductTier", "ProductTier")
                         .WithMany("ProductExportDetails")
-                        .HasForeignKey("ProductId")
+                        .HasForeignKey("ProductTierId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
                 });
@@ -1448,9 +1985,9 @@ namespace Banana_E_Commerce_API.Migrations
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
-                    b.HasOne("Banana_E_Commerce_API.Entities.Product", "Product")
+                    b.HasOne("Banana_E_Commerce_API.Entities.ProductTier", "ProductTier")
                         .WithMany("ProductFavorites")
-                        .HasForeignKey("ProductId")
+                        .HasForeignKey("ProductTierId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
                 });
@@ -1464,6 +2001,21 @@ namespace Banana_E_Commerce_API.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("Banana_E_Commerce_API.Entities.ProductTier", b =>
+                {
+                    b.HasOne("Banana_E_Commerce_API.Entities.Product", "Product")
+                        .WithMany("ProductTiers")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("Banana_E_Commerce_API.Entities.Tier", "Tier")
+                        .WithMany("ProductTiers")
+                        .HasForeignKey("TierId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("Banana_E_Commerce_API.Entities.Rating", b =>
                 {
                     b.HasOne("Banana_E_Commerce_API.Entities.Customer", "Customer")
@@ -1472,9 +2024,9 @@ namespace Banana_E_Commerce_API.Migrations
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
-                    b.HasOne("Banana_E_Commerce_API.Entities.Product", "Product")
+                    b.HasOne("Banana_E_Commerce_API.Entities.ProductTier", "ProductTier")
                         .WithMany("Rates")
-                        .HasForeignKey("ProductId")
+                        .HasForeignKey("ProductTierId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
                 });
@@ -1488,30 +2040,82 @@ namespace Banana_E_Commerce_API.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Banana_E_Commerce_API.Entities.Shipment", b =>
+            modelBuilder.Entity("Banana_E_Commerce_API.Entities.RequestExportDetail", b =>
+                {
+                    b.HasOne("Banana_E_Commerce_API.Entities.ProductTier", "ProductTier")
+                        .WithMany("RequestExportDetails")
+                        .HasForeignKey("ProductTierId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("Banana_E_Commerce_API.Entities.RequestExportProduct", "RequestExportProduct")
+                        .WithMany("RequestExportDetails")
+                        .HasForeignKey("RequestExportProductId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Banana_E_Commerce_API.Entities.RequestExportProduct", b =>
                 {
                     b.HasOne("Banana_E_Commerce_API.Entities.Admin", "Admin")
-                        .WithMany("Shipments")
+                        .WithMany("RequestExportProducts")
                         .HasForeignKey("CreatedBy")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("Banana_E_Commerce_API.Entities.Order", "Order")
-                        .WithOne("Shipment")
-                        .HasForeignKey("Banana_E_Commerce_API.Entities.Shipment", "OrderId")
+                        .WithOne("RequestExportProduct")
+                        .HasForeignKey("Banana_E_Commerce_API.Entities.RequestExportProduct", "OrderId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Banana_E_Commerce_API.Entities.RequestImportDetail", b =>
+                {
+                    b.HasOne("Banana_E_Commerce_API.Entities.ProductTier", "ProductTier")
+                        .WithMany("RequestImportDetails")
+                        .HasForeignKey("ProductTierId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
-                    b.HasOne("Banana_E_Commerce_API.Entities.ProductExportBill", "ProductExportBill")
-                        .WithOne("Shipment")
-                        .HasForeignKey("Banana_E_Commerce_API.Entities.Shipment", "ProductExportBillId")
+                    b.HasOne("Banana_E_Commerce_API.Entities.RequestImportProduct", "RequestImportProduct")
+                        .WithMany("RequestImportDetails")
+                        .HasForeignKey("RequestImportProductId")
                         .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Banana_E_Commerce_API.Entities.RequestImportProduct", b =>
+                {
+                    b.HasOne("Banana_E_Commerce_API.Entities.Admin", "Admin")
+                        .WithMany("RequestImportProducts")
+                        .HasForeignKey("CreatedBy")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Banana_E_Commerce_API.Entities.Shipment", b =>
+                {
+                    b.HasOne("Banana_E_Commerce_API.Entities.Admin", "Admin")
+                        .WithMany()
+                        .HasForeignKey("AdminId");
+
+                    b.HasOne("Banana_E_Commerce_API.Entities.Order", "Order")
+                        .WithMany()
+                        .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Banana_E_Commerce_API.Entities.ProductExportBill", "ProductExportBill")
+                        .WithMany()
+                        .HasForeignKey("ProductExportBillId")
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Banana_E_Commerce_API.Entities.Shipper", "Shipper")
                         .WithMany("Shipments")
                         .HasForeignKey("ShipperId")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
@@ -1524,7 +2128,7 @@ namespace Banana_E_Commerce_API.Migrations
                     b.HasOne("Banana_E_Commerce_API.Entities.User", "User")
                         .WithOne("Shipper")
                         .HasForeignKey("Banana_E_Commerce_API.Entities.Shipper", "UserId")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
@@ -1548,40 +2152,6 @@ namespace Banana_E_Commerce_API.Migrations
                         .HasForeignKey("Banana_E_Commerce_API.Entities.StorageManager", "UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("Banana_E_Commerce_API.Entities.SupplierPayment", b =>
-                {
-                    b.HasOne("Banana_E_Commerce_API.Entities.Admin", "Admin")
-                        .WithMany("SupplierPayments")
-                        .HasForeignKey("CreatedBy")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.HasOne("Banana_E_Commerce_API.Entities.Supplier", "Supplier")
-                        .WithMany("SupplierPayments")
-                        .HasForeignKey("SupplierId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("Banana_E_Commerce_API.Entities.SupplyProduct", b =>
-                {
-                    b.HasOne("Banana_E_Commerce_API.Entities.Product", "Product")
-                        .WithMany("SupplyProducts")
-                        .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.HasOne("Banana_E_Commerce_API.Entities.Supplier", "Supplier")
-                        .WithMany("SupplyProducts")
-                        .HasForeignKey("SupplierId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.HasOne("Banana_E_Commerce_API.Entities.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId");
                 });
 
             modelBuilder.Entity("Banana_E_Commerce_API.Entities.User", b =>

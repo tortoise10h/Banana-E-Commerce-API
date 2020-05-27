@@ -18,16 +18,14 @@ namespace Banana_E_Commerce_API.Entities
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
         public bool IsDeleted { get; set; }
-
-        public Customer Customer { get; set; }
+        public int AddressId { get; set; }
         public int CustomerId { get; set; }
 
+
+        public Customer Customer { get; set; }
         public Address Address { get; set; }
-        public int AddressId { get; set; }
-
-        public Shipment Shipment { get; set; }
-
         public ICollection<OrderItem> OrderItems { get; set; }
+        public RequestExportProduct RequestExportProduct { get; set; }
     }
 
 

@@ -11,11 +11,11 @@ namespace Banana_E_Commerce_API.Entities
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
         public bool IsDeleted { get; set; }
-
-        public Customer Customer { get; set; }
+        public int ProductTierId { get; set; }
         public int CustomerId { get; set; }
 
-        public Product Product { get; set; }
-        public int ProductId { get; set; }
+
+        public Customer Customer { get; set; }
+        public ProductTier ProductTier { get; set; }
     }
 }

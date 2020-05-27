@@ -13,15 +13,15 @@ namespace Banana_E_Commerce_API.Entities
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
         public bool IsDeleted { get; set; }
-
-        public User User { get; set; }
         public int UserId { get; set; }
 
+        public User User { get; set; }
         public ICollection<PaymentMethod> PaymentMethods { get; set; }
         public ICollection<Notification> Notifications { get; set; }
         public ICollection<Product> Products { get; set; }
         public ICollection<Category> Categories { get; set; }
-        public ICollection<Shipment> Shipments { get; set; }
-        public ICollection<SupplierPayment> SupplierPayments { get; set; }
+        public ICollection<RequestExportProduct> RequestExportProducts { get; set; }
+        public ICollection<RequestImportProduct> RequestImportProducts { get; set; }
+
     }
 }

@@ -20,7 +20,6 @@ namespace Banana_E_Commerce_API.Helpers
         public DbSet<Category> Categories { get; set; }
         public DbSet<ImportBillDetail> ImportBillDetails { get; set; }
         public DbSet<ImportBill> ImportBills { get; set; }
-        public DbSet<Invoice> Invoices { get; set; }
         public DbSet<Manager> Managers { get; set; }
         public DbSet<Notification> Notifications { get; set; }
         public DbSet<Order> Orders { get; set; }
@@ -32,14 +31,18 @@ namespace Banana_E_Commerce_API.Helpers
         public DbSet<ProductFavorite> ProductFavorites { get; set; }
         public DbSet<ProductImage> ProductImages { get; set; }
         public DbSet<Rating> Rates { get; set; }
-        public DbSet<Shipment> Shipments { get; set; }
-        public DbSet<Shipper> Shippers { get; set; }
         public DbSet<Storage> Storages { get; set; }
         public DbSet<StorageManager> StorageManagers { get; set; }
-        public DbSet<Supplier> Suppliers { get; set; }
-        public DbSet<SupplierPayment> SupplierPayments { get; set; }
-        public DbSet<SupplyProduct> SupplyProducts { get; set; }
         public DbSet<RefreshToken> RefreshToken { get; set; }
+        public DbSet<ImportProductReport> ImportProductReports { get; set; }
+        public DbSet<ProductTier> ProductTiers { get; set; }
+        public DbSet<RequestExportProduct> RequestExportProducts { get; set; }
+        public DbSet<RequestExportDetail> RequestExportDetails { get; set; }
+        public DbSet<RequestImportProduct> RequestImportProducts { get; set; }
+        public DbSet<RequestImportDetail> RequestImportDetails { get; set; }
+        public DbSet<ClassifyProductReport> ClassifyProductReports { get; set; }
+        public DbSet<Tier> Tiers { get; set; }
+        public DbSet<RemoveProductQuantityReport> RemoveProductQuantityReports { get; set; }
 
 
         public DataContext(DbContextOptions options, IConfiguration configuration)

@@ -23,6 +23,9 @@ namespace Banana_E_Commerce_API.Entities
 
         public ICollection<ImportBill> ImportBills { get; set; }
         public ICollection<ProductExportBill> ProductExportBills { get; set; }
+        public ICollection<ImportProductReport> ImportProductReports { get; set; }
+        public ICollection<ClassifyProductReport> ClassifyProductReports { get; set; }
+        public ICollection<RemoveProductQuantityReport> RemoveProductQuantityReports { get; set; }
 
     }
 }

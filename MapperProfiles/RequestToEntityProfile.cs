@@ -40,6 +40,10 @@ namespace Banana_E_Commerce_API.MapperProfiles
 
             /** Product Image */
             CreateMap<CreateProductImageRequest, ProductImage>();
+
+            /** ProductTier */
+            CreateMap<CreateProductRequest, ProductTier>();
+
         }
     }
 }

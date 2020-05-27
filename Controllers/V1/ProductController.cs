@@ -50,9 +50,11 @@ namespace Banana_E_Commerce_API.Controllers.V1
         {
             var createdProductUserId = int.Parse(HttpContext.GetUserIdFromRequest());
             var productEntity = _mapper.Map<Product>(model);
+            var productTierEntity = _mapper.Map<ProductTier>(model);
 
             var result = await _productService.CreateAsync(
                 productEntity,
+                productTierEntity,
                 createdProductUserId,
                 model.Images,
                 _appSettings.Value.ProductImageDir,
@@ -100,7 +102,9 @@ namespace Banana_E_Commerce_API.Controllers.V1
 
         [AuthorizeRoles(RoleNameEnum.Admin)]
         [HttpPut(ApiRoutes.Product.Update)]
-        public async Task<IActionResult> Update([FromRoute] int productId, [FromBody] UpdateProductRequest updateModel)
+        public async Task<IActionResult> Update(
+            [FromRoute] int productId,
+            [FromBody] UpdateProductRequest updateModel)
         {
             var productEntity = await _productService.GetByIdAsync(productId);
 

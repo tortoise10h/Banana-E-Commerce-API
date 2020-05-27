@@ -6,6 +6,7 @@ using AutoMapper;
 using Banana_E_Commerce_API.Contracts.V1.ResponseModels.Product;
 using Banana_E_Commerce_API.Domains;
 using Banana_E_Commerce_API.Entities;
+using Banana_E_Commerce_API.Enums;
 using Banana_E_Commerce_API.Extensions;
 using Banana_E_Commerce_API.Helpers;
 using Microsoft.AspNetCore.Http;
@@ -17,6 +18,7 @@ namespace Banana_E_Commerce_API.Services
     {
         Task<CreateProductResult> CreateAsync(
             Product product,
+            ProductTier productTier,
             int createdProductUserId,
             IEnumerable<IFormFile> images,
             string productImageDir,
@@ -37,15 +39,21 @@ namespace Banana_E_Commerce_API.Services
         private readonly DataContext _context;
         private readonly IMapper _mapper;
         private readonly IProductImageService _productImageService;
+        private readonly IProductTierService _productTierService;
+        private readonly ITierService _tierService;
 
         public ProductService(
             DataContext context,
             IMapper mapper,
-            IProductImageService productImageService)
+            IProductImageService productImageService,
+            IProductTierService productTierService,
+            ITierService tierService)
         {
             _context = context;
             _mapper = mapper;
             _productImageService = productImageService;
+            _productTierService = productTierService;
+            _tierService = tierService;
         }
 
         public async Task<int> CountAllAsync(
@@ -62,6 +70,7 @@ namespace Banana_E_Commerce_API.Services
 
         public async Task<CreateProductResult> CreateAsync(
             Product product,
+            ProductTier productTier,
             int createdProductUserId,
             IEnumerable<IFormFile> images,
             string productImageDir,
@@ -112,17 +121,31 @@ namespace Banana_E_Commerce_API.Services
                     // only work if images are existed
                     if (images.Count() > 0)
                     {
-                        var createProductImageResult = await _productImageService.UploadMultipleProductImages(
-                            appRootDir,
-                            productImageDir,
-                            product.Id,
-                            images
-                        );
+                        var createProductImageResult = await _productImageService
+                            .UploadMultipleProductImages(
+                                appRootDir,
+                                productImageDir,
+                                product.Id,
+                                images
+                            );
 
                         if (createProductImageResult.IsSuccess == false)
                         {
                             transaction.Dispose();
                         }
+                    }
+
+                    /** Create product tier and set as tier 1 at default */
+                    var tier1 = await _tierService.GetFirstOrDefaultByTierOptionAsync(
+                        TierEnum.tier1
+                    );
+                    productTier.TierId = tier1.Id;
+                    productTier.ProductId = product.Id;
+                    var createProductTierResult = await _productTierService
+                        .CreateAsync(productTier);
+                    if (createProductTierResult.IsSuccess == false)
+                    {
+                        transaction.Dispose();
                     }
 
                     await transaction.CommitAsync();
@@ -156,6 +179,7 @@ namespace Banana_E_Commerce_API.Services
                 .Skip(skip)
                 .Take(pagination.PageSize)
                 .Include(x => x.ProductImages)
+                .Include(x => x.ProductTiers)
                 .ToListAsync();
         }
 
@@ -165,6 +189,7 @@ namespace Banana_E_Commerce_API.Services
                 .Where(x => x.Id == productId &&
                     x.IsDeleted == false)
                 .Include(x => x.ProductImages)
+                .Include(x => x.ProductTiers)
                 .FirstOrDefaultAsync();
         }
 
@@ -198,15 +223,15 @@ namespace Banana_E_Commerce_API.Services
                 queryable = queryable.Where(x => x.StorageId == filter.StorageId);
             }
 
-            if (filter?.FromPrice != null)
-            {
-                queryable = queryable.Where(x => x.SalePrice >= filter.FromPrice);
-            }
+            // if (filter?.FromPrice != null)
+            // {
+            //     queryable = queryable.Where(x => x.SalePrice >= filter.FromPrice);
+            // }
 
-            if (filter?.ToPrice != null && filter.ToPrice > 0)
-            {
-                queryable = queryable.Where(x => x.SalePrice <= filter.ToPrice);
-            }
+            // if (filter?.ToPrice != null && filter.ToPrice > 0)
+            // {
+            //     queryable = queryable.Where(x => x.SalePrice <= filter.ToPrice);
+            // }
             return queryable;
         }
     }
