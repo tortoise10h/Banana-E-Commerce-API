@@ -16,6 +16,10 @@ using Banana_E_Commerce_API.Entities;
 using Banana_E_Commerce_API.Contracts.V1.ResponseModels.ProductImage;
 using Banana_E_Commerce_API.Contracts.V1.ResponseModels.Tier;
 using Banana_E_Commerce_API.Contracts.V1.ResponseModels.ProductTier;
+using Banana_E_Commerce_API.Contracts.V1.ResponseModels.RequestImportProduct;
+using Banana_E_Commerce_API.Contracts.V1.ResponseModels.RequestImportDetail;
+using Banana_E_Commerce_API.Contracts.V1.ResponseModels.ImportBill;
+using Banana_E_Commerce_API.Contracts.V1.ResponseModels.ImportBillDetail;
 
 namespace Banana_E_Commerce_API.MapperProfiles
 {
@@ -29,6 +33,7 @@ namespace Banana_E_Commerce_API.MapperProfiles
             /** Product */
             CreateMap<Product, ProductResponse>();
             CreateMap<Product, ProductResponseOfCartDetail>();
+            CreateMap<Product, ProductResponseOfImportBillDetail>();
 
             /** Category */
             CreateMap<Category, CategoryResponse>();
@@ -72,6 +77,20 @@ namespace Banana_E_Commerce_API.MapperProfiles
             /** ProductTier */
             CreateMap<ProductTier, ProductTierResponse>();
             CreateMap<ProductTier, ProductTierResponseOfCartDetail>();
+            CreateMap<ProductTier, ProductTierResponseOfImportBillDetail>();
+            CreateMap<ProductTier, ProductTierResponseOfProduct>();
+
+            /** RequestImportProduct */
+            CreateMap<RequestImportProduct, RequestImportProductResponse>();
+
+            /** RequestImportDetail */
+            CreateMap<RequestImportDetail, RequestImportDetailResponse>();
+
+            /** ImportBill */
+            CreateMap<ImportBill, ImportBillResponse>();
+
+            /** ImportBillDetail */
+            CreateMap<ImportBillDetail, ImportBillDetailResponse>();
         }
     }
 }

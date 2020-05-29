@@ -8,6 +8,10 @@ using Banana_E_Commerce_API.Contracts.V1.RequestModels.Storage;
 using Banana_E_Commerce_API.Contracts.V1.RequestModels.Address;
 using Banana_E_Commerce_API.Entities;
 using Banana_E_Commerce_API.Contracts.V1.RequestModels.ProductImage;
+using Banana_E_Commerce_API.Contracts.V1.RequestModels.RequestImportProduct;
+using Banana_E_Commerce_API.Contracts.V1.RequestModels.RequestImportDetail;
+using Banana_E_Commerce_API.Contracts.V1.RequestModels.ImportBill;
+using Banana_E_Commerce_API.Contracts.V1.RequestModels.ImportBillDetail;
 
 namespace Banana_E_Commerce_API.MapperProfiles
 {
@@ -43,6 +47,19 @@ namespace Banana_E_Commerce_API.MapperProfiles
 
             /** ProductTier */
             CreateMap<CreateProductRequest, ProductTier>();
+
+            /** RequestImportDetail */
+            CreateMap<CreateRequestImportDetailRequest, RequestImportDetail>();
+            CreateMap<CreateRequestImportProductRequest, RequestImportDetail>();
+
+            /** RequestImportProduct */
+            CreateMap<UpdateRequestImportProductRequest, RequestImportProduct>();
+
+            /** ImportBill */
+            CreateMap<CreateImportBillRequest, ImportBill>();
+
+            /** ImportBillDetail */
+            CreateMap<CreateImportBillDetailRequest, ImportBillDetail>();
 
         }
     }

@@ -31,7 +31,6 @@ namespace Banana_E_Commerce_API.Services
             storage.CreatedAt = DateTime.UtcNow;
             storage.UpdatedAt = DateTime.UtcNow;
             storage.IsDeleted = false;
-            storage.CreatedBy = createdByAdmin.Id;
 
             await _context.Storages.AddAsync(storage);
             var created = await _context.SaveChangesAsync();

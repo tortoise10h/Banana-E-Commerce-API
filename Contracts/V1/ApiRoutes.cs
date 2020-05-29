@@ -82,5 +82,23 @@ namespace Banana_E_Commerce_API.Contracts.V1
             public const string Update = Base + "/productImages/{productImageId}";
             public const string Delete = Base + "/productImages/{productImageId}";
         }
+
+        public static class RequestImportProduct
+        {
+            public const string Create = Base + "/requestImportProducts";
+            public const string GetAll = Base + "/requestImportProducts";
+            public const string GetById = Base + "/requestImportProducts/{requestImportProductId}";
+            public const string Update = Base + "/requestImportProducts/{requestImportProductId}";
+            public const string Delete = Base + "/requestImportProducts/{requestImportProductId}";
+        }
+
+        public static class ImportBill
+        {
+            public const string Create = Base + "/importBills";
+            public const string GetAll = Base + "/importBills";
+            public const string GetById = Base + "/importBills/{importBillId}";
+            public const string Update = Base + "/importBills/{importBillId}";
+            public const string Delete = Base + "/importBills/{importBillId}";
+        }
     }
 }

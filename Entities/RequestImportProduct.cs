@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Banana_E_Commerce_API.Enums;
 
 namespace Banana_E_Commerce_API.Entities
 {
@@ -7,9 +8,9 @@ namespace Banana_E_Commerce_API.Entities
     {
         public int Id { get; set; }
         public int CreatedBy { get; set; }
+        public RequestImportProductStatus Status { get; set; }
         public DateTime CreatedAt { get; set; }
         public bool IsDeleted { get; set; }
-        public int OrderId { get; set; }
 
         public Admin Admin { get; set; }
         public ICollection<RequestImportDetail> RequestImportDetails { get; set; }

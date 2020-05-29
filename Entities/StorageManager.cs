@@ -14,13 +14,12 @@ namespace Banana_E_Commerce_API.Entities
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
         public bool IsDeleted { get; set; }
-
-        public Storage Storage { get; set; }
         public int StorageId { get; set; }
-
-        public User User { get; set; }
         public int UserId { get; set; }
 
+
+        public Storage Storage { get; set; }
+        public User User { get; set; }
         public ICollection<ImportBill> ImportBills { get; set; }
         public ICollection<ProductExportBill> ProductExportBills { get; set; }
         public ICollection<ImportProductReport> ImportProductReports { get; set; }
