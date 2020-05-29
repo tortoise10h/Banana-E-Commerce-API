@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Banana_E_Commerce_API.Migrations
 {
-    public partial class Category_Seed_Data : Migration
+    public partial class Categories_Seed : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -12,10 +12,10 @@ namespace Banana_E_Commerce_API.Migrations
                 columns: new[] { "Id", "CreatedAt", "CreatedBy", "IsDeleted", "Name", "UpdatedAt" },
                 values: new object[,]
                 {
-                    { 1, new DateTime(2020, 5, 28, 8, 1, 28, 269, DateTimeKind.Utc).AddTicks(8774), 1, false, "Trái Cây Việt", new DateTime(2020, 5, 28, 8, 1, 28, 269, DateTimeKind.Utc).AddTicks(9139) },
-                    { 2, new DateTime(2020, 5, 28, 8, 1, 28, 270, DateTimeKind.Utc).AddTicks(81), 2, false, "Trái Cây Nhập", new DateTime(2020, 5, 28, 8, 1, 28, 270, DateTimeKind.Utc).AddTicks(105) },
-                    { 3, new DateTime(2020, 5, 28, 8, 1, 28, 270, DateTimeKind.Utc).AddTicks(133), 3, false, "Trái Cây Sấy Khô", new DateTime(2020, 5, 28, 8, 1, 28, 270, DateTimeKind.Utc).AddTicks(134) },
-                    { 4, new DateTime(2020, 5, 28, 8, 1, 28, 270, DateTimeKind.Utc).AddTicks(137), 4, false, "Mứt Trái Cây>", new DateTime(2020, 5, 28, 8, 1, 28, 270, DateTimeKind.Utc).AddTicks(138) }
+                    { 1, new DateTime(2020, 5, 31, 8, 25, 0, 311, DateTimeKind.Utc).AddTicks(4812), 1, false, "Trái Cây Việt", new DateTime(2020, 5, 31, 8, 25, 0, 311, DateTimeKind.Utc).AddTicks(5235) },
+                    { 2, new DateTime(2020, 5, 31, 8, 25, 0, 311, DateTimeKind.Utc).AddTicks(6272), 2, false, "Trái Cây Nhập", new DateTime(2020, 5, 31, 8, 25, 0, 311, DateTimeKind.Utc).AddTicks(6302) },
+                    { 3, new DateTime(2020, 5, 31, 8, 25, 0, 311, DateTimeKind.Utc).AddTicks(6332), 3, false, "Trái Cây Sấy Khô", new DateTime(2020, 5, 31, 8, 25, 0, 311, DateTimeKind.Utc).AddTicks(6333) },
+                    { 4, new DateTime(2020, 5, 31, 8, 25, 0, 311, DateTimeKind.Utc).AddTicks(6335), 4, false, "Mứt Trái Cây>", new DateTime(2020, 5, 31, 8, 25, 0, 311, DateTimeKind.Utc).AddTicks(6337) }
                 });
 
             migrationBuilder.UpdateData(
@@ -23,35 +23,35 @@ namespace Banana_E_Commerce_API.Migrations
                 keyColumn: "Id",
                 keyValue: 1,
                 columns: new[] { "CreatedAt", "UpdatedAt" },
-                values: new object[] { new DateTime(2020, 5, 28, 8, 1, 28, 267, DateTimeKind.Utc).AddTicks(7733), new DateTime(2020, 5, 28, 8, 1, 28, 267, DateTimeKind.Utc).AddTicks(8219) });
+                values: new object[] { new DateTime(2020, 5, 31, 8, 25, 0, 309, DateTimeKind.Utc).AddTicks(4123), new DateTime(2020, 5, 31, 8, 25, 0, 309, DateTimeKind.Utc).AddTicks(4687) });
 
             migrationBuilder.UpdateData(
                 table: "Roles",
                 keyColumn: "Id",
                 keyValue: 2,
                 columns: new[] { "CreatedAt", "UpdatedAt" },
-                values: new object[] { new DateTime(2020, 5, 28, 8, 1, 28, 267, DateTimeKind.Utc).AddTicks(9042), new DateTime(2020, 5, 28, 8, 1, 28, 267, DateTimeKind.Utc).AddTicks(9060) });
+                values: new object[] { new DateTime(2020, 5, 31, 8, 25, 0, 309, DateTimeKind.Utc).AddTicks(5535), new DateTime(2020, 5, 31, 8, 25, 0, 309, DateTimeKind.Utc).AddTicks(5548) });
 
             migrationBuilder.UpdateData(
                 table: "Roles",
                 keyColumn: "Id",
                 keyValue: 3,
                 columns: new[] { "CreatedAt", "UpdatedAt" },
-                values: new object[] { new DateTime(2020, 5, 28, 8, 1, 28, 267, DateTimeKind.Utc).AddTicks(9102), new DateTime(2020, 5, 28, 8, 1, 28, 267, DateTimeKind.Utc).AddTicks(9104) });
+                values: new object[] { new DateTime(2020, 5, 31, 8, 25, 0, 309, DateTimeKind.Utc).AddTicks(5582), new DateTime(2020, 5, 31, 8, 25, 0, 309, DateTimeKind.Utc).AddTicks(5584) });
 
             migrationBuilder.UpdateData(
                 table: "Roles",
                 keyColumn: "Id",
                 keyValue: 4,
                 columns: new[] { "CreatedAt", "UpdatedAt" },
-                values: new object[] { new DateTime(2020, 5, 28, 8, 1, 28, 267, DateTimeKind.Utc).AddTicks(9106), new DateTime(2020, 5, 28, 8, 1, 28, 267, DateTimeKind.Utc).AddTicks(9107) });
+                values: new object[] { new DateTime(2020, 5, 31, 8, 25, 0, 309, DateTimeKind.Utc).AddTicks(5586), new DateTime(2020, 5, 31, 8, 25, 0, 309, DateTimeKind.Utc).AddTicks(5587) });
 
             migrationBuilder.UpdateData(
                 table: "Storages",
                 keyColumn: "Id",
                 keyValue: 1,
                 columns: new[] { "CreatedAt", "UpdatedAt" },
-                values: new object[] { new DateTime(2020, 5, 28, 8, 1, 28, 269, DateTimeKind.Utc).AddTicks(6130), new DateTime(2020, 5, 28, 8, 1, 28, 269, DateTimeKind.Utc).AddTicks(6542) });
+                values: new object[] { new DateTime(2020, 5, 31, 8, 25, 0, 311, DateTimeKind.Utc).AddTicks(1962), new DateTime(2020, 5, 31, 8, 25, 0, 311, DateTimeKind.Utc).AddTicks(2468) });
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -81,35 +81,35 @@ namespace Banana_E_Commerce_API.Migrations
                 keyColumn: "Id",
                 keyValue: 1,
                 columns: new[] { "CreatedAt", "UpdatedAt" },
-                values: new object[] { new DateTime(2020, 5, 28, 8, 0, 50, 485, DateTimeKind.Utc).AddTicks(2602), new DateTime(2020, 5, 28, 8, 0, 50, 485, DateTimeKind.Utc).AddTicks(3025) });
+                values: new object[] { new DateTime(2020, 5, 31, 8, 24, 10, 236, DateTimeKind.Utc).AddTicks(4891), new DateTime(2020, 5, 31, 8, 24, 10, 236, DateTimeKind.Utc).AddTicks(5381) });
 
             migrationBuilder.UpdateData(
                 table: "Roles",
                 keyColumn: "Id",
                 keyValue: 2,
                 columns: new[] { "CreatedAt", "UpdatedAt" },
-                values: new object[] { new DateTime(2020, 5, 28, 8, 0, 50, 485, DateTimeKind.Utc).AddTicks(3743), new DateTime(2020, 5, 28, 8, 0, 50, 485, DateTimeKind.Utc).AddTicks(3756) });
+                values: new object[] { new DateTime(2020, 5, 31, 8, 24, 10, 236, DateTimeKind.Utc).AddTicks(6169), new DateTime(2020, 5, 31, 8, 24, 10, 236, DateTimeKind.Utc).AddTicks(6186) });
 
             migrationBuilder.UpdateData(
                 table: "Roles",
                 keyColumn: "Id",
                 keyValue: 3,
                 columns: new[] { "CreatedAt", "UpdatedAt" },
-                values: new object[] { new DateTime(2020, 5, 28, 8, 0, 50, 485, DateTimeKind.Utc).AddTicks(3789), new DateTime(2020, 5, 28, 8, 0, 50, 485, DateTimeKind.Utc).AddTicks(3790) });
+                values: new object[] { new DateTime(2020, 5, 31, 8, 24, 10, 236, DateTimeKind.Utc).AddTicks(6224), new DateTime(2020, 5, 31, 8, 24, 10, 236, DateTimeKind.Utc).AddTicks(6226) });
 
             migrationBuilder.UpdateData(
                 table: "Roles",
                 keyColumn: "Id",
                 keyValue: 4,
                 columns: new[] { "CreatedAt", "UpdatedAt" },
-                values: new object[] { new DateTime(2020, 5, 28, 8, 0, 50, 485, DateTimeKind.Utc).AddTicks(3792), new DateTime(2020, 5, 28, 8, 0, 50, 485, DateTimeKind.Utc).AddTicks(3793) });
+                values: new object[] { new DateTime(2020, 5, 31, 8, 24, 10, 236, DateTimeKind.Utc).AddTicks(6228), new DateTime(2020, 5, 31, 8, 24, 10, 236, DateTimeKind.Utc).AddTicks(6229) });
 
             migrationBuilder.UpdateData(
                 table: "Storages",
                 keyColumn: "Id",
                 keyValue: 1,
                 columns: new[] { "CreatedAt", "UpdatedAt" },
-                values: new object[] { new DateTime(2020, 5, 28, 8, 0, 50, 486, DateTimeKind.Utc).AddTicks(9127), new DateTime(2020, 5, 28, 8, 0, 50, 486, DateTimeKind.Utc).AddTicks(9531) });
+                values: new object[] { new DateTime(2020, 5, 31, 8, 24, 10, 238, DateTimeKind.Utc).AddTicks(3249), new DateTime(2020, 5, 31, 8, 24, 10, 238, DateTimeKind.Utc).AddTicks(3676) });
         }
     }
 }

@@ -14,14 +14,6 @@ namespace Banana_E_Commerce_API
     {
         public static void Main(string[] args)
         {
-            // using (var context = new DataContext())
-            // {
-            //     var admin1 = context.Users.SingleOrDefault(u => u.Email == "tortoiseadmin@gmail.com");
-            //     if (admin1 != null)
-            //     {
-            //     }
-            // }
-
             CreateHostBuilder(args).Build().Run();
         }
 

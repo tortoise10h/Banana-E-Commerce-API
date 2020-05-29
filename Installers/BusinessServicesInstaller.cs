@@ -23,6 +23,11 @@ namespace Banana_E_Commerce_API.Installers
             services.AddScoped<IProductImageService, ProductImageService>();
             services.AddScoped<IProductTierService, ProductTierService>();
             services.AddScoped<ITierService, TierService>();
+            services.AddScoped<IRequestImportProductService, RequestImportProductService>();
+            services.AddScoped<IRequestImportDetailService, RequestImportDetailService>();
+            services.AddScoped<IImportBillService, ImportBillService>();
+            services.AddScoped<IUploadImageService, UploadImageService>();
+            services.AddScoped<IStorageManagerService, StorageManagerService>();
 
             services.AddSingleton<IUriService>(provider =>
             {

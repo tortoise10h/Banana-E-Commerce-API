@@ -62,7 +62,7 @@ namespace Banana_E_Commerce_API.Services
                 }
                 catch (System.Exception)
                 {
-
+                    transaction.Dispose();
                     return false;
                 }
             }

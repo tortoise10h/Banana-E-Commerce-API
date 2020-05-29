@@ -263,11 +263,11 @@ namespace Banana_E_Commerce_API.Extensions
                 .HasForeignKey(ibd => ibd.ImportBillId)
                 .OnDelete(DeleteBehavior.NoAction);
 
-            /** [Product] and [ImportBillDetail] */
-            modelBuilder.Entity<Product>()
-                .HasMany<ImportBillDetail>(p => p.ImportBillDetails)
-                .WithOne(ibd => ibd.Product)
-                .HasForeignKey(ibd => ibd.ProductId)
+            /** [ProductTier] and [ImportBillDetail] */
+            modelBuilder.Entity<ProductTier>()
+                .HasMany<ImportBillDetail>(pt => pt.ImportBillDetails)
+                .WithOne(ibd => ibd.ProductTier)
+                .HasForeignKey(ibd => ibd.ProductTierId)
                 .OnDelete(DeleteBehavior.NoAction);
 
 
@@ -461,11 +461,10 @@ namespace Banana_E_Commerce_API.Extensions
                         CreatedAt = DateTime.UtcNow,
                         UpdatedAt = DateTime.UtcNow,
                         IsDeleted = false,
-                        CreatedBy = 3
                     }
                 );
 
-            // /** Category Seed Data */
+            /** Category Seed Data */
             modelBuilder.Entity<Category>()
                 .HasData(
                     new Category
@@ -506,7 +505,7 @@ namespace Banana_E_Commerce_API.Extensions
                     }
                 );
 
-            // /** Product Seed Data */
+            /** Product Seed Data */
             modelBuilder.Entity<Product>()
                 .HasData(
                     new Product
@@ -879,7 +878,7 @@ namespace Banana_E_Commerce_API.Extensions
                     }
                 );
 
-            // /** Tier Seed Data */
+            /** Tier Seed Data */
             modelBuilder.Entity<Tier>()
                 .HasData(
                     new Tier
@@ -896,7 +895,7 @@ namespace Banana_E_Commerce_API.Extensions
                     }
                 );
 
-            // /** Product Tier Seed Data */
+            /** Product Tier Seed Data */
             modelBuilder.Entity<ProductTier>()
                 .HasData(
                     new ProductTier
@@ -918,7 +917,7 @@ namespace Banana_E_Commerce_API.Extensions
                     new ProductTier
                     {
                         Id = 2,
-                        ProductId = 1,
+                        ProductId = 2,
                         TierId = 1,
                         Quantity = 50,
                         PricePerKg = 110_000,
@@ -934,7 +933,7 @@ namespace Banana_E_Commerce_API.Extensions
                     new ProductTier
                     {
                         Id = 3,
-                        ProductId = 1,
+                        ProductId = 3,
                         TierId = 1,
                         Quantity = 62,
                         PricePerKg = 90_000,
@@ -950,7 +949,7 @@ namespace Banana_E_Commerce_API.Extensions
                     new ProductTier
                     {
                         Id = 4,
-                        ProductId = 1,
+                        ProductId = 4,
                         TierId = 1,
                         Quantity = 39,
                         PricePerKg = 130_000,
@@ -966,7 +965,7 @@ namespace Banana_E_Commerce_API.Extensions
                     new ProductTier
                     {
                         Id = 5,
-                        ProductId = 1,
+                        ProductId = 5,
                         TierId = 1,
                         Quantity = 50,
                         PricePerKg = 45_000,
@@ -982,7 +981,7 @@ namespace Banana_E_Commerce_API.Extensions
                     new ProductTier
                     {
                         Id = 6,
-                        ProductId = 1,
+                        ProductId = 6,
                         TierId = 1,
                         Quantity = 50,
                         PricePerKg = 80_000,
@@ -998,7 +997,7 @@ namespace Banana_E_Commerce_API.Extensions
                     new ProductTier
                     {
                         Id = 7,
-                        ProductId = 1,
+                        ProductId = 7,
                         TierId = 1,
                         Quantity = 50,
                         PricePerKg = 75_000,
@@ -1014,7 +1013,7 @@ namespace Banana_E_Commerce_API.Extensions
                     new ProductTier
                     {
                         Id = 8,
-                        ProductId = 1,
+                        ProductId = 8,
                         TierId = 1,
                         Quantity = 50,
                         PricePerKg = 65_000,
@@ -1030,7 +1029,7 @@ namespace Banana_E_Commerce_API.Extensions
                     new ProductTier
                     {
                         Id = 9,
-                        ProductId = 1,
+                        ProductId = 9,
                         TierId = 1,
                         Quantity = 50,
                         PricePerKg = 66_000,
@@ -1046,7 +1045,7 @@ namespace Banana_E_Commerce_API.Extensions
                     new ProductTier
                     {
                         Id = 10,
-                        ProductId = 1,
+                        ProductId = 10,
                         TierId = 1,
                         Quantity = 50,
                         PricePerKg = 58_000,
@@ -1062,7 +1061,7 @@ namespace Banana_E_Commerce_API.Extensions
                     new ProductTier
                     {
                         Id = 11,
-                        ProductId = 1,
+                        ProductId = 11,
                         TierId = 1,
                         Quantity = 50,
                         PricePerKg = 260_000,
@@ -1078,7 +1077,7 @@ namespace Banana_E_Commerce_API.Extensions
                     new ProductTier
                     {
                         Id = 12,
-                        ProductId = 1,
+                        ProductId = 12,
                         TierId = 1,
                         Quantity = 50,
                         PricePerKg = 70_000,
@@ -1094,7 +1093,7 @@ namespace Banana_E_Commerce_API.Extensions
                     new ProductTier
                     {
                         Id = 13,
-                        ProductId = 1,
+                        ProductId = 13,
                         TierId = 1,
                         Quantity = 50,
                         PricePerKg = 100_000,
@@ -1110,7 +1109,7 @@ namespace Banana_E_Commerce_API.Extensions
                     new ProductTier
                     {
                         Id = 14,
-                        ProductId = 1,
+                        ProductId = 14,
                         TierId = 1,
                         Quantity = 50,
                         PricePerKg = 620_000,
@@ -1126,7 +1125,7 @@ namespace Banana_E_Commerce_API.Extensions
                     new ProductTier
                     {
                         Id = 15,
-                        ProductId = 1,
+                        ProductId = 15,
                         TierId = 1,
                         Quantity = 50,
                         PricePerKg = 700_000,
@@ -1142,7 +1141,7 @@ namespace Banana_E_Commerce_API.Extensions
                     new ProductTier
                     {
                         Id = 16,
-                        ProductId = 1,
+                        ProductId = 16,
                         TierId = 1,
                         Quantity = 50,
                         PricePerKg = 400_000,
@@ -1158,7 +1157,7 @@ namespace Banana_E_Commerce_API.Extensions
                     new ProductTier
                     {
                         Id = 17,
-                        ProductId = 1,
+                        ProductId = 17,
                         TierId = 1,
                         Quantity = 50,
                         PricePerKg = 480_000,
@@ -1174,7 +1173,7 @@ namespace Banana_E_Commerce_API.Extensions
                     new ProductTier
                     {
                         Id = 18,
-                        ProductId = 1,
+                        ProductId = 18,
                         TierId = 1,
                         Quantity = 50,
                         PricePerKg = 330_000,
@@ -1190,7 +1189,7 @@ namespace Banana_E_Commerce_API.Extensions
                     new ProductTier
                     {
                         Id = 19,
-                        ProductId = 1,
+                        ProductId = 19,
                         TierId = 1,
                         Quantity = 50,
                         PricePerKg = 700_000,
@@ -1206,7 +1205,7 @@ namespace Banana_E_Commerce_API.Extensions
                     new ProductTier
                     {
                         Id = 20,
-                        ProductId = 1,
+                        ProductId = 20,
                         TierId = 1,
                         Quantity = 50,
                         PricePerKg = 400_000,
@@ -1222,7 +1221,7 @@ namespace Banana_E_Commerce_API.Extensions
                     new ProductTier
                     {
                         Id = 21,
-                        ProductId = 1,
+                        ProductId = 21,
                         TierId = 1,
                         Quantity = 50,
                         PricePerKg = 900_000,
@@ -1238,7 +1237,7 @@ namespace Banana_E_Commerce_API.Extensions
                     new ProductTier
                     {
                         Id = 22,
-                        ProductId = 1,
+                        ProductId = 22,
                         TierId = 1,
                         Quantity = 50,
                         PricePerKg = 230_000,
@@ -1254,7 +1253,7 @@ namespace Banana_E_Commerce_API.Extensions
                     new ProductTier
                     {
                         Id = 23,
-                        ProductId = 1,
+                        ProductId = 23,
                         TierId = 1,
                         Quantity = 50,
                         PricePerKg = 300_000,

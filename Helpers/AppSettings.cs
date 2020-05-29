@@ -8,5 +8,6 @@ namespace Banana_E_Commerce_API.Helpers
         public TimeSpan TokenLifeTime { get; set; }
         public string UploadDir { get; set; }
         public string ProductImageDir { get; set; }
+        public string ImportBillImageDir { get; set; }
     }
 }

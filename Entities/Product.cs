@@ -25,7 +25,6 @@ namespace Banana_E_Commerce_API.Entities
         public Storage Storage { get; set; }
         public ICollection<ProductImage> ProductImages { get; set; }
         public ICollection<ProductTier> ProductTiers { get; set; }
-        public ICollection<ImportBillDetail> ImportBillDetails { get; set; }
 
     }
 

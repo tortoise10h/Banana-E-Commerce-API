@@ -15,9 +15,6 @@ namespace Banana_E_Commerce_API.Entities
         public DateTime UpdatedAt { get; set; }
         public bool IsDeleted { get; set; }
 
-        public Admin User { get; set; }
-        public int CreatedBy { get; set; }
-
         public ICollection<Product> Products { get; set; }
         public ICollection<StorageManager> StorageManagers { get; set; }
         public ICollection<ImportBill> ImportBills { get; set; }

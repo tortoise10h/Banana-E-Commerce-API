@@ -11,10 +11,10 @@ namespace Banana_E_Commerce_API.Entities
         public DateTime UpdatedAt { get; set; }
         public bool IsDeleted { get; set; }
         public int ImportBillId { get; set; }
-        public int ProductId { get; set; }
+        public int ProductTierId { get; set; }
 
         public ImportBill ImportBill { get; set; }
-        public Product Product { get; set; }
+        public ProductTier ProductTier { get; set; }
 
     }
 }
