@@ -8,6 +8,6 @@ namespace Banana_E_Commerce_API.Contracts.V1.ResponseModels.CartDetailModels
         public int Id { get; set; }
         public double Quantity { get; set; }
         public int CartId { get; set; }
-        public ProductTierResponse ProductTier { get; set; }
+        public ProductTierResponseOfCartDetail ProductTier { get; set; }
     }
 }

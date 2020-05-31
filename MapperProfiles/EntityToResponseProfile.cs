@@ -15,6 +15,7 @@ using Banana_E_Commerce_API.Contracts.V1.ResponseModels.Address;
 using Banana_E_Commerce_API.Entities;
 using Banana_E_Commerce_API.Contracts.V1.ResponseModels.ProductImage;
 using Banana_E_Commerce_API.Contracts.V1.ResponseModels.Tier;
+using Banana_E_Commerce_API.Contracts.V1.ResponseModels.ProductTier;
 
 namespace Banana_E_Commerce_API.MapperProfiles
 {
@@ -22,35 +23,55 @@ namespace Banana_E_Commerce_API.MapperProfiles
     {
         public EntityToResponseProfile()
         {
+            /** User */
             CreateMap<User, UserResponse>();
 
+            /** Product */
             CreateMap<Product, ProductResponse>();
+            CreateMap<Product, ProductResponseOfCartDetail>();
 
+            /** Category */
             CreateMap<Category, CategoryResponse>();
 
+            /** Storage */
             CreateMap<Storage, StorageResponse>();
 
+            /** Admin */
             CreateMap<Admin, AdminResponse>();
 
+            /** Customer */
             CreateMap<Customer, CustomerResponse>();
 
+            /** Manager */
             CreateMap<Manager, ManagerResponse>();
 
+            /** StorageManager */
             CreateMap<StorageManager, StorageManagerResponse>();
 
+            /** Shipper */
             CreateMap<Shipper, ShipperResponse>();
 
+            /** Role */
             CreateMap<Role, RoleResponse>();
 
+            /** Cart */
             CreateMap<Cart, CartResponse>();
 
+            /** CartDetail */
             CreateMap<CartDetail, CartDetailResponse>();
 
+            /** Address */
             CreateMap<Address, AddressResponse>();
 
+            /** ProductImage */
             CreateMap<ProductImage, ProductImageResponse>();
 
+            /** Tier */
             CreateMap<Tier, TierResponse>();
+
+            /** ProductTier */
+            CreateMap<ProductTier, ProductTierResponse>();
+            CreateMap<ProductTier, ProductTierResponseOfCartDetail>();
         }
     }
 }

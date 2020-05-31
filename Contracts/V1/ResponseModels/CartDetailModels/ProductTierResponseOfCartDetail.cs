@@ -1,9 +1,8 @@
-using Banana_E_Commerce_API.Contracts.V1.ResponseModels.Product;
 using Banana_E_Commerce_API.Enums;
 
-namespace Banana_E_Commerce_API.Contracts.V1.ResponseModels.ProductTier
+namespace Banana_E_Commerce_API.Contracts.V1.ResponseModels.CartDetailModels
 {
-    public class ProductTierResponse
+    public class ProductTierResponseOfCartDetail
     {
         public int Id { get; set; }
         public int ProductId { get; set; }
@@ -14,6 +13,6 @@ namespace Banana_E_Commerce_API.Contracts.V1.ResponseModels.ProductTier
         public int DiscountPercentage { get; set; }
         public double AfterDiscountPrice { get; set; }
         public PriceCurrency PriceCurrency { get; set; }
-        public ProductResponse Product { get; set; }
+        public ProductResponseOfCartDetail Product { get; set; }
     }
 }

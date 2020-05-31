@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using Banana_E_Commerce_API.Contracts.V1.ResponseModels.CartDetailModels;
 using Banana_E_Commerce_API.Domains;
 using Banana_E_Commerce_API.Entities;
@@ -28,12 +29,15 @@ namespace Banana_E_Commerce_API.Services
 
     public class CartDetailService : ICartDetailService
     {
+        private readonly IMapper _mapper;
         private readonly DataContext _context;
 
         public CartDetailService(
-            DataContext context
+            DataContext context,
+            IMapper mapper
         )
         {
+            _mapper = mapper;
             _context = context;
         }
 
@@ -52,7 +56,7 @@ namespace Banana_E_Commerce_API.Services
                 return new AddToCartResult
                 {
                     IsSuccess = false,
-                    Errors = new[] { "Product is not existed" }
+                    Errors = new[] { "Sản phẩm này không tồn tại" }
                 };
             }
 
@@ -65,7 +69,7 @@ namespace Banana_E_Commerce_API.Services
                 return new AddToCartResult
                 {
                     IsSuccess = false,
-                    Errors = new[] { "Cart is not existed" }
+                    Errors = new[] { "Giỏ hàng của khách hàng không tồn tại" }
                 };
             }
 
@@ -75,7 +79,7 @@ namespace Banana_E_Commerce_API.Services
                 return new AddToCartResult
                 {
                     IsSuccess = false,
-                    Errors = new[] { "Product is not enough" }
+                    Errors = new[] { "Số lượng hiện tại của sản phẩm không đủ" }
                 };
             }
 
@@ -85,10 +89,18 @@ namespace Banana_E_Commerce_API.Services
             var handleAddExistedItemResult = await handleAddExistedItem(cartDetail, productTier);
             if (handleAddExistedItemResult != null)
             {
+                /** Get created cart detail again include full product information
+                * for FE to display in cart 
+                */
+                var detailAndFullProductInfo = await _context.CartDetails
+                    .Where(cd => cd.Id == handleAddExistedItemResult.Id)
+                    .Include(cd => cd.ProductTier)
+                        .ThenInclude(pt => pt.Product)
+                    .FirstOrDefaultAsync();
                 return new AddToCartResult
                 {
                     IsSuccess = true,
-                    CartDetail = handleAddExistedItemResult
+                    CartDetail = detailAndFullProductInfo
                 };
             }
 
@@ -101,14 +113,23 @@ namespace Banana_E_Commerce_API.Services
                 return new AddToCartResult
                 {
                     IsSuccess = false,
-                    Errors = new[] { "Add product to cart failed" }
+                    Errors = new[] { "Thêm sản phẩm vào giỏ thất bại" }
                 };
             }
+
+            /** Get created cart detail again include full product information
+             * for FE to display in cart 
+             */
+            var createdCartDetailAndProductInfo = await _context.CartDetails
+                .Where(cd => cd.Id == cartDetail.Id)
+                .Include(cd => cd.ProductTier)
+                    .ThenInclude(pt => pt.Product)
+                .FirstOrDefaultAsync();
 
             return new AddToCartResult
             {
                 IsSuccess = true,
-                CartDetail = cartDetail
+                CartDetail = createdCartDetailAndProductInfo
             };
         }
 
