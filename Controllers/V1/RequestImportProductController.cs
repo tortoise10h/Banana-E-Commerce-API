@@ -2,11 +2,13 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
 using Banana_E_Commerce_API.Contracts.V1;
+using Banana_E_Commerce_API.Contracts.V1.RequestModels.Queries;
 using Banana_E_Commerce_API.Contracts.V1.RequestModels.RequestImportDetail;
 using Banana_E_Commerce_API.Contracts.V1.RequestModels.RequestImportProduct;
 using Banana_E_Commerce_API.Contracts.V1.ResponseModels;
 using Banana_E_Commerce_API.Contracts.V1.ResponseModels.RequestImportProduct;
 using Banana_E_Commerce_API.CustomAttributes;
+using Banana_E_Commerce_API.Domains;
 using Banana_E_Commerce_API.Entities;
 using Banana_E_Commerce_API.Enums;
 using Banana_E_Commerce_API.Extensions;
@@ -74,6 +76,32 @@ namespace Banana_E_Commerce_API.Controllers.V1
 
             return Created(locationUri,
                 new Response<RequestImportProductResponse>(requestImportProductResponse));
+        }
+
+        [HttpGet(ApiRoutes.RequestImportProduct.GetAll)]
+        public async Task<IActionResult> GetAll(
+            [FromQuery] GetAllRequestImportProductsQuery filterModel,
+            [FromQuery] PaginationQuery paginModel)
+        {
+            var pagination = _mapper.Map<PaginationFilter>(paginModel);
+            var filter = _mapper.Map<GetAllRequestImportProductsFilter>(filterModel);
+            var requestImportProducts = await _requestImportProductService
+                .GetAllAsync(pagination, filter);
+            int totalRequestImportProducts = await _requestImportProductService
+                .CountAllAsync(pagination, filter);
+            var responseRequestImportProducts = _mapper
+                .Map<List<RequestImportProductResponse>>(requestImportProducts);
+
+            var paginationRequestImportProductsResponse = PaginationHelpers
+                .CreatePaginatedResponse(
+                    _uriService,
+                    pagination,
+                    responseRequestImportProducts,
+                    totalRequestImportProducts,
+                    ApiRoutes.RequestImportProduct.GetAll
+                );
+
+            return Ok(paginationRequestImportProductsResponse);
         }
 
         // [HttpPut(ApiRoutes.RequestImportProduct.Update)]
