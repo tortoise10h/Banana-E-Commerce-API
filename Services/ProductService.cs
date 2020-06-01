@@ -178,8 +178,9 @@ namespace Banana_E_Commerce_API.Services
             return await queryable
                 .Skip(skip)
                 .Take(pagination.PageSize)
-                .Include(x => x.ProductImages)
-                .Include(x => x.ProductTiers)
+                .Include(p => p.ProductImages)
+                .Include(p => p.ProductTiers)
+                    .ThenInclude(pt => pt.Tier)
                 .ToListAsync();
         }
 
