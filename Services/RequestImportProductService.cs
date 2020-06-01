@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Banana_E_Commerce_API.Contracts.V1.ResponseModels.RequestImportDetail;
 using Banana_E_Commerce_API.Contracts.V1.ResponseModels.RequestImportProduct;
+using Banana_E_Commerce_API.Domains;
 using Banana_E_Commerce_API.Entities;
 using Banana_E_Commerce_API.Enums;
 using Banana_E_Commerce_API.Helpers;
@@ -19,6 +20,12 @@ namespace Banana_E_Commerce_API.Services
         );
         Task<bool> UpdateAsync(RequestImportProduct requestImportProduct);
         Task<RequestImportProduct> GetByIdAsync(int requestImportProductId);
+        Task<IEnumerable<RequestImportProduct>> GetAllAsync(
+            PaginationFilter pagination,
+            GetAllRequestImportProductsFilter filter);
+        Task<int> CountAllAsync(
+            PaginationFilter pagination,
+            GetAllRequestImportProductsFilter filter);
     }
 
     public class RequestImportProductService : IRequestImportProductService
@@ -180,6 +187,49 @@ namespace Banana_E_Commerce_API.Services
             var updated = await _context.SaveChangesAsync();
 
             return updated > 0;
+        }
+
+        public async Task<IEnumerable<RequestImportProduct>> GetAllAsync(
+            PaginationFilter pagination,
+            GetAllRequestImportProductsFilter filter)
+        {
+            var queryable = _context.RequestImportProducts.AsQueryable();
+
+            queryable = AddFilterOnQuery(filter, queryable);
+
+            var skip = (pagination.PageNumber - 1) * pagination.PageSize;
+            return await queryable
+                .Skip(skip)
+                .Take(pagination.PageSize)
+                .Include(rip => rip.RequestImportDetails)
+                .Include(rip => rip.ImportBills)
+                    .ThenInclude(ib => ib.ImportBillDetails)
+                .ToListAsync();
+        }
+
+        public async Task<int> CountAllAsync(
+            PaginationFilter pagination,
+            GetAllRequestImportProductsFilter filter)
+        {
+            var queryable = _context.RequestImportProducts.AsQueryable();
+
+            queryable = AddFilterOnQuery(filter, queryable);
+            return await queryable.CountAsync();
+        }
+
+        private IQueryable<RequestImportProduct> AddFilterOnQuery(
+            GetAllRequestImportProductsFilter filter,
+            IQueryable<RequestImportProduct> queryable
+        )
+        {
+            queryable = queryable.Where(x => x.IsDeleted == false);
+
+            if (filter?.Status != null)
+            {
+                queryable = queryable.Where(x => x.Status == filter.Status);
+            }
+
+            return queryable;
         }
     }
 }
