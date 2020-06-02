@@ -95,7 +95,7 @@ namespace Banana_E_Commerce_API.Contracts.V1
             public const string GetAll = Base + "/requestImportProducts";
             public const string GetById = Base + "/requestImportProducts/{requestImportProductId}";
             public const string Update = Base + "/requestImportProducts/{requestImportProductId}";
-            public const string Delete = Base + "/requestImportProducts/{requestImportProductId}";
+            public const string Cancel = Base + "/requestImportProducts/{requestImportProductId}";
         }
 
         public static class ImportBill

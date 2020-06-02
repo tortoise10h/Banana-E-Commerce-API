@@ -51,48 +51,7 @@ namespace Banana_E_Commerce_API.Services
             string importBillImageDir,
             string rootDir)
         {
-            /** get storage manager to get id from him/her */
-            var storageManager = await _context.StorageManagers
-                .SingleOrDefaultAsync(sm => sm.UserId == requestedUserId);
-            if (storageManager == null)
-            {
-                return new CreateImportBillResult
-                {
-                    IsSuccess = false,
-                    Errors = new List<string> { "Thủ kho không tồn tại" }
-                };
-            }
-
-            /** Get storage to get Id - temporary handle for only one storage business */
-            var storage = await _context.Storages
-                .FirstOrDefaultAsync();
-
-            /** Prepare default data for import bill */
-            importBill.Currency = PriceCurrency.VND;
-            importBill.TotalAmount = CalculateTotalAmountInImportBillDetails(importBillDetails);
-            importBill.Code = Regex.Replace(
-                Convert.ToBase64String(Guid.NewGuid().ToByteArray()), "[/+=]", "");
-            importBill.CreatedAt = DateTime.UtcNow;
-            importBill.UpdatedAt = DateTime.UtcNow;
-            importBill.IsDeleted = false;
-            importBill.StorageId = storage.Id;
-            importBill.StorageManagerId = storageManager.Id;
-
-            /** Validate Import Bill Detail Products */
-            var importBillDetailValidationResult = await CheckValidImportBillDetail(
-                importBillDetails,
-                importBill.RequestImportProductId
-            );
-            if (importBillDetailValidationResult.IsSuccess == false)
-            {
-                return new CreateImportBillResult
-                {
-                    IsSuccess = false,
-                    Errors = importBillDetailValidationResult.Errors
-                };
-            }
-
-            /** Handle upload image and put image links to new ImportBill*/
+            /** Handle upload image to get image links for new ImportBill*/
             var uploadSupplierBillImageResult = await _uploadImageService
                 .UploadSingleImage(
                     rootDir,
@@ -106,10 +65,65 @@ namespace Banana_E_Commerce_API.Services
                     supplierBillImage
                 );
 
-            importBill.SupplierBillImageLocation = uploadSupplierBillImageResult?.ImageLocation;
-            importBill.StorageManagerBillImageLocation = uploadStorageManagerBillImageResult?.ImageLocation;
+            try
+            {
+                importBill = await PrepareImportBillInfo(
+                    importBill,
+                    requestedUserId,
+                    importBillDetails,
+                    uploadSupplierBillImageResult.ImageLocation,
+                    uploadStorageManagerBillImageResult.ImageLocation
+                );
+            }
+            catch (Exception e)
+            {
+                return new CreateImportBillResult
+                {
+                    IsSuccess = false,
+                    Errors = new List<string>()
+                    {
+                        e.Message.ToString()
+                    }
+                };
+            }
 
-            /** Save import bill and import bill detail */
+            /** Get request import product and its details to use to validate later */
+            var requestImportProduct = await _context.RequestImportProducts
+                .Where(rip => rip.Id == importBill.RequestImportProductId &&
+                    rip.Status == RequestImportProductStatus.Processing &&
+                    rip.IsDeleted == false)
+                .Include(rip => rip.RequestImportDetails)
+                .FirstOrDefaultAsync();
+
+            /** Validate valid RequestImportProduct of this ImportBill */
+            if (requestImportProduct == null)
+            {
+                return new CreateImportBillResult
+                {
+                    IsSuccess = false,
+                    Errors = new List<string>()
+                    {
+                        "Không được phép tạo hoá đơn nhập cho yêu cầu nhập hàng này nữa!"
+                    }
+                };
+            }
+
+            /** Validate Import Bill Detail Products */
+            var importBillDetailValidationResult = await CheckValidImportBillDetail(
+                importBillDetails,
+                requestImportProduct.RequestImportDetails,
+                importBill.RequestImportProductId
+            );
+            if (importBillDetailValidationResult.IsSuccess == false)
+            {
+                return new CreateImportBillResult
+                {
+                    IsSuccess = false,
+                    Errors = importBillDetailValidationResult.Errors
+                };
+            }
+
+            /** Save import bill and update related info */
             using (var transaction = _context.Database.BeginTransaction())
             {
                 try
@@ -123,26 +137,48 @@ namespace Banana_E_Commerce_API.Services
                         throw new Exception("Tạo hoá đơn nhập hàng bị lỗi, xin thử lại!");
                     }
 
-
                     /** Save Import Detail */
-                    // add the rest additional information to each item of import bill details
-                    importBillDetails = importBillDetails.Select(x =>
+                    try
                     {
-                        x.CreatedAt = DateTime.UtcNow;
-                        x.UpdatedAt = DateTime.UtcNow;
-                        x.IsDeleted = false;
-                        x.ImportBillId = importBill.Id;
-
-                        return x;
-                    }).ToList();
-
-                    await _context.ImportBillDetails.AddRangeAsync(importBillDetails);
-                    var importBillDetailsCreated = await _context.SaveChangesAsync();
-                    if (!(importBillDetailsCreated > 0))
+                        await SaveImportBillDetailsInCreateImportBill(
+                            importBill,
+                            importBillDetails
+                        );
+                    }
+                    catch (Exception e)
                     {
                         transaction.Dispose();
-                        throw new Exception("Tạo hoá đơn nhập hàng bị lỗi, xin thử lại!");
+                        throw new Exception(e.Message.ToString());
                     }
+
+                    /** Change status of RequestImportProduct to done if import enough */
+                    try
+                    {
+                        await ChangeStatusOfRequestImportProductToSucceededWhenImportEnough(
+                            importBill,
+                            requestImportProduct
+                        );
+                    }
+                    catch (Exception e)
+                    {
+                        transaction.Dispose();
+                        throw new Exception(e.Message.ToString());
+                    }
+
+                    /** Update quantity of imported product tiers  */
+                    try
+                    {
+                        await UpdateProductQuantityBaseOnImportBillDetail(
+                            importBillDetails
+                        );
+                    }
+                    catch (Exception e)
+                    {
+                        transaction.Dispose();
+                        throw new Exception(e.Message.ToString());
+                    }
+
+                    /** TODO: Update entry price of imported product */
 
                     await transaction.CommitAsync();
                 }
@@ -169,6 +205,117 @@ namespace Banana_E_Commerce_API.Services
 
         }
 
+        private async Task<ImportBill> PrepareImportBillInfo(
+            ImportBill importBill,
+            int requestedUserId,
+            IEnumerable<ImportBillDetail> importBillDetails,
+            string supplierBillImageLocation,
+            string storageManagerBillImageLocation
+        )
+        {
+            /** get storage manager to get id from him/her */
+            var storageManager = await _context.StorageManagers
+                .SingleOrDefaultAsync(sm => sm.UserId == requestedUserId);
+            if (storageManager == null)
+            {
+                throw new Exception("Thủ kho không tồn tại");
+            }
+
+            /** Get storage to get Id - temporary handle for only one storage business */
+            var storage = await _context.Storages
+                .FirstOrDefaultAsync();
+
+            /** Prepare default data for import bill */
+            importBill.Currency = PriceCurrency.VND;
+            importBill.TotalAmount = CalculateTotalAmountInImportBillDetails(importBillDetails);
+            importBill.Code = Regex.Replace(
+                Convert.ToBase64String(Guid.NewGuid().ToByteArray()), "[/+=]", "");
+            importBill.CreatedAt = DateTime.UtcNow;
+            importBill.UpdatedAt = DateTime.UtcNow;
+            importBill.IsDeleted = false;
+            importBill.StorageId = storage.Id;
+            importBill.StorageManagerId = storageManager.Id;
+            importBill.SupplierBillImageLocation = supplierBillImageLocation;
+            importBill.StorageManagerBillImageLocation = storageManagerBillImageLocation;
+
+            return importBill;
+        }
+
+        private async Task SaveImportBillDetailsInCreateImportBill(
+            ImportBill importBill,
+            IEnumerable<ImportBillDetail> importBillDetails)
+        {
+            importBillDetails = importBillDetails.Select(x =>
+                {
+                    x.CreatedAt = DateTime.UtcNow;
+                    x.UpdatedAt = DateTime.UtcNow;
+                    x.IsDeleted = false;
+                    x.ImportBillId = importBill.Id;
+
+                    return x;
+                }).ToList();
+
+            await _context.ImportBillDetails.AddRangeAsync(importBillDetails);
+            var importBillDetailsCreated = await _context.SaveChangesAsync();
+            if (!(importBillDetailsCreated > 0))
+            {
+                throw new Exception("Tạo hoá đơn nhập hàng bị lỗi, xin thử lại!");
+            }
+        }
+
+        public async Task ChangeStatusOfRequestImportProductToSucceededWhenImportEnough(
+            ImportBill importBill,
+            RequestImportProduct requestImportProduct
+        )
+        {
+            bool isRequestImportProductDone = await IsImportProductEnough(
+                        importBill.RequestImportProductId,
+                        requestImportProduct.RequestImportDetails);
+            if (isRequestImportProductDone)
+            {
+                requestImportProduct.Status = RequestImportProductStatus.Succeeded;
+                _context.RequestImportProducts.Update(requestImportProduct);
+                var requestImportProductUpdated = await _context.SaveChangesAsync();
+
+                if (!(requestImportProductUpdated > 0))
+                {
+                    throw new Exception("Tạo hoá đơn nhập hàng bị lỗi, xin thử lại!");
+                }
+            }
+        }
+
+        public async Task UpdateProductQuantityBaseOnImportBillDetail(
+            IEnumerable<ImportBillDetail> importBillDetails
+        )
+        {
+            /** Get product tier Id from import bill details to query all
+             * product tiers need to update quantity */
+            var productTierIdsInImportDetails = importBillDetails
+                .Select(ibd => ibd.ProductTierId);
+
+            var productTiers = await _context.ProductTiers
+                .Where(pt => productTierIdsInImportDetails.Contains(pt.Id))
+                .ToListAsync();
+
+            productTiers = productTiers.Select(pt =>
+            {
+                /** Get this product tier in import bill details 
+                 * to get the quantity to add */
+                var productTierInImportDetail = importBillDetails
+                    .SingleOrDefault(ibd => ibd.ProductTierId == pt.Id);
+                pt.Quantity += productTierInImportDetail.Quantity;
+
+                return pt;
+            }).ToList();
+
+            _context.ProductTiers.UpdateRange(productTiers);
+            var updated = await _context.SaveChangesAsync();
+            if (!(updated > 0))
+            {
+                throw new Exception("Tạo hoá đơn nhập hàng bị lỗi, xin thử lại!");
+            }
+        }
+
         private double CalculateTotalAmountInImportBillDetails(
             IEnumerable<ImportBillDetail> importBillDetails
         )
@@ -185,14 +332,10 @@ namespace Banana_E_Commerce_API.Services
 
         private async Task<CheckValidImportBillDetailsResult> CheckValidImportBillDetail(
             IEnumerable<ImportBillDetail> importBillDetails,
+            IEnumerable<RequestImportDetail> requestImportDetails,
             int requestImportProductId
         )
         {
-            var requestImportDetails = await _context.RequestImportDetails
-                .Where(rid => rid.RequestImportProductId == requestImportProductId)
-                .ToListAsync();
-
-
             var checkProductsMatchResult = AreProductTiersInImportBillDetailMatchedRequestImportDetails(
                 importBillDetails,
                 requestImportDetails
@@ -421,6 +564,79 @@ namespace Banana_E_Commerce_API.Services
             * request import detail are existed
             */
             return newImportBillDetails.Count() == productTiers.Count();
+        }
+
+        private async Task<bool> IsImportProductEnough(
+            int requestImportProductId,
+            IEnumerable<RequestImportDetail> requestImportDetails
+        )
+        {
+            bool isSuccess = true;
+
+            var importBills = await _context.ImportBills
+                .Where(ib => ib.RequestImportProductId == requestImportProductId)
+                .Include(ib => ib.ImportBillDetails)
+                .ToListAsync();
+
+            /** Clone requestImportDetail to the new list with quantity  = 0 to calculate the 
+            * quantity of all import detail and compare that it's enough or not */
+            List<RequestImportDetail> baseEmptyRequestImportDetails = requestImportDetails
+                .Select(rid =>
+                    new RequestImportDetail
+                    {
+                        RequestImportProductId = rid.RequestImportProductId,
+                        ProductTierId = rid.ProductTierId,
+                        Quantity = rid.Quantity
+                    }
+                )
+                .ToList();
+
+            baseEmptyRequestImportDetails = baseEmptyRequestImportDetails
+                 .Select(x =>
+                 {
+                     x.Quantity = 0;
+                     return x;
+                 })
+                 .ToList();
+
+            if (importBills.Count() > 0)
+            {
+                /** Loop through all import bill details and 
+                 * add them in baseEmptyRequestImportDetails */
+                foreach (var importBill in importBills)
+                {
+                    foreach (var importDetail in importBill.ImportBillDetails)
+                    {
+                        baseEmptyRequestImportDetails = baseEmptyRequestImportDetails.Select(x =>
+                        {
+                            if (x.ProductTierId == importDetail.ProductTierId)
+                            {
+                                x.Quantity += importDetail.Quantity;
+                            }
+
+                            return x;
+                        })
+                        .ToList();
+                    }
+                }
+            }
+
+            /** Loop through all item of baseEmptyRequestImportDetails
+             * which were update after add all quantity from import bill details
+             * then compare each item to the RequestImportDetail 
+             * if all of them are equal that's mean the request import product is done */
+            foreach (var request in baseEmptyRequestImportDetails)
+            {
+                var originalRequestItem = requestImportDetails
+                    .SingleOrDefault(x => x.ProductTierId == request.ProductTierId);
+
+                if (request.Quantity != originalRequestItem.Quantity)
+                {
+                    isSuccess = false;
+                }
+            }
+
+            return isSuccess;
         }
 
         public async Task<ImportBill> GetByIdAsync(int importBillId)

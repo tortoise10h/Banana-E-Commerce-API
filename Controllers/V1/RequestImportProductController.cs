@@ -104,20 +104,49 @@ namespace Banana_E_Commerce_API.Controllers.V1
             return Ok(paginationRequestImportProductsResponse);
         }
 
-        // [HttpPut(ApiRoutes.RequestImportProduct.Update)]
-        // public async Task<IActionResult> Update(
-        //     [FromRoute] int requestImportProductId,
-        //     [FromBody] UpdateRequestImportProductRequest updateModel
-        // )
-        // {
-        //     var requestImportProduct = await _requestImportProductService
-        //         .GetByIdAsync(requestImportProductId);
-        //     if (requestImportProduct == null)
-        //     {
-        //         return NotFound();
-        //     }
+        [HttpGet(ApiRoutes.RequestImportProduct.GetById)]
+        public async Task<IActionResult> GetById(
+            [FromRoute] int requestImportProductId
+        )
+        {
+            var requestImportProduct = await _requestImportProductService
+                .GetByIdAsync(requestImportProductId);
+            if (requestImportProduct == null)
+            {
+                return NotFound();
+            }
 
-        //     var isUdpate
-        // }
+            var requestImportProductResponse = _mapper
+                .Map<RequestImportProductResponse>(requestImportProduct);
+
+            return Ok(new Response<RequestImportProductResponse>(requestImportProductResponse));
+        }
+
+        [AuthorizeRoles(RoleNameEnum.Admin)]
+        [HttpDelete(ApiRoutes.RequestImportProduct.Cancel)]
+        public async Task<IActionResult> CancelRequest(
+            [FromRoute] int requestImportProductId
+        )
+        {
+            var requestImportProduct = await _requestImportProductService
+                .GetByIdAsync(requestImportProductId);
+            if (requestImportProduct == null)
+            {
+                return NotFound();
+            }
+
+            var cancelResult = await _requestImportProductService
+                .CancelRequestAsync(requestImportProduct);
+
+            if (cancelResult.IsSuccess == false)
+            {
+                return BadRequest(cancelResult.Errors);
+            }
+
+            var requestImportProductResponse = _mapper.Map<RequestImportProductResponse>(
+                requestImportProduct);
+
+            return Ok(new Response<RequestImportProductResponse>(requestImportProductResponse));
+        }
     }
 }

@@ -26,6 +26,8 @@ namespace Banana_E_Commerce_API.Services
         Task<int> CountAllAsync(
             PaginationFilter pagination,
             GetAllRequestImportProductsFilter filter);
+        Task<CancelRequestImportProductResult> CancelRequestAsync(
+            RequestImportProduct requestImportProduct);
     }
 
     public class RequestImportProductService : IRequestImportProductService
@@ -178,7 +180,18 @@ namespace Banana_E_Commerce_API.Services
         public async Task<RequestImportProduct> GetByIdAsync(int requestImportProductId)
         {
             return await _context.RequestImportProducts
-                .SingleOrDefaultAsync(x => x.Id == requestImportProductId);
+                .Where(x => x.Id == requestImportProductId &&
+                    x.IsDeleted == false)
+                .Include(rip => rip.RequestImportDetails)
+                    .ThenInclude(rid => rid.ProductTier)
+                        .ThenInclude(pt => pt.Product)
+                            .ThenInclude(p => p.ProductImages)
+                .Include(rip => rip.ImportBills)
+                    .ThenInclude(ib => ib.ImportBillDetails)
+                      .ThenInclude(rid => rid.ProductTier)
+                        .ThenInclude(pt => pt.Product)
+                            .ThenInclude(p => p.ProductImages)
+                .FirstOrDefaultAsync();
         }
 
         public async Task<bool> UpdateAsync(RequestImportProduct requestImportProduct)
@@ -230,12 +243,40 @@ namespace Banana_E_Commerce_API.Services
         {
             queryable = queryable.Where(x => x.IsDeleted == false);
 
-            if (filter?.Status != null)
+            if (filter?.Status != null && filter?.Status != 0)
             {
                 queryable = queryable.Where(x => x.Status == filter.Status);
             }
 
             return queryable;
+        }
+
+        public async Task<CancelRequestImportProductResult> CancelRequestAsync(
+            RequestImportProduct requestImportProduct)
+        {
+            /** Only cancel a request when its status is processing */
+            if (requestImportProduct.Status != RequestImportProductStatus.Processing)
+            {
+                return new CancelRequestImportProductResult
+                {
+                    IsSuccess = false,
+                    Errors = new List<string>()
+                    {
+                        "Chỉ được phép huỷ yêu cầu nhập hàng đang trong quá trình xử lý (Processing)"
+                    }
+                };
+            }
+
+            requestImportProduct.Status = RequestImportProductStatus.Canceled;
+
+            _context.RequestImportProducts
+                .Update(requestImportProduct);
+            var updated = await _context.SaveChangesAsync();
+
+            return new CancelRequestImportProductResult
+            {
+                IsSuccess = true
+            };
         }
     }
 }

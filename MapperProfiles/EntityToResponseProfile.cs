@@ -34,6 +34,7 @@ namespace Banana_E_Commerce_API.MapperProfiles
             CreateMap<Product, ProductResponse>();
             CreateMap<Product, ProductResponseOfCartDetail>();
             CreateMap<Product, ProductResponseOfImportBillDetail>();
+            CreateMap<Product, ProductResponseOfRequestImportDetail>();
 
             /** Category */
             CreateMap<Category, CategoryResponse>();
@@ -79,6 +80,7 @@ namespace Banana_E_Commerce_API.MapperProfiles
             CreateMap<ProductTier, ProductTierResponseOfCartDetail>();
             CreateMap<ProductTier, ProductTierResponseOfImportBillDetail>();
             CreateMap<ProductTier, ProductTierResponseOfProduct>();
+            CreateMap<ProductTier, ProductTierResponseOfRequestImportDetail>();
 
             /** RequestImportProduct */
             CreateMap<RequestImportProduct, RequestImportProductResponse>();
