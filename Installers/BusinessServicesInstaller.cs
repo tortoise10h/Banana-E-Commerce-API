@@ -28,6 +28,7 @@ namespace Banana_E_Commerce_API.Installers
             services.AddScoped<IImportBillService, ImportBillService>();
             services.AddScoped<IUploadImageService, UploadImageService>();
             services.AddScoped<IStorageManagerService, StorageManagerService>();
+            services.AddScoped<IProductFavorService, ProductFavorService>();
 
             services.AddSingleton<IUriService>(provider =>
             {
