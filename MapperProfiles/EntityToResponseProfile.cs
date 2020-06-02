@@ -20,6 +20,7 @@ using Banana_E_Commerce_API.Contracts.V1.ResponseModels.RequestImportProduct;
 using Banana_E_Commerce_API.Contracts.V1.ResponseModels.RequestImportDetail;
 using Banana_E_Commerce_API.Contracts.V1.ResponseModels.ImportBill;
 using Banana_E_Commerce_API.Contracts.V1.ResponseModels.ImportBillDetail;
+using Banana_E_Commerce_API.Contracts.V1.ResponseModels.ProductFavor;
 
 namespace Banana_E_Commerce_API.MapperProfiles
 {
@@ -35,6 +36,7 @@ namespace Banana_E_Commerce_API.MapperProfiles
             CreateMap<Product, ProductResponseOfCartDetail>();
             CreateMap<Product, ProductResponseOfImportBillDetail>();
             CreateMap<Product, ProductResponseOfRequestImportDetail>();
+            CreateMap<Product, ProductResponseOfProductFavor>();
 
             /** Category */
             CreateMap<Category, CategoryResponse>();
@@ -81,6 +83,10 @@ namespace Banana_E_Commerce_API.MapperProfiles
             CreateMap<ProductTier, ProductTierResponseOfImportBillDetail>();
             CreateMap<ProductTier, ProductTierResponseOfProduct>();
             CreateMap<ProductTier, ProductTierResponseOfRequestImportDetail>();
+            CreateMap<ProductTier, ProductTierResponseOfProductFavor>();
+
+            /** ProductFavor */
+            CreateMap<ProductFavorite, ProductFavorResponse>();
 
             /** RequestImportProduct */
             CreateMap<RequestImportProduct, RequestImportProductResponse>();

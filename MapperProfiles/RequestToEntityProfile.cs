@@ -3,7 +3,6 @@ using Banana_E_Commerce_API.Contracts.V1.RequestModels.Auth;
 using Banana_E_Commerce_API.Contracts.V1.RequestModels.CartDetail;
 using Banana_E_Commerce_API.Contracts.V1.RequestModels.Category;
 using Banana_E_Commerce_API.Contracts.V1.RequestModels.Product;
-using Banana_E_Commerce_API.Contracts.V1.RequestModels.Queries;
 using Banana_E_Commerce_API.Contracts.V1.RequestModels.Storage;
 using Banana_E_Commerce_API.Contracts.V1.RequestModels.Address;
 using Banana_E_Commerce_API.Contracts.V1.RequestModels.Users;
@@ -14,6 +13,7 @@ using Banana_E_Commerce_API.Contracts.V1.RequestModels.RequestImportDetail;
 using Banana_E_Commerce_API.Contracts.V1.RequestModels.ImportBill;
 using Banana_E_Commerce_API.Contracts.V1.RequestModels.ImportBillDetail;
 using Banana_E_Commerce_API.Contracts.V1.RequestModels.Customer;
+using Banana_E_Commerce_API.Contracts.V1.RequestModels.ProductFavor;
 
 namespace Banana_E_Commerce_API.MapperProfiles
 {
@@ -68,6 +68,9 @@ namespace Banana_E_Commerce_API.MapperProfiles
 
             //** Customer **/
             CreateMap<UpdateCustomerInfoRequest, Customer>();
+
+            //** ProductFavor **/
+            CreateMap<CreateProductFavorRequest, ProductFavorite>();
         }
     }
 }

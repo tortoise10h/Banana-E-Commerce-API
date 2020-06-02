@@ -69,8 +69,12 @@ namespace Banana_E_Commerce_API.Services
 
         public async Task<UpdateCustomerInfoResult> UpdateAsync(Customer customer, int userId)
         {
-            var customerPhone = await _context.Customers.SingleOrDefaultAsync(c => c.Phone == customer.Phone);
-            if(customerPhone != null)
+            var currentPhone = await _context.Customers
+                .SingleOrDefaultAsync(c => c.Phone == customer.Phone && c.UserId == userId);
+
+            var newPhone = await _context.Customers.SingleOrDefaultAsync(c => c.Phone == customer.Phone);
+
+            if (currentPhone == null && newPhone != null)
             {
                 return new UpdateCustomerInfoResult
                 {
@@ -78,8 +82,9 @@ namespace Banana_E_Commerce_API.Services
                     Errors = new[] { $"The phone number {customer.Phone} is already existed" }
                 };
             }
+            
             var adminPhone = await _context.Admins.SingleOrDefaultAsync(a => a.Phone == customer.Phone);
-            if(adminPhone != null)
+            if (adminPhone != null)
             {
                 return new UpdateCustomerInfoResult
                 {
@@ -89,7 +94,7 @@ namespace Banana_E_Commerce_API.Services
             }
 
             var storageManagerPhone = await _context.StorageManagers.SingleOrDefaultAsync(s => s.Phone == customer.Phone);
-            if(storageManagerPhone != null)
+            if (storageManagerPhone != null)
             {
                 return new UpdateCustomerInfoResult
                 {
