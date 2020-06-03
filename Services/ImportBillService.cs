@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Banana_E_Commerce_API.Contracts.V1.ResponseModels.ImportBill;
+using Banana_E_Commerce_API.Domains;
 using Banana_E_Commerce_API.Entities;
 using Banana_E_Commerce_API.Enums;
 using Banana_E_Commerce_API.Helpers;
@@ -26,6 +27,12 @@ namespace Banana_E_Commerce_API.Services
         Task<ImportBill> GetByIdAsync(
             int importBillId
         );
+        Task<IEnumerable<ImportBill>> GetAllAsync(
+            PaginationFilter pagination,
+            GetAllImportBillsFilter filter);
+        Task<int> CountAllAsync(
+            PaginationFilter pagination,
+            GetAllImportBillsFilter filter);
     }
 
     public class ImportBillService : IImportBillService
@@ -642,12 +649,98 @@ namespace Banana_E_Commerce_API.Services
         public async Task<ImportBill> GetByIdAsync(int importBillId)
         {
             return await _context.ImportBills
-                .Where(ib => ib.Id == importBillId)
+                .Where(ib => ib.Id == importBillId &&
+                    ib.IsDeleted == false)
                 .Include(ib => ib.StorageManager)
                 .Include(ib => ib.ImportBillDetails)
                     .ThenInclude(ibd => ibd.ProductTier)
                         .ThenInclude(pt => pt.Product)
+                            .ThenInclude(p => p.ProductImages)
                 .FirstOrDefaultAsync();
+        }
+
+        public async Task<IEnumerable<ImportBill>> GetAllAsync(
+            PaginationFilter pagination,
+            GetAllImportBillsFilter filter)
+        {
+            var queryable = _context.ImportBills.AsQueryable();
+
+            queryable = AddFilterOnQuery(filter, queryable);
+
+            var skip = (pagination.PageNumber - 1) * pagination.PageSize;
+            return await queryable
+                .Skip(skip)
+                .Take(pagination.PageSize)
+                .Include(ib => ib.StorageManager)
+                .Include(ib => ib.ImportBillDetails)
+                    .ThenInclude(ibd => ibd.ProductTier)
+                        .ThenInclude(pt => pt.Product)
+                            .ThenInclude(p => p.ProductImages)
+                .ToListAsync();
+        }
+
+        public async Task<int> CountAllAsync(
+            PaginationFilter pagination,
+            GetAllImportBillsFilter filter)
+        {
+            var queryable = _context.ImportBills.AsQueryable();
+
+            queryable = AddFilterOnQuery(filter, queryable);
+            return await queryable.CountAsync();
+        }
+
+        private IQueryable<ImportBill> AddFilterOnQuery(
+            GetAllImportBillsFilter filter,
+            IQueryable<ImportBill> queryable
+        )
+        {
+            queryable = queryable.Where(x => x.IsDeleted == false);
+
+            // filter by code
+            if (!string.IsNullOrEmpty(filter?.Code))
+            {
+                queryable = queryable.Where(x => x.Code.Contains(filter.Code));
+            }
+
+            // filter by total amount
+            if (filter?.FromAmount != null)
+            {
+                queryable = queryable.Where(x => x.TotalAmount >= filter.FromAmount);
+            }
+            if (filter?.ToAmount != null && filter.ToAmount > 0)
+            {
+                queryable = queryable.Where(x => x.TotalAmount <= filter.ToAmount);
+            }
+
+            // filter by CreatedAt date
+            // if (filter?.FromCreatedDate != null)
+            // {
+            //     queryable = queryable.Where(x => x.CreatedAt >= filter.FromCreatedDate);
+            // }
+            // if (filter?.ToCreatedDate != null)
+            // {
+            //     queryable = queryable.Where(x => x.CreatedAt <= filter.ToCreatedDate);
+            // }
+
+            // filter by RequestImportProductId
+            if (filter?.RequestImportProductId != null && filter?.RequestImportProductId != 0)
+            {
+                queryable = queryable.Where(x => x.RequestImportProductId == filter.RequestImportProductId);
+            }
+
+            // filter by StorageManagerId
+            if (filter?.StorageManagerId != null && filter?.StorageManagerId != 0)
+            {
+                queryable = queryable.Where(x => x.StorageManagerId == filter.StorageManagerId);
+            }
+
+            // filter by StorageId
+            if (filter?.StorageId != null && filter?.StorageId != 0)
+            {
+                queryable = queryable.Where(x => x.StorageId == filter.StorageId);
+            }
+
+            return queryable;
         }
     }
 }

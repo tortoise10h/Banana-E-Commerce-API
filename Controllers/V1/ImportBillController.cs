@@ -4,9 +4,11 @@ using AutoMapper;
 using Banana_E_Commerce_API.Contracts.V1;
 using Banana_E_Commerce_API.Contracts.V1.RequestModels.ImportBill;
 using Banana_E_Commerce_API.Contracts.V1.RequestModels.ImportBillDetail;
+using Banana_E_Commerce_API.Contracts.V1.RequestModels.Queries;
 using Banana_E_Commerce_API.Contracts.V1.ResponseModels;
 using Banana_E_Commerce_API.Contracts.V1.ResponseModels.ImportBill;
 using Banana_E_Commerce_API.CustomAttributes;
+using Banana_E_Commerce_API.Domains;
 using Banana_E_Commerce_API.Entities;
 using Banana_E_Commerce_API.Enums;
 using Banana_E_Commerce_API.Extensions;
@@ -18,7 +20,7 @@ using Microsoft.Extensions.Options;
 
 namespace Banana_E_Commerce_API.Controllers.V1
 {
-    [AuthorizeRoles(RoleNameEnum.StorageManager)]
+    [AuthorizeRoles(RoleNameEnum.StorageManager, RoleNameEnum.Admin)]
     public class ImportBillController : ControllerBase
     {
         private readonly IImportBillService _importBillService;
@@ -42,10 +44,11 @@ namespace Banana_E_Commerce_API.Controllers.V1
             _env = env;
         }
 
+        [AuthorizeRoles(RoleNameEnum.StorageManager)]
         [HttpPost(ApiRoutes.ImportBill.Create)]
         public async Task<IActionResult> Create(
-            [FromForm] CreateImportBillRequest createModel
-        )
+                    [FromForm] CreateImportBillRequest createModel
+                )
         {
             var requestedUserId = int.Parse(HttpContext.GetUserIdFromRequest());
             ImportBill importBillEntity = new ImportBill
@@ -80,6 +83,52 @@ namespace Banana_E_Commerce_API.Controllers.V1
 
             return Created(locationUri,
                 new Response<ImportBillResponse>(importBillResponse));
+        }
+
+        [HttpGet(ApiRoutes.ImportBill.GetAll)]
+        public async Task<IActionResult> GetAll(
+            [FromQuery] GetAllImportBillsQuery filterModel,
+            [FromQuery] PaginationQuery paginModel
+        )
+        {
+            var pagination = _mapper.Map<PaginationFilter>(paginModel);
+            var filter = _mapper.Map<GetAllImportBillsFilter>(filterModel);
+            var importBills = await _importBillService
+                .GetAllAsync(pagination, filter);
+            int totalRequestImportProducts = await _importBillService
+                .CountAllAsync(pagination, filter);
+            var responseImportBills = _mapper
+                .Map<List<ImportBillResponse>>(importBills);
+
+            var paginationImportBillsResponse = PaginationHelpers
+                .CreatePaginatedResponse(
+                    _uriService,
+                    pagination,
+                    responseImportBills,
+                    totalRequestImportProducts,
+                    ApiRoutes.RequestImportProduct.GetAll
+                );
+
+            return Ok(paginationImportBillsResponse);
+        }
+
+        [HttpGet(ApiRoutes.ImportBill.GetById)]
+        public async Task<IActionResult> GetById(
+            [FromRoute] int importBillId
+        )
+        {
+            var importBill = await _importBillService
+                .GetByIdAsync(importBillId);
+            if (importBill == null)
+            {
+                return NotFound();
+            }
+
+            var importBillResponse = _mapper
+                .Map<ImportBillResponse>(importBill);
+
+            return Ok(new Response<ImportBillResponse>(
+                importBillResponse));
         }
     }
 }

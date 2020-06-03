@@ -15,6 +15,7 @@ namespace Banana_E_Commerce_API.MapperProfiles
             CreateMap<GetAllUsersQuery, GetAllUserFilter>();
             CreateMap<GetAllAddressesQuery, GetAllAddressesFilter>();
             CreateMap<GetAllRequestImportProductsQuery, GetAllRequestImportProductsFilter>();
+            CreateMap<GetAllImportBillsQuery, GetAllImportBillsFilter>();
         }
     }
 }
