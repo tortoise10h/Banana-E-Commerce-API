@@ -76,7 +76,8 @@ namespace Banana_E_Commerce_API.Services
             string productImageDir,
             string appRootDir)
         {
-            var createdAdmin = await _context.Admins.SingleOrDefaultAsync(x => x.UserId == createdProductUserId);
+            var createdAdmin = await _context.Admins
+                .SingleOrDefaultAsync(x => x.UserId == createdProductUserId);
 
             product.CreatedBy = createdAdmin.Id;
             product.CreatedAt = DateTime.UtcNow;
@@ -84,7 +85,8 @@ namespace Banana_E_Commerce_API.Services
             product.IsDeleted = false;
 
             /** Check exist storage */
-            var existedStorage = await _context.Storages.SingleOrDefaultAsync(s => s.Id == product.StorageId);
+            var existedStorage = await _context.Storages
+                .SingleOrDefaultAsync(s => s.Id == product.StorageId);
             if (existedStorage == null)
             {
                 return new CreateProductResult
@@ -95,7 +97,8 @@ namespace Banana_E_Commerce_API.Services
             }
 
             /** Check exist category */
-            var existedCategory = await _context.Categories.SingleOrDefaultAsync(c => c.Id == product.CategoryId);
+            var existedCategory = await _context.Categories
+                .SingleOrDefaultAsync(c => c.Id == product.CategoryId);
             if (existedCategory == null)
             {
                 return new CreateProductResult

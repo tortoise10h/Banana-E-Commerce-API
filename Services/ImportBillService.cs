@@ -33,6 +33,12 @@ namespace Banana_E_Commerce_API.Services
         Task<int> CountAllAsync(
             PaginationFilter pagination,
             GetAllImportBillsFilter filter);
+        double CalculatePriceByWeightedAverageMethod(
+            double oldQuantity,
+            double oldPrice,
+            double newQuantity,
+            double newPrice
+        );
     }
 
     public class ImportBillService : IImportBillService
@@ -186,7 +192,7 @@ namespace Banana_E_Commerce_API.Services
                     /** Update quantity of imported product tiers  */
                     try
                     {
-                        await UpdateProductQuantityBaseOnImportBillDetail(
+                        await UpdateImportedProductTiersAfterImport(
                             importBillDetails
                         );
                     }
@@ -196,7 +202,18 @@ namespace Banana_E_Commerce_API.Services
                         throw new Exception(e.Message.ToString());
                     }
 
-                    /** TODO: Update entry price of imported product */
+                    /** Update entry price of imported product */
+                    try
+                    {
+                        await UpdateProductEntryPriceBaseOnImportBillDetail(
+                            importBillDetails
+                        );
+                    }
+                    catch (Exception e)
+                    {
+                        transaction.Dispose();
+                        throw new Exception(e.Message.ToString());
+                    }
 
                     await transaction.CommitAsync();
                 }
@@ -302,7 +319,7 @@ namespace Banana_E_Commerce_API.Services
             }
         }
 
-        public async Task UpdateProductQuantityBaseOnImportBillDetail(
+        public async Task UpdateImportedProductTiersAfterImport(
             IEnumerable<ImportBillDetail> importBillDetails
         )
         {
@@ -310,15 +327,22 @@ namespace Banana_E_Commerce_API.Services
              * product tiers need to update quantity */
             var productTierIdsInImportDetails = importBillDetails
                 .Select(ibd => ibd.ProductTierId);
-
             var productTiers = await _context.ProductTiers
                 .Where(pt => productTierIdsInImportDetails.Contains(pt.Id))
+                .Include(pt => pt.Product)
                 .ToListAsync();
 
+            /** Calculate new price of imported product tiers */
+            CalculateNewProductTiersPriceAfterImport(
+                importBillDetails,
+                productTiers
+            );
+
+            /** Update new quantity, this block of code has to be run after
+             * CalculateNewProductTiersPriceAfterImport method to make sure
+             * calculate new price using "weighted average" correct */
             productTiers = productTiers.Select(pt =>
             {
-                /** Get this product tier in import bill details 
-                 * to get the quantity to add */
                 var productTierInImportDetail = importBillDetails
                     .SingleOrDefault(ibd => ibd.ProductTierId == pt.Id);
                 pt.Quantity += productTierInImportDetail.Quantity;
@@ -326,7 +350,104 @@ namespace Banana_E_Commerce_API.Services
                 return pt;
             }).ToList();
 
+            /** Update sale price after PricePerKg was changed 
+             * this block of code has to be run after 
+             * CalculateNewProductTiersPriceAfterImport method to make sure it correct
+            */
+            UpdateImportedProductTiersSalePrice(
+                productTiers
+            );
+
             _context.ProductTiers.UpdateRange(productTiers);
+            var updated = await _context.SaveChangesAsync();
+            if (!(updated > 0))
+            {
+                throw new Exception("Tạo hoá đơn nhập hàng bị lỗi, xin thử lại!");
+            }
+        }
+
+        private void CalculateNewProductTiersPriceAfterImport(
+            IEnumerable<ImportBillDetail> importBillDetails,
+            IEnumerable<ProductTier> productTiers
+        )
+        {
+            foreach (var importDetail in importBillDetails)
+            {
+                var productTierToCalculate = productTiers.SingleOrDefault(
+                    pt => pt.Id == importDetail.ProductTierId
+                );
+
+                /** Calculate new price before apply "weighted average" by using
+                 * proportion between the old pricePerKg, old entry price and the new entry price */
+                double predictedPrice = (importDetail.Price * productTierToCalculate.PricePerKg) / productTierToCalculate.Product.EntryPrice;
+
+                double newPrice = CalculatePriceByWeightedAverageMethod(
+                    productTierToCalculate.Quantity,
+                    productTierToCalculate.PricePerKg,
+                    importDetail.Quantity,
+                    predictedPrice
+                );
+
+                // use Math.Floor to get the beautiful price
+                productTierToCalculate.PricePerKg = Math.Floor(newPrice);
+            }
+        }
+
+        public double CalculatePriceByWeightedAverageMethod(
+            double oldQuantity,
+            double oldPrice,
+            double newQuantity,
+            double newPrice)
+        {
+            return ((oldQuantity * oldPrice) + (newQuantity * newPrice)) / (oldQuantity + newQuantity);
+        }
+
+        public void UpdateImportedProductTiersSalePrice(
+            IEnumerable<ProductTier> priceUpdatedProductTiers
+        )
+        {
+            foreach (var productTier in priceUpdatedProductTiers)
+            {
+                double newSalePrice = Math.Floor(productTier.PricePerKg * productTier.KgSale);
+                double discountAmount = ((newSalePrice * productTier.DiscountPercentage) / 100);
+                double newAfterDiscountPrice = newSalePrice - discountAmount;
+
+                productTier.SalePrice = newSalePrice;
+                productTier.AfterDiscountPrice = Math.Floor(newAfterDiscountPrice);
+            }
+        }
+
+        public async Task UpdateProductEntryPriceBaseOnImportBillDetail(
+            IEnumerable<ImportBillDetail> importBillDetails
+        )
+        {
+            /** Get product tier Id from import bill details to have list produc tier id
+             * and use that list to query products need to update */
+            // get product tiers list
+            var productTierIdsInImportDetails = importBillDetails
+                .Select(ibd => ibd.ProductTierId);
+            var productTiers = await _context.ProductTiers
+                .Where(pt => productTierIdsInImportDetails.Contains(pt.Id))
+                .Include(pt => pt.Product)
+                .ToListAsync();
+
+            // update new entry price for product
+            productTiers = productTiers.Select(pt =>
+            {
+                var productTierInImportDetail = importBillDetails.SingleOrDefault(
+                    x => x.ProductTierId == pt.Id
+                );
+
+                pt.Product.EntryPrice = productTierInImportDetail.Price;
+
+                return pt;
+            })
+            .ToList();
+
+            // get new products list to update
+            var products = productTiers.Select(pt => pt.Product);
+
+            _context.Products.UpdateRange(products);
             var updated = await _context.SaveChangesAsync();
             if (!(updated > 0))
             {
