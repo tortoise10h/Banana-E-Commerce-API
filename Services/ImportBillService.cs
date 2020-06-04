@@ -71,6 +71,17 @@ namespace Banana_E_Commerce_API.Services
                     importBillImageDir,
                     supplierBillImage
                 );
+            if (uploadStorageManagerBillImageResult.IsSuccess == false ||
+                uploadStorageManagerBillImageResult.IsSuccess == false)
+            {
+                return new CreateImportBillResult
+                {
+                    IsSuccess = false,
+                    Errors = uploadSupplierBillImageResult.Errors.Count() > 0
+                        ? uploadSupplierBillImageResult.Errors
+                        : uploadStorageManagerBillImageResult.Errors
+                };
+            }
 
             try
             {
