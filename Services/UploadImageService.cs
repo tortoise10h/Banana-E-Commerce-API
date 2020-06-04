@@ -23,13 +23,26 @@ namespace Banana_E_Commerce_API.Services
             string categoryDir,
             IFormFile image)
         {
+            if (image == null)
+            {
+                return new UploadSingleImageResult
+                {
+                    IsSuccess = false,
+                    Errors = new List<string>()
+                    {
+                        "Không tìm thấy hình ảnh để upload"
+                    }
+                };
+            }
+
             bool isUploadSuccess = true;
             List<string> errors = new List<string>();
+            string categoryDirFullPath = appRootDir + categoryDir;
 
             /** Check available category dir */
-            if (!Directory.Exists(categoryDir))
+            if (!Directory.Exists(categoryDirFullPath))
             {
-                Directory.CreateDirectory(categoryDir);
+                Directory.CreateDirectory(categoryDirFullPath);
             }
 
             /** Create custom file name and file path */
