@@ -16,10 +16,8 @@ namespace Banana_E_Commerce_API.Contracts.V1.RequestModels.Product
         public int CategoryId { get; set; }
         public int StorageId { get; set; }
         public double PricePerKg { get; set; }
-        public double SalePrice { get; set; }
         public double KgSale { get; set; }
         public int DiscountPercentage { get; set; }
-        public double AfterDiscountPrice { get; set; }
         public IEnumerable<IFormFile> Images { get; set; }
 
     }

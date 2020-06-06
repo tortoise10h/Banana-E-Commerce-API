@@ -32,6 +32,11 @@ namespace Banana_E_Commerce_API.Services
             PaginationFilter pagination,
             GetAllProductsFilter filter = null
         );
+
+        double CalculateAfterDiscountPrice(
+            double originalPrice,
+            int discountPercentage
+        );
     }
 
     public class ProductService : IProductService
@@ -56,6 +61,14 @@ namespace Banana_E_Commerce_API.Services
             _tierService = tierService;
         }
 
+        public double CalculateAfterDiscountPrice(double originalPrice, int discountPercentage)
+        {
+            double discountPrice = (originalPrice * discountPercentage) / 100;
+            double afterDiscountPrice = Math.Floor(originalPrice - discountPrice);
+
+            return afterDiscountPrice;
+        }
+
         public async Task<int> CountAllAsync(
             PaginationFilter pagination,
             GetAllProductsFilter filter = null
@@ -76,35 +89,16 @@ namespace Banana_E_Commerce_API.Services
             string productImageDir,
             string appRootDir)
         {
-            var createdAdmin = await _context.Admins
-                .SingleOrDefaultAsync(x => x.UserId == createdProductUserId);
-
-            product.CreatedBy = createdAdmin.Id;
-            product.CreatedAt = DateTime.UtcNow;
-            product.UpdatedAt = DateTime.UtcNow;
-            product.IsDeleted = false;
-
-            /** Check exist storage */
-            var existedStorage = await _context.Storages
-                .SingleOrDefaultAsync(s => s.Id == product.StorageId);
-            if (existedStorage == null)
+            var prepareProductInfoResult = await PrepareNewProductInfo(
+                product,
+                createdProductUserId
+            );
+            if (prepareProductInfoResult.IsSuccess == false)
             {
                 return new CreateProductResult
                 {
                     IsSuccess = false,
-                    Errors = new[] { "Storage is not existed" }
-                };
-            }
-
-            /** Check exist category */
-            var existedCategory = await _context.Categories
-                .SingleOrDefaultAsync(c => c.Id == product.CategoryId);
-            if (existedCategory == null)
-            {
-                return new CreateProductResult
-                {
-                    IsSuccess = false,
-                    Errors = new[] { "Category of product is not existed" }
+                    Errors = prepareProductInfoResult.Errors
                 };
             }
 
@@ -118,47 +112,43 @@ namespace Banana_E_Commerce_API.Services
                     if (!(created > 0))
                     {
                         transaction.Dispose();
+                        throw new Exception("Có lỗi khi tạo sản phẩm mới, vui lòng thử lại");
                     }
 
                     /** Create Images of product */
                     // only work if images are existed
-                    if (images.Count() > 0)
-                    {
-                        var createProductImageResult = await _productImageService
-                            .UploadMultipleProductImages(
-                                appRootDir,
-                                productImageDir,
-                                product.Id,
-                                images
-                            );
-
-                        if (createProductImageResult.IsSuccess == false)
-                        {
-                            transaction.Dispose();
-                        }
-                    }
-
-                    /** Create product tier and set as tier 1 at default */
-                    var tier1 = await _tierService.GetFirstOrDefaultByTierOptionAsync(
-                        TierEnum.tier1
+                    bool isUploadImageSuccess = await UploadImagesWhenCreateProduct(
+                        images,
+                        appRootDir,
+                        productImageDir,
+                        product.Id
                     );
-                    productTier.TierId = tier1.Id;
-                    productTier.ProductId = product.Id;
-                    var createProductTierResult = await _productTierService
-                        .CreateAsync(productTier);
-                    if (createProductTierResult.IsSuccess == false)
+                    if (isUploadImageSuccess == false)
                     {
                         transaction.Dispose();
+                        throw new Exception("Có lỗi khi tạo sản phẩm mới, vui lòng thử lại");
+                    }
+
+                    /** Create product tiers */
+                    bool isCreatedProductTiersSuccess = await CreateProductTiersWhenCreateNewProduct(
+                        productTier,
+                        product.Id
+                    );
+
+                    if (!isCreatedProductTiersSuccess)
+                    {
+                        transaction.Dispose();
+                        throw new Exception("Có lỗi khi tạo sản phẩm mới, vui lòng thử lại");
                     }
 
                     await transaction.CommitAsync();
                 }
-                catch (System.Exception)
+                catch (Exception e)
                 {
                     return new CreateProductResult
                     {
                         IsSuccess = false,
-                        Errors = new[] { "Created product error, please try again" }
+                        Errors = new[] { e.Message.ToString() }
                     };
                 }
             }
@@ -167,6 +157,131 @@ namespace Banana_E_Commerce_API.Services
             {
                 IsSuccess = true
             };
+        }
+
+        private async Task<PrepareProductInfoResult> PrepareNewProductInfo(
+            Product product,
+            int createdProductUserId
+        )
+        {
+            var createdAdmin = await _context.Admins
+                .SingleOrDefaultAsync(x => x.UserId == createdProductUserId);
+
+            product.CreatedBy = createdAdmin.Id;
+            product.CreatedAt = DateTime.UtcNow;
+            product.UpdatedAt = DateTime.UtcNow;
+            product.IsDeleted = false;
+
+            /** Check exist storage */
+            var existedStorage = await _context.Storages
+                .SingleOrDefaultAsync(s => s.Id == product.StorageId);
+            if (existedStorage == null)
+            {
+                return new PrepareProductInfoResult
+                {
+                    IsSuccess = false,
+                    Errors = new List<string>()
+                    { "Kho nhập hàng không tồn tại" }
+                };
+            }
+
+            /** Check exist category */
+            var existedCategory = await _context.Categories
+                .SingleOrDefaultAsync(c => c.Id == product.CategoryId);
+            if (existedCategory == null)
+            {
+                return new PrepareProductInfoResult
+                {
+                    IsSuccess = false,
+                    Errors = new List<string>()
+                    { "Danh mục sản phẩm không tồn tại" }
+                };
+            }
+
+            return new PrepareProductInfoResult
+            {
+                IsSuccess = true,
+                Product = product
+            };
+        }
+
+        private async Task<bool> UploadImagesWhenCreateProduct(
+            IEnumerable<IFormFile> images,
+            string appRootDir,
+            string productImageDir,
+            int productId
+        )
+        {
+            if (images != null && images.Count() > 0)
+            {
+                var createProductImageResult = await _productImageService
+                    .UploadMultipleProductImages(
+                        appRootDir,
+                        productImageDir,
+                        productId,
+                        images
+                    );
+
+                return createProductImageResult.IsSuccess;
+            }
+
+            return true;
+        }
+
+        private async Task<bool> CreateProductTiersWhenCreateNewProduct(
+            ProductTier productTier1,
+            int productId
+        )
+        {
+            /** Get tiers */
+            var tier1AndTier2 = await _context.Tiers
+                .Where(t => t.TierOption == TierEnum.tier1 ||
+                    t.TierOption == TierEnum.tier2)
+                .ToListAsync();
+            var tier1 = tier1AndTier2.SingleOrDefault(t => t.TierOption == TierEnum.tier1);
+            var tier2 = tier1AndTier2.SingleOrDefault(t => t.TierOption == TierEnum.tier2);
+
+            /** Prepare product tier info */
+            // prepare tier 1 info
+            productTier1.IsDeleted = false;
+            productTier1.CreatedAt = DateTime.UtcNow;
+            productTier1.UpdatedAt = DateTime.UtcNow;
+            productTier1.TierId = tier1.Id;
+            productTier1.ProductId = productId;
+            productTier1.SalePrice = Math.Floor(productTier1.PricePerKg * productTier1.KgSale);
+            productTier1.AfterDiscountPrice = CalculateAfterDiscountPrice(
+                productTier1.SalePrice,
+                productTier1.DiscountPercentage
+            );
+
+            // Create product tier 2 too
+            // but the new product tier 2 will has quantity 0 
+            ProductTier productTier2 = new ProductTier
+            {
+                ProductId = productId,
+                TierId = tier2.Id,
+                Quantity = 0,
+                PricePerKg = productTier1.PricePerKg,
+                SalePrice = productTier1.SalePrice,
+                KgSale = productTier1.KgSale,
+                DiscountPercentage = productTier1.DiscountPercentage,
+                AfterDiscountPrice = productTier1.AfterDiscountPrice,
+                PriceCurrency = productTier1.PriceCurrency,
+                CreatedAt = DateTime.UtcNow,
+                UpdatedAt = DateTime.UtcNow,
+                IsDeleted = false
+            };
+
+            await _context.AddRangeAsync(
+                new List<ProductTier>()
+                {
+                    productTier1,
+                    productTier2
+                }
+            );
+            var created = await _context.SaveChangesAsync();
+
+            return created > 0;
         }
 
         public async Task<IEnumerable<Product>> GetAllAsync(
