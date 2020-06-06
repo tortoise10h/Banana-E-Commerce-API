@@ -9,6 +9,7 @@ namespace Banana_E_Commerce_API.Contracts.V1.ResponseModels.RequestImportDetail
         public int RequestImportProductId { get; set; }
         public int ProductTierId { get; set; }
         public double Quantity { get; set; }
+        public double QuantityLeft { get; set; }
         public ProductTierResponseOfRequestImportDetail ProductTier { get; set; }
     }
 }

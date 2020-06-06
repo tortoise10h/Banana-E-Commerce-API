@@ -215,6 +215,22 @@ namespace Banana_E_Commerce_API.Services
                         throw new Exception(e.Message.ToString());
                     }
 
+                    /** Update quantity left of request import details */
+                    try
+                    {
+                        await UpdateQuantityLeftOfRequestImportDetail(
+                            requestImportProduct.RequestImportDetails,
+                            importBillDetails
+                        );
+                    }
+                    catch (Exception e)
+                    {
+                        transaction.Dispose();
+                        throw new Exception(e.Message.ToString());
+                    }
+
+
+
                     await transaction.CommitAsync();
                 }
                 catch (Exception e)
@@ -448,6 +464,27 @@ namespace Banana_E_Commerce_API.Services
             var products = productTiers.Select(pt => pt.Product);
 
             _context.Products.UpdateRange(products);
+            var updated = await _context.SaveChangesAsync();
+            if (!(updated > 0))
+            {
+                throw new Exception("Tạo hoá đơn nhập hàng bị lỗi, xin thử lại!");
+            }
+        }
+
+        private async Task UpdateQuantityLeftOfRequestImportDetail(
+            IEnumerable<RequestImportDetail> requestImportDetails,
+            IEnumerable<ImportBillDetail> importBillDetails
+        )
+        {
+            List<RequestImportDetail> updatedRequestImportDetails = new List<RequestImportDetail>();
+            foreach (var importDetail in importBillDetails)
+            {
+                var updatedRequestDetail = requestImportDetails
+                    .SingleOrDefault(rid => rid.ProductTierId == importDetail.ProductTierId);
+                updatedRequestDetail.QuantityLeft = updatedRequestDetail.Quantity - importDetail.Quantity;
+            }
+
+            _context.RequestImportDetails.UpdateRange(requestImportDetails);
             var updated = await _context.SaveChangesAsync();
             if (!(updated > 0))
             {

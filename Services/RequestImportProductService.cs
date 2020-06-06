@@ -186,11 +186,6 @@ namespace Banana_E_Commerce_API.Services
                     .ThenInclude(rid => rid.ProductTier)
                         .ThenInclude(pt => pt.Product)
                             .ThenInclude(p => p.ProductImages)
-                .Include(rip => rip.ImportBills)
-                    .ThenInclude(ib => ib.ImportBillDetails)
-                      .ThenInclude(rid => rid.ProductTier)
-                        .ThenInclude(pt => pt.Product)
-                            .ThenInclude(p => p.ProductImages)
                 .FirstOrDefaultAsync();
         }
 
@@ -216,11 +211,6 @@ namespace Banana_E_Commerce_API.Services
                 .Take(pagination.PageSize)
                 .Include(rip => rip.RequestImportDetails)
                     .ThenInclude(rid => rid.ProductTier)
-                        .ThenInclude(pt => pt.Product)
-                            .ThenInclude(p => p.ProductImages)
-                .Include(rip => rip.ImportBills)
-                    .ThenInclude(ib => ib.ImportBillDetails)
-                      .ThenInclude(rid => rid.ProductTier)
                         .ThenInclude(pt => pt.Product)
                             .ThenInclude(p => p.ProductImages)
                 .ToListAsync();
