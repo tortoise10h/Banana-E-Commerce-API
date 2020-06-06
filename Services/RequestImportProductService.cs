@@ -73,8 +73,15 @@ namespace Banana_E_Commerce_API.Services
 
                     /** Create request import details */
                     // add created RequestImportProduct's Id to each request import detail
-                    requestImportDetails
-                        .Select(x => x.RequestImportProductId = requestImportProduct.Id)
+                    // set the QuantityLeft = the request Quantity because the request is new
+                    requestImportDetails = requestImportDetails
+                        .Select(x =>
+                        {
+                            x.RequestImportProductId = requestImportProduct.Id;
+                            x.QuantityLeft = x.Quantity;
+
+                            return x;
+                        })
                         .ToList();
 
                     // make sure all product tier in request import detail are existed

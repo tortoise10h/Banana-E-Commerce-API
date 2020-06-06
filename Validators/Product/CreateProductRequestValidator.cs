@@ -27,11 +27,6 @@ namespace Banana_E_Commerce_API.Validators.Product
                 .NotNull()
                 .GreaterThanOrEqualTo(0);
 
-            // Sale Price
-            RuleFor(x => x.SalePrice)
-                .NotNull()
-                .GreaterThanOrEqualTo(0);
-
             // Price Currency
             RuleFor(x => x.PriceCurrency)
                 .IsInEnum()
@@ -66,10 +61,6 @@ namespace Banana_E_Commerce_API.Validators.Product
                 .NotNull()
                 .GreaterThanOrEqualTo(0);
 
-            // SalePrice
-            RuleFor(x => x.SalePrice)
-                .NotNull()
-                .GreaterThanOrEqualTo(0);
 
             // KgSale
             RuleFor(x => x.KgSale)
