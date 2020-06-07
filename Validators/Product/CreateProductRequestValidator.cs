@@ -61,7 +61,6 @@ namespace Banana_E_Commerce_API.Validators.Product
                 .NotNull()
                 .GreaterThanOrEqualTo(0);
 
-
             // KgSale
             RuleFor(x => x.KgSale)
                 .NotNull()

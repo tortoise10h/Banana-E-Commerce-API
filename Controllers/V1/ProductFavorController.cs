@@ -27,7 +27,7 @@ namespace Banana_E_Commerce_API.Controllers.V1
         private readonly IUriService _uriService;
         private readonly IMapper _mapper;
 
-         public ProductFavorController(
+        public ProductFavorController(
             IProductFavorService productfavorservice,
             IUriService uriService,
             IMapper mapper,
@@ -46,7 +46,8 @@ namespace Banana_E_Commerce_API.Controllers.V1
             var productFavorEntity = _mapper.Map<ProductFavorite>(createModel);
             var createdCustomerId = int.Parse(HttpContext.GetUserIdFromRequest());
 
-            var isCreateSuccess = await _productFavorService.CreateAsync(productFavorEntity, createdCustomerId);
+            var isCreateSuccess = await _productFavorService
+                .CreateAsync(productFavorEntity, createdCustomerId);
 
             if (!isCreateSuccess.IsSuccess)
             {
@@ -102,6 +103,20 @@ namespace Banana_E_Commerce_API.Controllers.V1
             }
 
             var isDeleted = await _productFavorService.DeleteAsync(productFavorId);
+            if (isDeleted)
+            {
+                return NoContent();
+            }
+
+            return NotFound();
+        }
+
+        [HttpDelete(ApiRoutes.ProductFavor.DeleteAll)]
+        public async Task<IActionResult> DeleteAll()
+        {
+            var requestedUserId = int.Parse(HttpContext.GetUserIdFromRequest());
+            var isDeleted = await _productFavorService.DeleteAllAsync(requestedUserId);
+
             if (isDeleted)
             {
                 return NoContent();

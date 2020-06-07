@@ -96,6 +96,7 @@ namespace Banana_E_Commerce_API.Services
                     .Where(cd => cd.Id == handleAddExistedItemResult.Id)
                     .Include(cd => cd.ProductTier)
                         .ThenInclude(pt => pt.Product)
+                            .ThenInclude(p => p.ProductImages)
                     .FirstOrDefaultAsync();
                 return new AddToCartResult
                 {
@@ -124,6 +125,7 @@ namespace Banana_E_Commerce_API.Services
                 .Where(cd => cd.Id == cartDetail.Id)
                 .Include(cd => cd.ProductTier)
                     .ThenInclude(pt => pt.Product)
+                        .ThenInclude(p => p.ProductImages)
                 .FirstOrDefaultAsync();
 
             return new AddToCartResult

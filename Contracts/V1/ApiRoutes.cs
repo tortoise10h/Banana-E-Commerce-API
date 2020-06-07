@@ -113,7 +113,7 @@ namespace Banana_E_Commerce_API.Contracts.V1
             public const string Create = Base + "/productFavors";
             public const string GetAll = Base + "/productFavors";
             public const string GetById = Base + "/productFavors/{productFavorId}";
-            public const string Update = Base + "/productFavors/{productFavorId}";
+            public const string DeleteAll = Base + "/productFavors";
             public const string Delete = Base + "/productFavors/{productFavorId}";
         }
 
@@ -125,6 +125,14 @@ namespace Banana_E_Commerce_API.Contracts.V1
             public const string GetById = Base + "/productTierTransferReport/{productTierTransferReportId}";
             public const string Update = Base + "/productTierTransferReport/{productTierTransferReportId}";
             public const string Delete = Base + "/productTierTransferReport/{productTierTransferReportId}";
+
+        }
+            
+        public static class ProductTier
+        {
+            public const string GetAll = Base + "/productTiers";
+            public const string GetById = Base + "/productTiers/{productTierId}";
+            public const string Update = Base + "/productTiers/{productTierId}";
         }
     }
 }
