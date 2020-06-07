@@ -14,6 +14,6 @@ namespace Banana_E_Commerce_API.Contracts.V1.ResponseModels.ProductTier
         public int DiscountPercentage { get; set; }
         public double AfterDiscountPrice { get; set; }
         public PriceCurrency PriceCurrency { get; set; }
-        public ProductResponse Product { get; set; }
+        public ProductResponseWithoutIncludeProductTier Product { get; set; }
     }
 }

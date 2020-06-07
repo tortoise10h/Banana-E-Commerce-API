@@ -40,7 +40,7 @@ namespace Banana_E_Commerce_API.Helpers
         public DbSet<RequestExportDetail> RequestExportDetails { get; set; }
         public DbSet<RequestImportProduct> RequestImportProducts { get; set; }
         public DbSet<RequestImportDetail> RequestImportDetails { get; set; }
-        public DbSet<ClassifyProductReport> ClassifyProductReports { get; set; }
+        public DbSet<ProductTierTransferReport> ProductTierTransferReports { get; set; }
         public DbSet<Tier> Tiers { get; set; }
         public DbSet<RemoveProductQuantityReport> RemoveProductQuantityReports { get; set; }
 

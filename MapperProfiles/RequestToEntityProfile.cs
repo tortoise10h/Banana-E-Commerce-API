@@ -14,6 +14,7 @@ using Banana_E_Commerce_API.Contracts.V1.RequestModels.ImportBill;
 using Banana_E_Commerce_API.Contracts.V1.RequestModels.ImportBillDetail;
 using Banana_E_Commerce_API.Contracts.V1.RequestModels.Customer;
 using Banana_E_Commerce_API.Contracts.V1.RequestModels.ProductFavor;
+using Banana_E_Commerce_API.Contracts.V1.RequestModels.ProductTierTransferReport;
 
 namespace Banana_E_Commerce_API.MapperProfiles
 {
@@ -66,11 +67,15 @@ namespace Banana_E_Commerce_API.MapperProfiles
             /** User **/
             CreateMap<UpdateUserPasswordRequest, User>();
 
-            //** Customer **/
+            /** Customer **/
             CreateMap<UpdateCustomerInfoRequest, Customer>();
 
-            //** ProductFavor **/
+            /** ProductFavor **/
             CreateMap<CreateProductFavorRequest, ProductFavorite>();
+
+            /** ProductTierTransferReport */
+            CreateMap<CreateProductTierTransferReportRequest, ProductTierTransferReport>();
+
         }
     }
 }
