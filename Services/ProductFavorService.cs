@@ -24,6 +24,7 @@ namespace Banana_E_Commerce_API.Services
         );
         Task<ProductFavorite> GetByIdAsync(int productFavorId);
         Task<bool> IsCustomerOwnInfo(int userId, int customerId);
+        Task<bool> DeleteAllAsync(int requestedUserId);
     }
 
     public class ProductFavorService : IProductFavorService
@@ -65,9 +66,12 @@ namespace Banana_E_Commerce_API.Services
             await _context.ProductFavorites.AddAsync(productFavor);
             var created = await _context.SaveChangesAsync();
 
+            var createdProductFavor = await GetByIdAsync(productFavor.Id);
+
             return new CreateProductFavorResult
                 {
                     IsSuccess = true,
+                    ProductFavorite = createdProductFavor
                 };
         }
 
@@ -77,6 +81,7 @@ namespace Banana_E_Commerce_API.Services
                 .Where(a => a.Id == id)
                 .Include(pdf => pdf.ProductTier)
                     .ThenInclude(pt => pt.Product)
+                        .ThenInclude(p => p.ProductImages)
                 .FirstOrDefaultAsync();
         }
 
@@ -98,6 +103,7 @@ namespace Banana_E_Commerce_API.Services
                 .Take(pagination.PageSize)
                 .Include(pdf => pdf.ProductTier)
                     .ThenInclude(pt => pt.Product)
+                        .ThenInclude(p => p.ProductImages)
                 .ToListAsync();
         }
 
@@ -123,6 +129,24 @@ namespace Banana_E_Commerce_API.Services
             }
 
             _context.ProductFavorites.Remove(productFavor);
+            var deleted = await _context.SaveChangesAsync();
+
+            return deleted > 0;
+        }
+
+        public async Task<bool> DeleteAllAsync(int requestedUserId)
+        {
+            var customer = await _context.Customers
+                .Where(c => c.UserId == requestedUserId)
+                .Include(c => c.ProductFavorites)
+                .FirstOrDefaultAsync();
+            
+            if (customer == null || customer.ProductFavorites == null)
+            {
+                return false;
+            }
+
+            _context.ProductFavorites.RemoveRange(customer.ProductFavorites);
             var deleted = await _context.SaveChangesAsync();
 
             return deleted > 0;

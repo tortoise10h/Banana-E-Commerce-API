@@ -10,10 +10,12 @@ namespace Banana_E_Commerce_API.Contracts.V1.ResponseModels.ProductTier
         public int TierId { get; set; }
         public double Quantity { get; set; }
         public double PricePerKg { get; set; }
+        public double KgSale { get; set; }
         public double SalePrice { get; set; }
         public int DiscountPercentage { get; set; }
         public double AfterDiscountPrice { get; set; }
         public PriceCurrency PriceCurrency { get; set; }
         public ProductResponseWithoutIncludeProductTier Product { get; set; }
+        // public ProductResponseOfProductTier Product { get; set; }
     }
 }
