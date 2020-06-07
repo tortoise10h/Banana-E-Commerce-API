@@ -57,7 +57,8 @@ namespace Banana_E_Commerce_API.Services
 
         public async Task<RegisterResult> RegisterAsync(string email, string password, Customer customer)
         {
-            var existedUser = _context.Users.SingleOrDefault(u => u.Email == email);
+            var existedUser = _context.Users.SingleOrDefault(u => u.Email == email &&
+                u.IsDeleted == false);
             var customerRole = _context.Roles.SingleOrDefault(r => r.RoleName == RoleNameEnum.Customer);
 
             if (existedUser != null)

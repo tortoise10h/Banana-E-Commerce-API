@@ -364,21 +364,21 @@ namespace Banana_E_Commerce_API.Extensions
 
             /** [StorageManager] and [ClassifyProductReport] */
             modelBuilder.Entity<StorageManager>()
-                .HasMany<ClassifyProductReport>(sm => sm.ClassifyProductReports)
+                .HasMany<ProductTierTransferReport>(sm => sm.ProductTierTransferReports)
                 .WithOne(cpr => cpr.StorageManager)
                 .HasForeignKey(cpr => cpr.CreatedBy)
                 .OnDelete(DeleteBehavior.NoAction);
 
-            /** [ProductTier] and [ClassifyProductReport] - Source*/
+            /** [ProductTier] and [ProductTierTransferReport] - Source*/
             modelBuilder.Entity<ProductTier>()
-                .HasMany<ClassifyProductReport>(pt => pt.ClassifyProductReports)
+                .HasMany<ProductTierTransferReport>(pt => pt.ProductTierTransferReports)
                 .WithOne(cpr => cpr.ProductTier)
                 .HasForeignKey(cpr => cpr.FromTierId)
                 .OnDelete(DeleteBehavior.NoAction);
 
-            /** [ProductTier] and [ClassifyProductReport] - Destination */
+            /** [ProductTier] and [ProductTierTransferReport] - Destination */
             modelBuilder.Entity<ProductTier>()
-                .HasMany<ClassifyProductReport>(pt => pt.ClassifyProductReports)
+                .HasMany<ProductTierTransferReport>(pt => pt.ProductTierTransferReports)
                 .WithOne(cpr => cpr.ProductTier)
                 .HasForeignKey(cpr => cpr.ToTierId)
                 .OnDelete(DeleteBehavior.NoAction);
@@ -898,6 +898,7 @@ namespace Banana_E_Commerce_API.Extensions
             /** Product Tier Seed Data */
             modelBuilder.Entity<ProductTier>()
                 .HasData(
+                    /** Product Tier 1 */
                     new ProductTier
                     {
                         Id = 1,
@@ -1256,6 +1257,375 @@ namespace Banana_E_Commerce_API.Extensions
                         ProductId = 23,
                         TierId = 1,
                         Quantity = 50,
+                        PricePerKg = 300_000,
+                        KgSale = 1,
+                        SalePrice = 300_000,
+                        DiscountPercentage = 0,
+                        AfterDiscountPrice = 300_000,
+                        PriceCurrency = PriceCurrency.VND,
+                        CreatedAt = DateTime.UtcNow,
+                        UpdatedAt = DateTime.UtcNow,
+                        IsDeleted = false,
+                    },
+                    /** Product Tier 2 */
+                    new ProductTier
+                    {
+                        Id = 24,
+                        ProductId = 1,
+                        TierId = 2,
+                        Quantity = 0,
+                        PricePerKg = 100_000,
+                        SalePrice = 100_000,
+                        KgSale = 1,
+                        DiscountPercentage = 0,
+                        AfterDiscountPrice = 100_000,
+                        PriceCurrency = PriceCurrency.VND,
+                        CreatedAt = DateTime.UtcNow,
+                        UpdatedAt = DateTime.UtcNow,
+                        IsDeleted = false,
+                    },
+                    new ProductTier
+                    {
+                        Id = 25,
+                        ProductId = 2,
+                        TierId = 2,
+                        Quantity = 0,
+                        PricePerKg = 110_000,
+                        SalePrice = 110_000,
+                        KgSale = 1,
+                        DiscountPercentage = 0,
+                        AfterDiscountPrice = 100_000,
+                        PriceCurrency = PriceCurrency.VND,
+                        CreatedAt = DateTime.UtcNow,
+                        UpdatedAt = DateTime.UtcNow,
+                        IsDeleted = false,
+                    },
+                    new ProductTier
+                    {
+                        Id = 26,
+                        ProductId = 3,
+                        TierId = 2,
+                        Quantity = 0,
+                        PricePerKg = 90_000,
+                        KgSale = 2.7,
+                        SalePrice = 243_000,
+                        DiscountPercentage = 0,
+                        AfterDiscountPrice = 243_000,
+                        PriceCurrency = PriceCurrency.VND,
+                        CreatedAt = DateTime.UtcNow,
+                        UpdatedAt = DateTime.UtcNow,
+                        IsDeleted = false,
+                    },
+                    new ProductTier
+                    {
+                        Id = 27,
+                        ProductId = 4,
+                        TierId = 2,
+                        Quantity = 0,
+                        PricePerKg = 130_000,
+                        KgSale = 1,
+                        SalePrice = 130_000,
+                        DiscountPercentage = 0,
+                        AfterDiscountPrice = 130_000,
+                        PriceCurrency = PriceCurrency.VND,
+                        CreatedAt = DateTime.UtcNow,
+                        UpdatedAt = DateTime.UtcNow,
+                        IsDeleted = false,
+                    },
+                    new ProductTier
+                    {
+                        Id = 28,
+                        ProductId = 5,
+                        TierId = 2,
+                        Quantity = 0,
+                        PricePerKg = 45_000,
+                        KgSale = 1,
+                        SalePrice = 45_000,
+                        DiscountPercentage = 0,
+                        AfterDiscountPrice = 45_000,
+                        PriceCurrency = PriceCurrency.VND,
+                        CreatedAt = DateTime.UtcNow,
+                        UpdatedAt = DateTime.UtcNow,
+                        IsDeleted = false,
+                    },
+                    new ProductTier
+                    {
+                        Id = 29,
+                        ProductId = 6,
+                        TierId = 2,
+                        Quantity = 0,
+                        PricePerKg = 80_000,
+                        KgSale = 1,
+                        SalePrice = 80_000,
+                        DiscountPercentage = 0,
+                        AfterDiscountPrice = 80_000,
+                        PriceCurrency = PriceCurrency.VND,
+                        CreatedAt = DateTime.UtcNow,
+                        UpdatedAt = DateTime.UtcNow,
+                        IsDeleted = false,
+                    },
+                    new ProductTier
+                    {
+                        Id = 30,
+                        ProductId = 7,
+                        TierId = 2,
+                        Quantity = 0,
+                        PricePerKg = 75_000,
+                        KgSale = 1,
+                        SalePrice = 75_000,
+                        DiscountPercentage = 0,
+                        AfterDiscountPrice = 75_000,
+                        PriceCurrency = PriceCurrency.VND,
+                        CreatedAt = DateTime.UtcNow,
+                        UpdatedAt = DateTime.UtcNow,
+                        IsDeleted = false,
+                    },
+                    new ProductTier
+                    {
+                        Id = 31,
+                        ProductId = 8,
+                        TierId = 2,
+                        Quantity = 0,
+                        PricePerKg = 65_000,
+                        KgSale = 1,
+                        SalePrice = 65_000,
+                        DiscountPercentage = 0,
+                        AfterDiscountPrice = 65_000,
+                        PriceCurrency = PriceCurrency.VND,
+                        CreatedAt = DateTime.UtcNow,
+                        UpdatedAt = DateTime.UtcNow,
+                        IsDeleted = false,
+                    },
+                    new ProductTier
+                    {
+                        Id = 32,
+                        ProductId = 9,
+                        TierId = 2,
+                        Quantity = 0,
+                        PricePerKg = 66_000,
+                        KgSale = 1,
+                        SalePrice = 66_000,
+                        DiscountPercentage = 0,
+                        AfterDiscountPrice = 66_000,
+                        PriceCurrency = PriceCurrency.VND,
+                        CreatedAt = DateTime.UtcNow,
+                        UpdatedAt = DateTime.UtcNow,
+                        IsDeleted = false,
+                    },
+                    new ProductTier
+                    {
+                        Id = 33,
+                        ProductId = 10,
+                        TierId = 2,
+                        Quantity = 0,
+                        PricePerKg = 58_000,
+                        KgSale = 1,
+                        SalePrice = 58_000,
+                        DiscountPercentage = 0,
+                        AfterDiscountPrice = 58_000,
+                        PriceCurrency = PriceCurrency.VND,
+                        CreatedAt = DateTime.UtcNow,
+                        UpdatedAt = DateTime.UtcNow,
+                        IsDeleted = false,
+                    },
+                    new ProductTier
+                    {
+                        Id = 34,
+                        ProductId = 11,
+                        TierId = 2,
+                        Quantity = 0,
+                        PricePerKg = 260_000,
+                        KgSale = 1,
+                        SalePrice = 260_000,
+                        DiscountPercentage = 0,
+                        AfterDiscountPrice = 260_000,
+                        PriceCurrency = PriceCurrency.VND,
+                        CreatedAt = DateTime.UtcNow,
+                        UpdatedAt = DateTime.UtcNow,
+                        IsDeleted = false,
+                    },
+                    new ProductTier
+                    {
+                        Id = 35,
+                        ProductId = 12,
+                        TierId = 2,
+                        Quantity = 0,
+                        PricePerKg = 70_000,
+                        KgSale = 1,
+                        SalePrice = 70_000,
+                        DiscountPercentage = 0,
+                        AfterDiscountPrice = 70_000,
+                        PriceCurrency = PriceCurrency.VND,
+                        CreatedAt = DateTime.UtcNow,
+                        UpdatedAt = DateTime.UtcNow,
+                        IsDeleted = false,
+                    },
+                    new ProductTier
+                    {
+                        Id = 36,
+                        ProductId = 13,
+                        TierId = 2,
+                        Quantity = 0,
+                        PricePerKg = 100_000,
+                        KgSale = 1,
+                        SalePrice = 100_000,
+                        DiscountPercentage = 0,
+                        AfterDiscountPrice = 100_000,
+                        PriceCurrency = PriceCurrency.VND,
+                        CreatedAt = DateTime.UtcNow,
+                        UpdatedAt = DateTime.UtcNow,
+                        IsDeleted = false,
+                    },
+                    new ProductTier
+                    {
+                        Id = 37,
+                        ProductId = 14,
+                        TierId = 2,
+                        Quantity = 0,
+                        PricePerKg = 620_000,
+                        KgSale = 1,
+                        SalePrice = 620_000,
+                        DiscountPercentage = 0,
+                        AfterDiscountPrice = 620_000,
+                        PriceCurrency = PriceCurrency.VND,
+                        CreatedAt = DateTime.UtcNow,
+                        UpdatedAt = DateTime.UtcNow,
+                        IsDeleted = false,
+                    },
+                    new ProductTier
+                    {
+                        Id = 38,
+                        ProductId = 15,
+                        TierId = 2,
+                        Quantity = 0,
+                        PricePerKg = 700_000,
+                        KgSale = 1,
+                        SalePrice = 700_000,
+                        DiscountPercentage = 0,
+                        AfterDiscountPrice = 700_000,
+                        PriceCurrency = PriceCurrency.VND,
+                        CreatedAt = DateTime.UtcNow,
+                        UpdatedAt = DateTime.UtcNow,
+                        IsDeleted = false,
+                    },
+                    new ProductTier
+                    {
+                        Id = 39,
+                        ProductId = 16,
+                        TierId = 2,
+                        Quantity = 0,
+                        PricePerKg = 400_000,
+                        KgSale = 1,
+                        SalePrice = 400_000,
+                        DiscountPercentage = 0,
+                        AfterDiscountPrice = 400_000,
+                        PriceCurrency = PriceCurrency.VND,
+                        CreatedAt = DateTime.UtcNow,
+                        UpdatedAt = DateTime.UtcNow,
+                        IsDeleted = false,
+                    },
+                    new ProductTier
+                    {
+                        Id = 40,
+                        ProductId = 17,
+                        TierId = 2,
+                        Quantity = 0,
+                        PricePerKg = 480_000,
+                        KgSale = 1,
+                        SalePrice = 480_000,
+                        DiscountPercentage = 0,
+                        AfterDiscountPrice = 480_000,
+                        PriceCurrency = PriceCurrency.VND,
+                        CreatedAt = DateTime.UtcNow,
+                        UpdatedAt = DateTime.UtcNow,
+                        IsDeleted = false,
+                    },
+                    new ProductTier
+                    {
+                        Id = 41,
+                        ProductId = 18,
+                        TierId = 2,
+                        Quantity = 0,
+                        PricePerKg = 330_000,
+                        KgSale = 1,
+                        SalePrice = 330_000,
+                        DiscountPercentage = 0,
+                        AfterDiscountPrice = 330_000,
+                        PriceCurrency = PriceCurrency.VND,
+                        CreatedAt = DateTime.UtcNow,
+                        UpdatedAt = DateTime.UtcNow,
+                        IsDeleted = false,
+                    },
+                    new ProductTier
+                    {
+                        Id = 42,
+                        ProductId = 19,
+                        TierId = 2,
+                        Quantity = 0,
+                        PricePerKg = 700_000,
+                        KgSale = 1,
+                        SalePrice = 700_000,
+                        DiscountPercentage = 0,
+                        AfterDiscountPrice = 700_000,
+                        PriceCurrency = PriceCurrency.VND,
+                        CreatedAt = DateTime.UtcNow,
+                        UpdatedAt = DateTime.UtcNow,
+                        IsDeleted = false,
+                    },
+                    new ProductTier
+                    {
+                        Id = 43,
+                        ProductId = 20,
+                        TierId = 2,
+                        Quantity = 0,
+                        PricePerKg = 400_000,
+                        KgSale = 0.5,
+                        SalePrice = 400_000,
+                        DiscountPercentage = 0,
+                        AfterDiscountPrice = 400_000,
+                        PriceCurrency = PriceCurrency.VND,
+                        CreatedAt = DateTime.UtcNow,
+                        UpdatedAt = DateTime.UtcNow,
+                        IsDeleted = false,
+                    },
+                    new ProductTier
+                    {
+                        Id = 44,
+                        ProductId = 21,
+                        TierId = 2,
+                        Quantity = 0,
+                        PricePerKg = 900_000,
+                        KgSale = 3,
+                        SalePrice = 900_000,
+                        DiscountPercentage = 0,
+                        AfterDiscountPrice = 900_000,
+                        PriceCurrency = PriceCurrency.VND,
+                        CreatedAt = DateTime.UtcNow,
+                        UpdatedAt = DateTime.UtcNow,
+                        IsDeleted = false,
+                    },
+                    new ProductTier
+                    {
+                        Id = 45,
+                        ProductId = 22,
+                        TierId = 2,
+                        Quantity = 0,
+                        PricePerKg = 230_000,
+                        KgSale = 1,
+                        SalePrice = 230_000,
+                        DiscountPercentage = 0,
+                        AfterDiscountPrice = 230_000,
+                        PriceCurrency = PriceCurrency.VND,
+                        CreatedAt = DateTime.UtcNow,
+                        UpdatedAt = DateTime.UtcNow,
+                        IsDeleted = false,
+                    },
+                    new ProductTier
+                    {
+                        Id = 46,
+                        ProductId = 23,
+                        TierId = 2,
+                        Quantity = 0,
                         PricePerKg = 300_000,
                         KgSale = 1,
                         SalePrice = 300_000,

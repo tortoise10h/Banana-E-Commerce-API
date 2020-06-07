@@ -116,5 +116,15 @@ namespace Banana_E_Commerce_API.Contracts.V1
             public const string Update = Base + "/productFavors/{productFavorId}";
             public const string Delete = Base + "/productFavors/{productFavorId}";
         }
+
+        public static class ProductTierTransferReport
+        {
+            public const string Create = Base + "/productTierTransferReport";
+            public const string BulkCreate = Base + "/productTierTransferReport/bulk";
+            public const string GetAll = Base + "/productTierTransferReport";
+            public const string GetById = Base + "/productTierTransferReport/{productTierTransferReportId}";
+            public const string Update = Base + "/productTierTransferReport/{productTierTransferReportId}";
+            public const string Delete = Base + "/productTierTransferReport/{productTierTransferReportId}";
+        }
     }
 }
