@@ -15,7 +15,7 @@ namespace Banana_E_Commerce_API.Entities
         public Admin Admin { get; set; }
         public int CreatedBy { get; set; }
 
-        public ICollection<Invoice> Invoices { get; set; }
+        public ICollection<Order> Orders { get; set; }
     }
 
 

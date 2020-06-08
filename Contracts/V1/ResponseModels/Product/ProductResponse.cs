@@ -13,6 +13,7 @@ namespace Banana_E_Commerce_API.Contracts.V1.ResponseModels.Product
         public string Description { get; set; }
         public string Origin { get; set; }
         public ProductUnit ProductUnit { get; set; }
+        public ProductStatus Status { get; set; }
         public PriceCurrency PriceCurrency { get; set; }
         public int CreatedBy { get; set; }
         public int CategoryId { get; set; }

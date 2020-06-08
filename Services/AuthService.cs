@@ -40,10 +40,12 @@ namespace Banana_E_Commerce_API.Services
         private readonly ICartService _cartService;
         private readonly TokenValidationParameters _tokenValidationParameters;
         private readonly IMapper _mapper;
+        private readonly IEmailService _emailService;
 
         public AuthService(
             DataContext context,
             ICustomerService customerService,
+            IEmailService emailService,
             ICartService cartService,
             TokenValidationParameters tokenValidationParameters,
             IMapper mapper)
@@ -53,6 +55,7 @@ namespace Banana_E_Commerce_API.Services
             _cartService = cartService;
             _tokenValidationParameters = tokenValidationParameters;
             _mapper = mapper;
+            _emailService = emailService;
         }
 
         public async Task<RegisterResult> RegisterAsync(string email, string password, Customer customer)
@@ -96,7 +99,11 @@ namespace Banana_E_Commerce_API.Services
                     await _context.Users.AddAsync(newUser);
                     var created = await _context.SaveChangesAsync();
                     var createUser = _context.Users.SingleOrDefault(u => u.Email == email);
-
+                    if (!(created > 0))
+                    {
+                        transaction.Dispose();
+                        throw new Exception("Đăng ký tài khoản thất bại, xin thử lại");
+                    }
 
                     // create customer
                     customer.UserId = createUser.Id;
@@ -104,6 +111,7 @@ namespace Banana_E_Commerce_API.Services
                     if (!isCustomerCreated)
                     {
                         transaction.Dispose();
+                        throw new Exception("Đăng ký tài khoản thất bại, xin thử lại");
                     }
 
                     // create cart for customer
@@ -111,20 +119,18 @@ namespace Banana_E_Commerce_API.Services
                     if (!isCartCreated)
                     {
                         transaction.Dispose();
+                        throw new Exception("Đăng ký tài khoản thất bại, xin thử lại");
                     }
 
                     transaction.Commit();
                 }
-                catch (System.Exception)
+                catch (System.Exception e)
                 {
 
                     return new RegisterResult
                     {
                         IsSuccess = false,
-                        Errors = new[]
-                        {
-                            $"The phone number {customer.Phone} is already existed"
-                        }
+                        Errors = new[] { e.Message.ToString() }
                     };
                 }
             }

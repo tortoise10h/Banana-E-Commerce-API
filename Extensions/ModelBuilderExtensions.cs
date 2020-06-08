@@ -75,9 +75,9 @@ namespace Banana_E_Commerce_API.Extensions
 
             /** [Address] and [Order] */
             modelBuilder.Entity<Address>()
-                .HasOne<Order>(ad => ad.Order)
+                .HasMany<Order>(ad => ad.Orders)
                 .WithOne(o => o.Address)
-                .HasForeignKey<Order>(o => o.AddressId)
+                .HasForeignKey(o => o.AddressId)
                 .OnDelete(DeleteBehavior.NoAction);
 
 
@@ -138,6 +138,13 @@ namespace Banana_E_Commerce_API.Extensions
                 .HasMany<PaymentMethod>(a => a.PaymentMethods)
                 .WithOne(pm => pm.Admin)
                 .HasForeignKey(pm => pm.CreatedBy)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            /** [PaymentMethod] and [Order] */
+            modelBuilder.Entity<PaymentMethod>()
+                .HasMany<Order>(pm => pm.Orders)
+                .WithOne(o => o.PaymentMethod)
+                .HasForeignKey(pm => pm.PaymentMethodId)
                 .OnDelete(DeleteBehavior.NoAction);
 
             /** [Cart] and [CartDetail] */
@@ -515,6 +522,7 @@ namespace Banana_E_Commerce_API.Extensions
                         EntryPrice = 60_000,
                         Description = "Bơ 034 từ Việt Nam, Đắk Lắk",
                         Origin = "Việt Nam, Đắk Lắk",
+                        Status = ProductStatus.Stocking,
                         ProductUnit = ProductUnit.Kg,
                         PriceCurrency = PriceCurrency.VND,
                         CreatedAt = DateTime.UtcNow,
@@ -531,6 +539,7 @@ namespace Banana_E_Commerce_API.Extensions
                         EntryPrice = 58_000,
                         Description = "Bơ Sáp từ Việt Nam, Đắk Lắk",
                         Origin = "Việt Nam, Đắk Lắk",
+                        Status = ProductStatus.Stocking,
                         ProductUnit = ProductUnit.Kg,
                         PriceCurrency = PriceCurrency.VND,
                         CreatedAt = DateTime.UtcNow,
@@ -547,6 +556,7 @@ namespace Banana_E_Commerce_API.Extensions
                         EntryPrice = 30_000,
                         Description = "Bưởi Da Xanh từ Việt Nam, Đồng Nai, Tân Triều",
                         Origin = "Việt Nam, Đồng Nai, Tân Triều",
+                        Status = ProductStatus.Stocking,
                         ProductUnit = ProductUnit.BundleOfThree,
                         PriceCurrency = PriceCurrency.VND,
                         CreatedAt = DateTime.UtcNow,
@@ -563,6 +573,7 @@ namespace Banana_E_Commerce_API.Extensions
                         EntryPrice = 65_000,
                         Description = "Có sắc tố đặc biệt, rất hiệu dụng trong quá trình chống oxy hóa",
                         Origin = "Hà Nội",
+                        Status = ProductStatus.Stocking,
                         ProductUnit = ProductUnit.Kg,
                         PriceCurrency = PriceCurrency.VND,
                         CreatedAt = DateTime.UtcNow,
@@ -579,6 +590,7 @@ namespace Banana_E_Commerce_API.Extensions
                         EntryPrice = 15_000,
                         Description = "Cam Sành Miền Tây",
                         Origin = "Miền Tây",
+                        Status = ProductStatus.Stocking,
                         ProductUnit = ProductUnit.Kg,
                         PriceCurrency = PriceCurrency.VND,
                         CreatedAt = DateTime.UtcNow,
@@ -595,6 +607,7 @@ namespace Banana_E_Commerce_API.Extensions
                         EntryPrice = 40_000,
                         Description = "Chanh đào tươi Đà Lạt",
                         Origin = "Đà Lạt",
+                        Status = ProductStatus.Stocking,
                         ProductUnit = ProductUnit.Kg,
                         PriceCurrency = PriceCurrency.VND,
                         CreatedAt = DateTime.UtcNow,
@@ -611,6 +624,7 @@ namespace Banana_E_Commerce_API.Extensions
                         EntryPrice = 35_000,
                         Description = "Chôm chôm nhãn",
                         Origin = "Đồng Bằng Sông Cửu Long",
+                        Status = ProductStatus.Stocking,
                         ProductUnit = ProductUnit.Kg,
                         PriceCurrency = PriceCurrency.VND,
                         CreatedAt = DateTime.UtcNow,
@@ -627,6 +641,7 @@ namespace Banana_E_Commerce_API.Extensions
                         EntryPrice = 25_000,
                         Description = "Nhãn Lồng",
                         Origin = "Hưng Yên",
+                        Status = ProductStatus.Stocking,
                         ProductUnit = ProductUnit.Kg,
                         PriceCurrency = PriceCurrency.VND,
                         CreatedAt = DateTime.UtcNow,
@@ -643,6 +658,7 @@ namespace Banana_E_Commerce_API.Extensions
                         EntryPrice = 22_000,
                         Description = "Thanh Long Ruột Đỏ",
                         Origin = "Bình Thuận",
+                        Status = ProductStatus.Stocking,
                         ProductUnit = ProductUnit.Kg,
                         PriceCurrency = PriceCurrency.VND,
                         CreatedAt = DateTime.UtcNow,
@@ -659,6 +675,7 @@ namespace Banana_E_Commerce_API.Extensions
                         EntryPrice = 25_000,
                         Description = "Thanh long ruột trắng",
                         Origin = "Bình Thuận",
+                        Status = ProductStatus.Stocking,
                         ProductUnit = ProductUnit.Kg,
                         PriceCurrency = PriceCurrency.VND,
                         CreatedAt = DateTime.UtcNow,
@@ -675,6 +692,7 @@ namespace Banana_E_Commerce_API.Extensions
                         EntryPrice = 120_000,
                         Description = "Dâu tây đà lạt giống Mỹ",
                         Origin = "Đà Lạt",
+                        Status = ProductStatus.Stocking,
                         ProductUnit = ProductUnit.Kg,
                         PriceCurrency = PriceCurrency.VND,
                         CreatedAt = DateTime.UtcNow,
@@ -691,6 +709,7 @@ namespace Banana_E_Commerce_API.Extensions
                         EntryPrice = 30_000,
                         Description = "Dưa lưới Bình Dương",
                         Origin = "Bình Dương",
+                        Status = ProductStatus.Stocking,
                         ProductUnit = ProductUnit.Kg,
                         PriceCurrency = PriceCurrency.VND,
                         CreatedAt = DateTime.UtcNow,
@@ -707,6 +726,7 @@ namespace Banana_E_Commerce_API.Extensions
                         EntryPrice = 45_000,
                         Description = "Dưa Pepino Mexico",
                         Origin = "Mexico",
+                        Status = ProductStatus.Stocking,
                         ProductUnit = ProductUnit.Kg,
                         PriceCurrency = PriceCurrency.VND,
                         CreatedAt = DateTime.UtcNow,
@@ -723,6 +743,7 @@ namespace Banana_E_Commerce_API.Extensions
                         EntryPrice = 310_000,
                         Description = "Cherry Mỹ",
                         Origin = "Mỹ",
+                        Status = ProductStatus.Stocking,
                         ProductUnit = ProductUnit.Kg,
                         PriceCurrency = PriceCurrency.VND,
                         CreatedAt = DateTime.UtcNow,
@@ -739,6 +760,7 @@ namespace Banana_E_Commerce_API.Extensions
                         EntryPrice = 380_000,
                         Description = "Việt Quất Mỹ",
                         Origin = "Mỹ",
+                        Status = ProductStatus.Stocking,
                         ProductUnit = ProductUnit.Kg,
                         PriceCurrency = PriceCurrency.VND,
                         CreatedAt = DateTime.UtcNow,
@@ -755,6 +777,7 @@ namespace Banana_E_Commerce_API.Extensions
                         EntryPrice = 180_000,
                         Description = "Dưa Lê Hàn",
                         Origin = "Hàn Quốc",
+                        Status = ProductStatus.Stocking,
                         ProductUnit = ProductUnit.Kg,
                         PriceCurrency = PriceCurrency.VND,
                         CreatedAt = DateTime.UtcNow,
@@ -771,6 +794,7 @@ namespace Banana_E_Commerce_API.Extensions
                         EntryPrice = 200_000,
                         Description = "Táo New Zealand",
                         Origin = "New Zealand",
+                        Status = ProductStatus.Stocking,
                         ProductUnit = ProductUnit.Kg,
                         PriceCurrency = PriceCurrency.VND,
                         CreatedAt = DateTime.UtcNow,
@@ -787,6 +811,7 @@ namespace Banana_E_Commerce_API.Extensions
                         EntryPrice = 130_000,
                         Description = "Kiwi Vàng New Zealand ",
                         Origin = "New Zealand",
+                        Status = ProductStatus.Stocking,
                         ProductUnit = ProductUnit.Kg,
                         PriceCurrency = PriceCurrency.VND,
                         CreatedAt = DateTime.UtcNow,
@@ -803,6 +828,7 @@ namespace Banana_E_Commerce_API.Extensions
                         EntryPrice = 320_000,
                         Description = "Nho xanh Úc",
                         Origin = "Úc",
+                        Status = ProductStatus.Stocking,
                         ProductUnit = ProductUnit.Kg,
                         PriceCurrency = PriceCurrency.VND,
                         CreatedAt = DateTime.UtcNow,
@@ -819,6 +845,7 @@ namespace Banana_E_Commerce_API.Extensions
                         EntryPrice = 610_000,
                         Description = "Dâu Anh Đào Nhật",
                         Origin = "Nhật Bản",
+                        Status = ProductStatus.Stocking,
                         ProductUnit = ProductUnit.Pack,
                         PriceCurrency = PriceCurrency.VND,
                         CreatedAt = DateTime.UtcNow,
@@ -835,6 +862,7 @@ namespace Banana_E_Commerce_API.Extensions
                         EntryPrice = 170_000,
                         Description = "Dưa Hấu Luna Piena Nhật",
                         Origin = "Nhật Bản",
+                        Status = ProductStatus.Stocking,
                         ProductUnit = ProductUnit.BundleOfThree,
                         PriceCurrency = PriceCurrency.VND,
                         CreatedAt = DateTime.UtcNow,
@@ -851,6 +879,7 @@ namespace Banana_E_Commerce_API.Extensions
                         EntryPrice = 100_000,
                         Description = "Sầu Riêng Muthong Thái",
                         Origin = "Thái Lan",
+                        Status = ProductStatus.Stocking,
                         ProductUnit = ProductUnit.Kg,
                         PriceCurrency = PriceCurrency.VND,
                         CreatedAt = DateTime.UtcNow,
@@ -867,6 +896,7 @@ namespace Banana_E_Commerce_API.Extensions
                         EntryPrice = 140_000,
                         Description = "Bơ Úc (Bơ Hass)",
                         Origin = "Úc",
+                        Status = ProductStatus.Stocking,
                         ProductUnit = ProductUnit.Kg,
                         PriceCurrency = PriceCurrency.VND,
                         CreatedAt = DateTime.UtcNow,
@@ -1637,6 +1667,30 @@ namespace Banana_E_Commerce_API.Extensions
                         IsDeleted = false,
                     }
                 );
+
+            /** Payment Method Seed Data */
+            modelBuilder.Entity<PaymentMethod>()
+                .HasData(
+                    new PaymentMethod
+                    {
+                        Id = 1,
+                        Method = MethodOfPayment.COD,
+                        CreatedAt = DateTime.UtcNow,
+                        UpdatedAt = DateTime.UtcNow,
+                        IsDeleted = false,
+                        CreatedBy = 1
+                    },
+                    new PaymentMethod
+                    {
+                        Id = 2,
+                        Method = MethodOfPayment.BK,
+                        CreatedAt = DateTime.UtcNow,
+                        UpdatedAt = DateTime.UtcNow,
+                        IsDeleted = false,
+                        CreatedBy = 1
+                    }
+                );
         }
+
     }
 }

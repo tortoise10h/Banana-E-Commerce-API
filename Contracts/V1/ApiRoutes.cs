@@ -127,12 +127,22 @@ namespace Banana_E_Commerce_API.Contracts.V1
             public const string Delete = Base + "/productTierTransferReport/{productTierTransferReportId}";
 
         }
-            
+
         public static class ProductTier
         {
             public const string GetAll = Base + "/productTiers";
             public const string GetById = Base + "/productTiers/{productTierId}";
             public const string Update = Base + "/productTiers/{productTierId}";
+        }
+
+
+        public static class Order
+        {
+            public const string Create = Base + "/Orders";
+            public const string GetAll = Base + "/Orders";
+            public const string GetById = Base + "/Orders/{orderId}";
+            public const string Update = Base + "/Orders/{orderId}";
+            public const string Delete = Base + "/Orders/{orderId}";
         }
     }
 }

@@ -4,7 +4,7 @@ namespace Banana_E_Commerce_API.Entities
     {
         public int Id { get; set; }
         public int Quantity { get; set; }
-        public int SinglePrice { get; set; }
+        public double SinglePrice { get; set; }
         public int ProductTierId { get; set; }
         public int OrderId { get; set; }
 

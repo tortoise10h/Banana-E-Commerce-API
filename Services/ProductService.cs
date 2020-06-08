@@ -170,6 +170,7 @@ namespace Banana_E_Commerce_API.Services
             product.CreatedBy = createdAdmin.Id;
             product.CreatedAt = DateTime.UtcNow;
             product.UpdatedAt = DateTime.UtcNow;
+            product.Status = ProductStatus.NewGoodsImported;
             product.IsDeleted = false;
 
             /** Check exist storage */

@@ -22,6 +22,9 @@ using Banana_E_Commerce_API.Contracts.V1.ResponseModels.ImportBill;
 using Banana_E_Commerce_API.Contracts.V1.ResponseModels.ImportBillDetail;
 using Banana_E_Commerce_API.Contracts.V1.ResponseModels.ProductFavor;
 using Banana_E_Commerce_API.Contracts.V1.ResponseModels.ProductTierTransferReport;
+using Banana_E_Commerce_API.Contracts.V1.ResponseModels.Order;
+using Banana_E_Commerce_API.Contracts.V1.ResponseModels.OrderItem;
+using Banana_E_Commerce_API.Contracts.V1.ResponseModels.PaymentMethod;
 
 namespace Banana_E_Commerce_API.MapperProfiles
 {
@@ -106,6 +109,15 @@ namespace Banana_E_Commerce_API.MapperProfiles
 
             /** ProductTierTransferReport */
             CreateMap<ProductTierTransferReport, ProductTierTransferReportResponse>();
+
+            /** Order */
+            CreateMap<Order, OrderResponse>();
+
+            /** OrderItem */
+            CreateMap<OrderItem, OrderItemResponse>();
+
+            /** PaymentMethod */
+            CreateMap<PaymentMethod, PaymentMethodResponse>();
         }
     }
 }

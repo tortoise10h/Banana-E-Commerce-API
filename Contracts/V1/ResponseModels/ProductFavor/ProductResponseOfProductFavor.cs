@@ -11,6 +11,8 @@ namespace Banana_E_Commerce_API.Contracts.V1.ResponseModels.ProductFavor
         public string Description { get; set; }
         public string Origin { get; set; }
         public PriceCurrency PriceCurrency { get; set; }
+        public ProductStatus Status { get; set; }
+
         public IEnumerable<ProductImageResponse> ProductImages { get; set; }
     }
 }

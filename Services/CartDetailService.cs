@@ -6,6 +6,7 @@ using AutoMapper;
 using Banana_E_Commerce_API.Contracts.V1.ResponseModels.CartDetailModels;
 using Banana_E_Commerce_API.Domains;
 using Banana_E_Commerce_API.Entities;
+using Banana_E_Commerce_API.Enums;
 using Banana_E_Commerce_API.Helpers;
 using Microsoft.EntityFrameworkCore;
 
@@ -48,9 +49,11 @@ namespace Banana_E_Commerce_API.Services
 
             // check product exists
             var productTier = await _context.ProductTiers
-                .SingleOrDefaultAsync(p =>
+                .Where(p =>
                     p.Id == cartDetail.ProductTierId &&
-                    p.IsDeleted == false);
+                    p.IsDeleted == false)
+                .Include(pt => pt.Product)
+                .FirstOrDefaultAsync();
             if (productTier == null)
             {
                 return new AddToCartResult
@@ -80,6 +83,16 @@ namespace Banana_E_Commerce_API.Services
                 {
                     IsSuccess = false,
                     Errors = new[] { "Số lượng hiện tại của sản phẩm không đủ" }
+                };
+            }
+
+            // validate valid product status
+            if (productTier.Product.Status == ProductStatus.OutOfStock)
+            {
+                return new AddToCartResult
+                {
+                    IsSuccess = false,
+                    Errors = new[] { "Sản phẩm này đã hết hàng, không thể thêm vào giỏ" }
                 };
             }
 

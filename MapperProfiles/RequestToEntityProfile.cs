@@ -16,6 +16,8 @@ using Banana_E_Commerce_API.Contracts.V1.RequestModels.Customer;
 using Banana_E_Commerce_API.Contracts.V1.RequestModels.ProductFavor;
 using Banana_E_Commerce_API.Contracts.V1.RequestModels.ProductTierTransferReport;
 using Banana_E_Commerce_API.Contracts.V1.RequestModels.ProductTier;
+using Banana_E_Commerce_API.Contracts.V1.RequestModels.Order;
+using Banana_E_Commerce_API.Contracts.V1.RequestModels.OrderItem;
 
 namespace Banana_E_Commerce_API.MapperProfiles
 {
@@ -78,6 +80,11 @@ namespace Banana_E_Commerce_API.MapperProfiles
             /** ProductTierTransferReport */
             CreateMap<CreateProductTierTransferReportRequest, ProductTierTransferReport>();
 
+            /** Order */
+            CreateMap<CreateOrderRequest, Order>();
+
+            /** OrderItem */
+            CreateMap<CreateOrderItemRequest, OrderItem>();
         }
     }
 }

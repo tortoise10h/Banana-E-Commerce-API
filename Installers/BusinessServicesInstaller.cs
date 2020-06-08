@@ -30,6 +30,8 @@ namespace Banana_E_Commerce_API.Installers
             services.AddScoped<IStorageManagerService, StorageManagerService>();
             services.AddScoped<IProductFavorService, ProductFavorService>();
             services.AddScoped<IProductTierTransferReportService, ProductTierTransferReportService>();
+            services.AddScoped<IOrderService, OrderService>();
+            services.AddScoped<IEmailService, EmailService>();
 
             services.AddSingleton<IUriService>(provider =>
             {
