@@ -342,15 +342,44 @@ namespace Banana_E_Commerce_API.Services
                 queryable = queryable.Where(x => x.StorageId == filter.StorageId);
             }
 
-            // if (filter?.FromPrice != null)
-            // {
-            //     queryable = queryable.Where(x => x.SalePrice >= filter.FromPrice);
-            // }
+            if (filter?.ProductTier1FromPrice != null)
+            {
+                queryable = queryable.Where(x =>
+                    x.ProductTiers
+                        .SingleOrDefault(
+                            pt => pt.Tier.TierOption == TierEnum.tier1
+                        )
+                            .AfterDiscountPrice >= filter.ProductTier1FromPrice);
+            }
 
-            // if (filter?.ToPrice != null && filter.ToPrice > 0)
-            // {
-            //     queryable = queryable.Where(x => x.SalePrice <= filter.ToPrice);
-            // }
+            if (filter?.ProductTier1ToPrice != null && filter.ProductTier1ToPrice > 0)
+            {
+                queryable = queryable.Where(x =>
+                    x.ProductTiers
+                        .SingleOrDefault(
+                            pt => pt.Tier.TierOption == TierEnum.tier1
+                        )
+                            .AfterDiscountPrice <= filter.ProductTier1ToPrice);
+            }
+            if (filter?.ProductTier2FromPrice != null)
+            {
+                queryable = queryable.Where(x =>
+                    x.ProductTiers
+                        .SingleOrDefault(
+                            pt => pt.Tier.TierOption == TierEnum.tier2
+                        )
+                            .AfterDiscountPrice >= filter.ProductTier2FromPrice);
+            }
+
+            if (filter?.ProductTier2ToPrice != null && filter.ProductTier2ToPrice > 0)
+            {
+                queryable = queryable.Where(x =>
+                    x.ProductTiers
+                        .SingleOrDefault(
+                            pt => pt.Tier.TierOption == TierEnum.tier2
+                        )
+                            .AfterDiscountPrice <= filter.ProductTier2ToPrice);
+            }
             return queryable;
         }
     }

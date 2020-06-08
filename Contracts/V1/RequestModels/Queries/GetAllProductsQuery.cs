@@ -6,8 +6,10 @@ namespace Banana_E_Commerce_API.Contracts.V1.RequestModels.Queries
     public class GetAllProductsQuery
     {
         public string Name { get; set; }
-        public double FromPrice { get; set; }
-        public double ToPrice { get; set; }
+        public double ProductTier1FromPrice { get; set; }
+        public double ProductTier1ToPrice { get; set; }
+        public double ProductTier2FromPrice { get; set; }
+        public double ProductTier2ToPrice { get; set; }
         public int Quantity { get; set; }
         public FilterOrder Order { get; set; }
         public string OrderOption { get; set; }
