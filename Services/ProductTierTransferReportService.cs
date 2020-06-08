@@ -140,6 +140,12 @@ namespace Banana_E_Commerce_API.Services
             productTierTransferReport.CreatedAt = DateTime.UtcNow;
             productTierTransferReport.CreatedBy = storageManager.Id;
             productTierTransferReport.IsDeleted = false;
+            // rounded transfer quantity to 2 decimal place to avoid
+            // awkward quantity number
+            productTierTransferReport.Quantity = Math.Round(
+                productTierTransferReport.Quantity,
+                2,
+                MidpointRounding.AwayFromZero);
         }
 
         private void AreSourceAndDestinationProductTierValid(
@@ -357,8 +363,8 @@ namespace Banana_E_Commerce_API.Services
                 try
                 {
                     /** Reverse transfer quantity back */
-                    productTier1.Quantity += productTierTransferReport.Quantity;
-                    productTier2.Quantity -= productTierTransferReport.Quantity;
+                    productTier1.Quantity = productTier1.Quantity + productTierTransferReport.Quantity;
+                    productTier2.Quantity = productTier2.Quantity - productTierTransferReport.Quantity;
                     _context.ProductTiers.UpdateRange(
                         new List<ProductTier>()
                         {
