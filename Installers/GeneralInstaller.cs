@@ -25,7 +25,7 @@ namespace Banana_E_Commerce_API.Installers
                               });
             });
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
-            services.AddDbContext<DataContext>(ServiceLifetime.Transient);
+            services.AddDbContext<DataContext>();
             services.AddSwaggerGen(x =>
             {
                 x.SwaggerDoc("v1",

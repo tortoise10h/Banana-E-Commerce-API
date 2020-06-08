@@ -9,6 +9,7 @@ namespace Banana_E_Commerce_API.Contracts.V1.ResponseModels.CartDetailModels
         public int Id { get; set; }
         public string Name { get; set; }
         public double EntryPrice { get; set; }
+        public ProductStatus Status { get; set; }
         public string Description { get; set; }
         public string Origin { get; set; }
         public ProductUnit ProductUnit { get; set; }

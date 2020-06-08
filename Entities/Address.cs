@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace Banana_E_Commerce_API.Entities
 {
@@ -18,6 +19,6 @@ namespace Banana_E_Commerce_API.Entities
         public Customer Customer { get; set; }
         public int CustomerId { get; set; }
 
-        public Order Order { get; set; }
+        public ICollection<Order> Orders { get; set; }
     }
 }

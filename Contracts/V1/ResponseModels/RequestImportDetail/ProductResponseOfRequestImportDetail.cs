@@ -16,6 +16,8 @@ namespace Banana_E_Commerce_API.Contracts.V1.ResponseModels.RequestImportDetail
         public int CreatedBy { get; set; }
         public int CategoryId { get; set; }
         public int StorageId { get; set; }
+        public ProductStatus Status { get; set; }
+
         public IEnumerable<ProductImageResponse> ProductImages { get; set; }
     }
 }

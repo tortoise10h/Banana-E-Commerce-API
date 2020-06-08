@@ -28,7 +28,8 @@ namespace Banana_E_Commerce_API.Services
         }
         public async Task<bool> CreateAsync(Customer customer)
         {
-            var existedCustomerPhone = _context.Customers.SingleOrDefault(c => c.Phone == customer.Phone);
+            var existedCustomerPhone = await _context.Customers
+                .SingleOrDefaultAsync(c => c.Phone == customer.Phone);
 
             if (existedCustomerPhone != null)
             {
@@ -55,7 +56,7 @@ namespace Banana_E_Commerce_API.Services
         {
             var user = await _context.Users.SingleOrDefaultAsync(u => u.Id == userId);
             var customer = await _context.Customers
-                .Where(u => u.Id == customerId && 
+                .Where(u => u.Id == customerId &&
                         u.UserId == user.Id)
                     .FirstOrDefaultAsync();
 
@@ -63,7 +64,7 @@ namespace Banana_E_Commerce_API.Services
             {
                 return false;
             }
-            
+
             return true;
         }
 
@@ -82,7 +83,7 @@ namespace Banana_E_Commerce_API.Services
                     Errors = new[] { $"The phone number {customer.Phone} is already existed" }
                 };
             }
-            
+
             var adminPhone = await _context.Admins.SingleOrDefaultAsync(a => a.Phone == customer.Phone);
             if (adminPhone != null)
             {
@@ -107,9 +108,9 @@ namespace Banana_E_Commerce_API.Services
             var updated = await _context.SaveChangesAsync();
 
             return new UpdateCustomerInfoResult
-                {
-                    IsSuccess = true,
-                };
+            {
+                IsSuccess = true,
+            };
         }
     }
 }
