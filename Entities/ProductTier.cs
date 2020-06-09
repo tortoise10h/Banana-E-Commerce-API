@@ -22,7 +22,7 @@ namespace Banana_E_Commerce_API.Entities
 
         public Product Product { get; set; }
         public Tier Tier { get; set; }
-        public ICollection<Rating> Rates { get; set; }
+        public ICollection<RatingImage> RatingImages { get; set; }
         public ICollection<CartDetail> CartDetails { get; set; }
         public ICollection<OrderItem> OrderItems { get; set; }
         public ICollection<ProductFavorite> ProductFavorites { get; set; }

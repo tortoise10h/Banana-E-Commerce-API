@@ -1,22 +1,19 @@
 using System;
-using System.Collections.Generic;
 
 namespace Banana_E_Commerce_API.Entities
 {
-    public class Rating
+    public class RatingImage
     {
         public int Id { get; set; }
-        public int StarNum { get; set; }
-        public string Comment { get; set; }
+        public string ImgLocation { get; set; }
+        public string ImgName { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
         public bool IsDeleted { get; set; }
+        public int RatingId { get; set; }
         public int ProductTierId { get; set; }
-        public int CustomerId { get; set; }
 
-
-        public Customer Customer { get; set; }
+        public Rating Rating { get; set; }
         public ProductTier ProductTier { get; set; }
-        public ICollection<RatingImage> RatingImages { get; set; }
     }
 }

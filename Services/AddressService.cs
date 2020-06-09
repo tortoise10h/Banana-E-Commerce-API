@@ -23,6 +23,7 @@ namespace Banana_E_Commerce_API.Services
         );
         Task<Address> GetByIdAsync(int addressId);
         Task<bool> UpdateAsync(Address address, int userId);
+        Task<bool> DeleteAsync(int addressId);
         Task<bool> IsCustomerOwnAddress(int userId, int addressId);
     }
 
@@ -69,8 +70,6 @@ namespace Banana_E_Commerce_API.Services
                 .ToListAsync();
         }
 
-
-
         public async Task<int> CountAllAsync(
             PaginationFilter pagination,
             GetAllAddressesFilter filter = null
@@ -116,11 +115,64 @@ namespace Banana_E_Commerce_API.Services
             return updated > 0;
         }
 
+        public async Task<bool> DeleteAsync(int addressId)
+        {
+            var customerAddress = await _context.Addresses.SingleOrDefaultAsync(a => a.Id == addressId);
+
+            if (customerAddress == null)
+            {
+                return false;
+            }
+
+            customerAddress.IsDeleted = true;
+            _context.Addresses.Update(customerAddress);
+            var deleted = await _context.SaveChangesAsync();
+
+            return deleted > 0;
+        }
+
         private IQueryable<Address> AddFilterOnQuery(
             GetAllAddressesFilter filter,
             IQueryable<Address> queryable
         )
         {
+            queryable = queryable.Where(x => x.IsDeleted == false);
+
+            if (!string.IsNullOrEmpty(filter?.City))
+            {
+                queryable = queryable.Where(x => x.City.Contains(filter.City));
+            }
+
+            if (!string.IsNullOrEmpty(filter?.District))
+            {
+                queryable = queryable.Where(x => x.District.Contains(filter.District));
+            }
+
+            if (!string.IsNullOrEmpty(filter?.Ward))
+            {
+                queryable = queryable.Where(x => x.Ward.Contains(filter.Ward));
+            }
+
+            if (!string.IsNullOrEmpty(filter?.StreetLocation))
+            {
+                queryable = queryable.Where(x => x.StreetLocation.Contains(filter.StreetLocation));
+            }
+
+            if (!string.IsNullOrEmpty(filter?.Name))
+            {
+                queryable = queryable.Where(x => x.Name.Contains(filter.Name));
+            }
+
+            if (!string.IsNullOrEmpty(filter?.Phone))
+            {
+                queryable = queryable.Where(x => x.Phone.Contains(filter.Phone));
+            }
+
+            if (filter?.CustomerId > 0)
+            {
+                queryable = queryable.Where(x => x.CustomerId == filter.CustomerId);
+            }
+            
             return queryable;
         }
     }

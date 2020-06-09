@@ -20,23 +20,28 @@ using Banana_E_Commerce_API.Contracts.V1.ResponseModels;
 using Banana_E_Commerce_API.CustomAttributes;
 using Banana_E_Commerce_API.Enums;
 using Banana_E_Commerce_API.Extensions;
+using Banana_E_Commerce_API.Contracts.V1.RequestModels.Queries;
+using Banana_E_Commerce_API.Domains;
 
 namespace Banana_E_Commerce_API.Controllers
 {
-    [AuthorizeRoles(RoleNameEnum.Admin, RoleNameEnum.Customer)]
+    [AuthorizeRoles(RoleNameEnum.Admin, RoleNameEnum.Customer, RoleNameEnum.StorageManager)]
     public class UsersController : ControllerBase
     {
         private IUserService _userService;
+        private readonly IUriService _uriService;
         private IMapper _mapper;
         private readonly AppSettings _appSettings;
 
         public UsersController(
             IUserService userService,
+            IUriService uriService,
             IMapper mapper,
             IOptions<AppSettings> appSettings
         )
         {
             _userService = userService;
+            _uriService = uriService;
             _mapper = mapper;
             _appSettings = appSettings.Value;
         }
@@ -98,6 +103,29 @@ namespace Banana_E_Commerce_API.Controllers
             var userResponse = _mapper.Map<UserResponse>(userEntity);
             return Ok("Update password successfully");
 
+        }
+
+        [AuthorizeRoles(RoleNameEnum.Admin, RoleNameEnum.StorageManager)]
+        [HttpGet(ApiRoutes.Users.GetAll)]
+        public async Task<IActionResult> GetAll(
+            [FromQuery] GetAllUsersQuery filterModel,
+            [FromQuery] PaginationQuery paginModel)
+        {
+            var pagination = _mapper.Map<PaginationFilter>(paginModel);
+            var filter = _mapper.Map<GetAllUserFilter>(filterModel);
+            var users = await _userService.GetAllAsync(pagination, filter);
+            int totalUsers = await _userService.CountAllAsync(pagination, filter);
+            var responseUser = _mapper.Map<List<UserResponse>>(users);
+
+            var paginationUsersResponse = PaginationHelpers.CreatePaginatedResponse(
+                _uriService,
+                pagination,
+                responseUser,
+                totalUsers,
+                ApiRoutes.Users.GetAll
+            );
+
+            return Ok(paginationUsersResponse);
         }
     }
 }

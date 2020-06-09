@@ -16,16 +16,25 @@ namespace Banana_E_Commerce_API.Services
     public interface IUserService
     {
 
-        Task<IEnumerable<User>> GetAllAsync(
+        Task<IEnumerable<User>> GetAllAsync
+        (
             PaginationFilter pagination,
-            GetAllUserFilter filter = null);
-        Task<int> CountAllAsync(
+            GetAllUserFilter filter = null
+        );
+        Task<int> CountAllAsync
+        (
             PaginationFilter pagination,
             GetAllUserFilter filter = null
         );
         Task<User> GetByIdAsync(int userId);
-        Task<UpdateUserPasswordResult> UpdateUserPassword(User user, string oldPassword, string newPassword, string confirmPassword);
-        void Delete(int id);
+        Task<UpdateUserPasswordResult> UpdateUserPassword
+        (
+            User user, 
+            string oldPassword, 
+            string newPassword, 
+            string confirmPassword
+        );
+        Task<bool> BanUserAsync(int userId);
         Task<bool> CreateAsync(User user, string password);
         Task<bool> IsUserOwnInfo(int userId, int requestedUserId);
         Task<bool> IsAdmin(int userId);
@@ -87,6 +96,7 @@ namespace Banana_E_Commerce_API.Services
                         userAndInfo = await _context.Users
                             .Where(u => u.Id == userId)
                             .Include(u => u.Customer)
+                                .ThenInclude(c => c.Cart)
                             .FirstOrDefaultAsync();
                         break;
                     }
@@ -182,31 +192,73 @@ namespace Banana_E_Commerce_API.Services
                 };
         }
         
-        public void Delete(int id)
+        public async Task<bool> BanUserAsync(int userId)
         {
-            var user = _context.Users.Find(id);
-            if (user != null)
+            var userInfo = await _context.Users.SingleOrDefaultAsync(a => a.Id == userId);
+
+            if (userInfo == null)
             {
-                _context.Users.Remove(user);
-                _context.SaveChanges();
+                return false;
             }
+
+            userInfo.Status = UserStatus.Banned;
+            _context.Users.Update(userInfo);
+            var deleted = await _context.SaveChangesAsync();
+
+            return deleted > 0;
         }
 
-        public Task<IEnumerable<User>> GetAllAsync(PaginationFilter pagination, GetAllUserFilter filter = null)
+        public async Task<IEnumerable<User>> GetAllAsync(
+            PaginationFilter pagination,
+            GetAllUserFilter filter = null)
         {
-            throw new NotImplementedException();
+            var queryable = _context.Users.AsQueryable();
+
+            queryable = AddFilterOnQuery(filter, queryable);
+
+            var skip = (pagination.PageNumber - 1) * pagination.PageSize;
+            return await queryable
+                .Skip(skip)
+                .Include(u => u.Admin)
+                .Include(u => u.Customer)
+                .Include(u => u.StorageManager)
+                .Take(pagination.PageSize)
+                .ToListAsync();
         }
 
-        public Task<int> CountAllAsync(PaginationFilter pagination, GetAllUserFilter filter = null)
+        public async Task<int> CountAllAsync(
+            PaginationFilter pagination,
+            GetAllUserFilter filter = null
+        )
         {
-            throw new NotImplementedException();
-        }
+            var queryable = _context.Users.AsQueryable();
 
+            queryable = queryable.Where(x => x.IsDeleted == false);
+            queryable = AddFilterOnQuery(filter, queryable);
+            return await queryable.CountAsync();
+        }
         private IQueryable<User> AddFilterOnQuery(
             GetAllUserFilter filter,
             IQueryable<User> queryable
         )
         {
+            queryable = queryable.Where(x => x.IsDeleted == false);
+
+            if (!string.IsNullOrEmpty(filter?.Email))
+            {
+                queryable = queryable.Where(x => x.Email.Contains(filter.Email));
+            }
+
+            if (filter?.Status > 0)
+            {
+                queryable = queryable.Where(x => x.Status == filter.Status);
+            }
+            
+            if (filter?.RoleId > 0)
+            {
+                queryable = queryable.Where(x => x.RoleId == filter.RoleId);
+            }
+
             return queryable;
         }
 
@@ -215,7 +267,11 @@ namespace Banana_E_Commerce_API.Services
         {
             var user = await _context.Users.SingleOrDefaultAsync(user => user.Id == userId);
 
-            return user.Id == requestedUserId;
+            if (user.Id != requestedUserId)
+            {
+                return false;
+            }
+            return true;
         }
 
         public async Task<bool> IsAdmin(int userId)

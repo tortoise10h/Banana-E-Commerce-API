@@ -25,6 +25,8 @@ using Banana_E_Commerce_API.Contracts.V1.ResponseModels.ProductTierTransferRepor
 using Banana_E_Commerce_API.Contracts.V1.ResponseModels.Order;
 using Banana_E_Commerce_API.Contracts.V1.ResponseModels.OrderItem;
 using Banana_E_Commerce_API.Contracts.V1.ResponseModels.PaymentMethod;
+using Banana_E_Commerce_API.Contracts.V1.ResponseModels.Rating;
+using Banana_E_Commerce_API.Contracts.V1.ResponseModels.RatingImage;
 
 namespace Banana_E_Commerce_API.MapperProfiles
 {
@@ -43,7 +45,7 @@ namespace Banana_E_Commerce_API.MapperProfiles
             CreateMap<Product, ProductResponseOfProductFavor>();
             CreateMap<Product, ProductResponseWithoutIncludeProductTier>();
             CreateMap<Product, ProductResponseOfProductTier>();
-
+            CreateMap<Product, ProductResponseOfRating>();
 
             /** Category */
             CreateMap<Category, CategoryResponse>();
@@ -56,6 +58,7 @@ namespace Banana_E_Commerce_API.MapperProfiles
 
             /** Customer */
             CreateMap<Customer, CustomerResponse>();
+            CreateMap<Customer, CustomerResponseOfRating>();
 
             /** Manager */
             CreateMap<Manager, ManagerResponse>();
@@ -91,6 +94,7 @@ namespace Banana_E_Commerce_API.MapperProfiles
             CreateMap<ProductTier, ProductTierResponseOfProduct>();
             CreateMap<ProductTier, ProductTierResponseOfRequestImportDetail>();
             CreateMap<ProductTier, ProductTierResponseOfProductFavor>();
+            CreateMap<ProductTier, ProductTierResponseOfRating>();
 
             /** ProductFavor */
             CreateMap<ProductFavorite, ProductFavorResponse>();
@@ -118,6 +122,12 @@ namespace Banana_E_Commerce_API.MapperProfiles
 
             /** PaymentMethod */
             CreateMap<PaymentMethod, PaymentMethodResponse>();
+
+            /** Rating */
+            CreateMap<Rating, RatingResponse>();
+
+            /** RatingImage */
+            CreateMap<RatingImage, RatingImageResponse>();
         }
     }
 }
