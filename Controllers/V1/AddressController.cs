@@ -126,6 +126,33 @@ namespace Banana_E_Commerce_API.Controllers.V1
 
             return NotFound();
         }
+
+        [HttpDelete(ApiRoutes.Address.Delete)]
+        public async Task<IActionResult> Delete([FromRoute] int addressId)
+        {
+            var addressEntity = await _addressService.GetByIdAsync(addressId);
+            var userId = int.Parse(HttpContext.GetUserIdFromRequest());
+
+            if (addressEntity == null)
+            {
+                return NotFound();
+            }
+
+            var isCustomerValidDelete = await _addressService.IsCustomerOwnAddress(userId, addressId);
+            if (!isCustomerValidDelete)
+            {   
+                return Unauthorized("You don\'t have a permission");
+            }
+
+            var isDeleted = await _addressService.DeleteAsync(addressId);
+            if (isDeleted)
+            {
+                return NoContent();
+            }
+
+            return NotFound();
+        }
+
   }
 }
 

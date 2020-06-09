@@ -18,6 +18,8 @@ using Banana_E_Commerce_API.Contracts.V1.RequestModels.ProductTierTransferReport
 using Banana_E_Commerce_API.Contracts.V1.RequestModels.ProductTier;
 using Banana_E_Commerce_API.Contracts.V1.RequestModels.Order;
 using Banana_E_Commerce_API.Contracts.V1.RequestModels.OrderItem;
+using Banana_E_Commerce_API.Contracts.V1.RequestModels.Rating;
+using Banana_E_Commerce_API.Contracts.V1.RequestModels.RatingImage;
 
 namespace Banana_E_Commerce_API.MapperProfiles
 {
@@ -85,6 +87,13 @@ namespace Banana_E_Commerce_API.MapperProfiles
 
             /** OrderItem */
             CreateMap<CreateOrderItemRequest, OrderItem>();
+
+            /** Rating **/
+            CreateMap<CreateRatingRequest, Rating>();
+            CreateMap<UpdateRatingRequest, Rating>();
+
+            /** Rating Image */
+            CreateMap<CreateRatingImageRequest, RatingImage>();
         }
     }
 }

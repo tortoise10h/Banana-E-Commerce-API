@@ -42,6 +42,7 @@ namespace Banana_E_Commerce_API.Helpers
         public DbSet<RequestImportDetail> RequestImportDetails { get; set; }
         public DbSet<ProductTierTransferReport> ProductTierTransferReports { get; set; }
         public DbSet<Tier> Tiers { get; set; }
+        public DbSet<RatingImage> RatingImages { get; set; }
         public DbSet<RemoveProductQuantityReport> RemoveProductQuantityReports { get; set; }
 
 

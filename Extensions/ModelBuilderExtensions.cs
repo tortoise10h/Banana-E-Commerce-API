@@ -126,11 +126,18 @@ namespace Banana_E_Commerce_API.Extensions
                 .HasForeignKey(r => r.CustomerId)
                 .OnDelete(DeleteBehavior.NoAction);
 
-            /** [ProductTier] and [Rating] */
+            /** [ProductTier] and [RatingImage] */
             modelBuilder.Entity<ProductTier>()
-                .HasMany<Rating>(p => p.Rates)
+                .HasMany<RatingImage>(p => p.RatingImages)
                 .WithOne(r => r.ProductTier)
                 .HasForeignKey(r => r.ProductTierId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            /** [Rating] and [RatingImage] */
+            modelBuilder.Entity<Rating>()
+                .HasMany<RatingImage>(p => p.RatingImages)
+                .WithOne(r => r.Rating)
+                .HasForeignKey(r => r.RatingId)
                 .OnDelete(DeleteBehavior.NoAction);
 
             /** [Admin] and [PaymentMethod] */

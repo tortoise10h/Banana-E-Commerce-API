@@ -20,6 +20,7 @@ namespace Banana_E_Commerce_API.MapperProfiles
             CreateMap<GetAllProductTierTransferReportsQuery, GetAllProductTierTransferReportsFilter>();
             CreateMap<GetAllProductTiersQuery, GetAllProductTiersFilter>();
             CreateMap<GetAllOrdersQuery, GetAllOrdersFilter>();
+            CreateMap<GetAllRatingQuery, GetAllRatingFilter>();
         }
     }
 }
