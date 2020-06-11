@@ -21,13 +21,15 @@ namespace Banana_E_Commerce_API.Entities
         public int AddressId { get; set; }
         public int CustomerId { get; set; }
         public int PaymentMethodId { get; set; }
+        public string PaymentIntentId { get; set; }
 
 
         public Customer Customer { get; set; }
+        public CancelOrderReport CancelOrderReport { get; set; }
         public Address Address { get; set; }
         public PaymentMethod PaymentMethod { get; set; }
         public ICollection<OrderItem> OrderItems { get; set; }
-        public RequestExportProduct RequestExportProduct { get; set; }
+        public ICollection<ProductExportBill> ProductExportBills { get; set; }
     }
 
 

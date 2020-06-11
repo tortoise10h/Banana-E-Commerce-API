@@ -299,39 +299,53 @@ namespace Banana_E_Commerce_API.Extensions
                 .HasForeignKey(pt => pt.TierId)
                 .OnDelete(DeleteBehavior.NoAction);
 
-            /** [Order] and [RequestExportProduct] */
+            /** [Order] and [ProductExportBill] */
             modelBuilder.Entity<Order>()
-                .HasOne<RequestExportProduct>(o => o.RequestExportProduct)
-                .WithOne(rep => rep.Order)
-                .HasForeignKey<RequestExportProduct>(rep => rep.OrderId)
+                .HasMany<ProductExportBill>(a => a.ProductExportBills)
+                .WithOne(peb => peb.Order)
+                .HasForeignKey(peb => peb.OrderId)
                 .OnDelete(DeleteBehavior.NoAction);
 
-            /** [Admin] and [RequestExportProduct] */
-            modelBuilder.Entity<Admin>()
-                .HasMany<RequestExportProduct>(a => a.RequestExportProducts)
-                .WithOne(rep => rep.Admin)
-                .HasForeignKey(rep => rep.CreatedBy)
-                .OnDelete(DeleteBehavior.NoAction);
+            // /** [Order] and [RequestExportProduct] */
+            // modelBuilder.Entity<Order>()
+            //     .HasOne<RequestExportProduct>(o => o.RequestExportProduct)
+            //     .WithOne(rep => rep.Order)
+            //     .HasForeignKey<RequestExportProduct>(rep => rep.OrderId)
+            //     .OnDelete(DeleteBehavior.NoAction);
 
-            /** [RequestExportProduct] and [RequestExportDetail] */
-            modelBuilder.Entity<RequestExportProduct>()
-                .HasMany<RequestExportDetail>(rep => rep.RequestExportDetails)
-                .WithOne(red => red.RequestExportProduct)
-                .HasForeignKey(rep => rep.RequestExportProductId)
-                .OnDelete(DeleteBehavior.NoAction);
+            // /** [Admin] and [RequestExportProduct] */
+            // modelBuilder.Entity<Admin>()
+            //     .HasMany<RequestExportProduct>(a => a.RequestExportProducts)
+            //     .WithOne(rep => rep.Admin)
+            //     .HasForeignKey(rep => rep.CreatedBy)
+            //     .OnDelete(DeleteBehavior.NoAction);
 
-            /** [ProductTier] and [RequestExportDetail] */
-            modelBuilder.Entity<ProductTier>()
-                .HasMany<RequestExportDetail>(pt => pt.RequestExportDetails)
-                .WithOne(rep => rep.ProductTier)
-                .HasForeignKey(rep => rep.ProductTierId)
-                .OnDelete(DeleteBehavior.NoAction);
+            // /** [RequestExportProduct] and [RequestExportDetail] */
+            // modelBuilder.Entity<RequestExportProduct>()
+            //     .HasMany<RequestExportDetail>(rep => rep.RequestExportDetails)
+            //     .WithOne(red => red.RequestExportProduct)
+            //     .HasForeignKey(rep => rep.RequestExportProductId)
+            //     .OnDelete(DeleteBehavior.NoAction);
 
-            /** [RequestExportProduct] and [ProductExportBill] */
-            modelBuilder.Entity<RequestExportProduct>()
-                .HasMany<ProductExportBill>(rep => rep.ProductExportBills)
-                .WithOne(reb => reb.RequestExportProduct)
-                .HasForeignKey(rep => rep.RequestExportProductId)
+            // /** [ProductTier] and [RequestExportDetail] */
+            // modelBuilder.Entity<ProductTier>()
+            //     .HasMany<RequestExportDetail>(pt => pt.RequestExportDetails)
+            //     .WithOne(rep => rep.ProductTier)
+            //     .HasForeignKey(rep => rep.ProductTierId)
+            //     .OnDelete(DeleteBehavior.NoAction);
+
+            // /** [RequestExportProduct] and [ProductExportBill] */
+            // modelBuilder.Entity<RequestExportProduct>()
+            //     .HasMany<ProductExportBill>(rep => rep.ProductExportBills)
+            //     .WithOne(reb => reb.RequestExportProduct)
+            //     .HasForeignKey(rep => rep.RequestExportProductId)
+            //     .OnDelete(DeleteBehavior.NoAction);
+
+            /** [Order] and [CancelOrderReport] */
+            modelBuilder.Entity<Order>()
+                .HasOne<CancelOrderReport>(o => o.CancelOrderReport)
+                .WithOne(cor => cor.Order)
+                .HasForeignKey<CancelOrderReport>(cor => cor.OrderId)
                 .OnDelete(DeleteBehavior.NoAction);
 
             /** [Admin] and [RequestImportProduct] */
@@ -1690,7 +1704,7 @@ namespace Banana_E_Commerce_API.Extensions
                     new PaymentMethod
                     {
                         Id = 2,
-                        Method = MethodOfPayment.BK,
+                        Method = MethodOfPayment.Stripe,
                         CreatedAt = DateTime.UtcNow,
                         UpdatedAt = DateTime.UtcNow,
                         IsDeleted = false,

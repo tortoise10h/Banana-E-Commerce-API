@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -9,6 +10,9 @@ using Banana_E_Commerce_API.Entities;
 using Banana_E_Commerce_API.Enums;
 using Banana_E_Commerce_API.Helpers;
 using Microsoft.EntityFrameworkCore;
+using Stripe;
+using Order = Banana_E_Commerce_API.Entities.Order;
+using OrderItem = Banana_E_Commerce_API.Entities.OrderItem;
 
 namespace Banana_E_Commerce_API.Services
 {
@@ -16,10 +20,15 @@ namespace Banana_E_Commerce_API.Services
     {
         Task<CreateResult<Order>> CreateAsync(
             Order order,
-            int requestedUserId);
+            int requestedUserId,
+            string stripeSecretKey);
         Task<Order> GetByIdAsync(
             int id,
             int requestedUserId);
+        Task<Order> GetByIdAsyncAnonymous(
+            int id);
+        Task<Order> GetByPaymentIntentIdAsync(
+            string paymentIntentId);
         Task<IEnumerable<Order>> GetAllAsync(
             PaginationFilter pagination,
             GetAllOrdersFilter filter,
@@ -28,32 +37,46 @@ namespace Banana_E_Commerce_API.Services
             PaginationFilter pagination,
             GetAllOrdersFilter filter,
             int requestedUserId);
-        // Task<UpdateResult<Order>> CancelOrderAsync(Order order);
+        Task<UpdateResult<Order>> HandOverOrderToStorageManager(Order order);
+        Task<UpdateResult<Order>> CancelOrderAsync(
+            Order order,
+            CancelOrderReport cancelOrderReport);
+        Task<bool> ChangeOrderStatusToPayed(Order order);
     }
 
     public class OrderService : IOrderService
     {
         private readonly DataContext _context;
         private readonly IUserService _userService;
+        private readonly IEmailTemplateService _emailTemplateService;
+        private readonly IEmailService _emailService;
 
         public OrderService(
             DataContext context,
-            IUserService userService
+            IUserService userService,
+            IEmailTemplateService emailTemplateService,
+            IEmailService emailService
         )
         {
             _context = context;
             _userService = userService;
+            _emailTemplateService = emailTemplateService;
+            _emailService = emailService;
         }
 
         /** CREATE ASYNC */
         public async Task<CreateResult<Order>> CreateAsync(
             Order order,
-            int requestedUserId)
+            int requestedUserId,
+            string stripeSecretKey)
         {
             var customer = await _context.Customers
                 .Where(c => c.UserId == requestedUserId)
                 .Include(c => c.Cart)
+                .Include(c => c.User)
                 .FirstOrDefaultAsync();
+            var chosenPaymentMethod = await _context.PaymentMethods
+                .SingleOrDefaultAsync(x => x.Id == order.PaymentMethodId);
 
             /** Get all products in cart of customer to create order */
             var cartDetails = await GetListCartDetailToPay(customer.Cart.Id);
@@ -87,6 +110,13 @@ namespace Banana_E_Commerce_API.Services
             {
                 try
                 {
+                    /** Handle stripe payment (if choose) */
+                    HandleStripePaymentIfPaymentMethodIsStripe(
+                        chosenPaymentMethod,
+                        order,
+                        stripeSecretKey
+                    );
+
                     /** Create order */
                     await _context.Orders.AddAsync(order);
                     var orderCreated = await _context.SaveChangesAsync();
@@ -132,6 +162,24 @@ namespace Banana_E_Commerce_API.Services
                     };
                 }
             }
+
+            /** Send mail to user */
+            string orderMailTemplate = _emailTemplateService
+                .CreateOrderHtmlTempalteToSendMailToCustomer(
+                    order.Code,
+                    order.TotalAmount,
+                    order.CreatedAt,
+                    orderItems,
+                    productTiers,
+                    customer.Name,
+                    customer.User.Email
+                );
+            _emailService.SendMail(
+                customer.User.Email,
+                customer.Name,
+                $"Đơn hàng của khách hàng '{customer.Name}' vào {order.CreatedAt.ToString("dd/MM/y yyy HH:mm:ss")}",
+                orderMailTemplate
+            );
 
             return new CreateResult<Order>
             {
@@ -182,6 +230,7 @@ namespace Banana_E_Commerce_API.Services
                 .Where(x => productTierIdsInCartDetails.Contains(x.Id) &&
                     x.IsDeleted == false)
                 .Include(pt => pt.Product)
+                .Include(pt => pt.Tier)
                 .ToListAsync();
 
             return productTiers;
@@ -304,6 +353,27 @@ namespace Banana_E_Commerce_API.Services
             return deleted > 0;
         }
 
+        private void HandleStripePaymentIfPaymentMethodIsStripe(
+            Entities.PaymentMethod chosenPaymentMethod,
+            Order order,
+            string stripeSecretKey
+        )
+        {
+            if (chosenPaymentMethod.Method == MethodOfPayment.Stripe)
+            {
+                /** If payment by Stripe */
+                StripeConfiguration.ApiKey = stripeSecretKey;
+
+                var options = new PaymentIntentCreateOptions
+                {
+                    Amount = (long?)order.TotalAmount,
+                    Currency = "vnd",
+                };
+                var stripeService = new PaymentIntentService();
+                var paymentIntent = stripeService.Create(options);
+                order.PaymentIntentId = paymentIntent.Id;
+            }
+        }
 
 
         /** GET BY ID ASYNC */
@@ -381,11 +451,42 @@ namespace Banana_E_Commerce_API.Services
                 queryable = queryable.Where(o => o.CustomerId == user.Customer.Id);
             }
 
+            /** If role is storage manager then can't see canceled order */
+            if (user.Role.RoleName == RoleNameEnum.StorageManager)
+            {
+                queryable = queryable.Where(o => o.OrderStatus != OrderStatus.Canceled &&
+                    o.OrderStatus != OrderStatus.New);
+            }
+
             queryable = queryable.Where(x => x.IsDeleted == false);
 
             if (!string.IsNullOrEmpty(filter?.Code))
             {
                 queryable = queryable.Where(x => x.Code.Contains(filter.Code));
+            }
+
+            if (!string.IsNullOrEmpty(filter?.FromCreatedAt))
+            {
+                try
+                {
+                    var fromCreatedAtDate = DateTime
+                    .ParseExact(filter?.FromCreatedAt, "dd-MM-yyyy", CultureInfo.InvariantCulture);
+                    queryable = queryable.Where(x => x.CreatedAt >= fromCreatedAtDate);
+                }
+                catch
+                {
+                }
+            }
+            if (!string.IsNullOrEmpty(filter?.ToCreatedAt))
+            {
+                try
+                {
+                    var toCreatedAtDate = DateTime
+                    .ParseExact(filter?.ToCreatedAt, "dd-MM-yyyy", CultureInfo.InvariantCulture);
+                    queryable = queryable.Where(x => x.CreatedAt <= toCreatedAtDate);
+                }
+                catch
+                { }
             }
 
             if (!string.IsNullOrEmpty(filter?.Notes))
@@ -444,49 +545,203 @@ namespace Banana_E_Commerce_API.Services
                     x.PaymentMethod.Method == filter.MethodOfPayment);
             }
 
+            if (filter?.OrderStatus != null && filter?.OrderStatus != 0)
+            {
+                queryable = queryable.Where(x =>
+                    x.OrderStatus == filter.OrderStatus);
+            }
+
             return queryable;
         }
 
 
+        /** HAND OVER ORDER TO STORAGE MANAGER */
+        public async Task<UpdateResult<Order>> HandOverOrderToStorageManager(Order order)
+        {
+            /** Only change order status to processing with the current status is New */
+            if (order.OrderStatus != OrderStatus.New)
+            {
+                return new UpdateResult<Order>
+                {
+                    IsSuccess = false,
+                    Errors = new List<string>()
+                    {
+                        "Chỉ có thể bàn giao những đơn hàng mới tạo (trạng thái = New)"
+                    }
+                };
+            }
+
+            /** Change status to Processing */
+            order.OrderStatus = OrderStatus.Processing;
+
+            _context.Orders.Update(order);
+            var updated = await _context.SaveChangesAsync();
+
+            bool isUpdateSucceeded = updated > 0;
+
+            if (!isUpdateSucceeded)
+            {
+                return new UpdateResult<Order>
+                {
+                    IsSuccess = false,
+                    Errors = new List<string>()
+                    {
+                        "Bàn giao hoá đơn bị lỗi, xin thử lại"
+                    }
+                };
+            }
+
+            return new UpdateResult<Order>
+            {
+                IsSuccess = true
+            };
+        }
 
         /** CANCLE ORDER ASYNC */
-        // public async Task<UpdateResult<Order>> CancelOrderAsync(Order order)
-        // {
-        //     try
-        //     {
-        //         if (!CheckValidCanceledOrder(order))
-        //         {
-        //             throw new Exception("Huỷ đơn hàng bị lỗi, xin thử lại");
-        //         }
-        //     }
-        //     catch (Exception e)
-        //     {
-        //         return new UpdateResult<Order>
-        //         {
-        //             IsSuccess = false,
-        //             Errors = new List<string>()
-        //             {
-        //                 e.Message.ToString()
-        //             }
-        //         };
-        //     }
+        public async Task<UpdateResult<Order>> CancelOrderAsync(
+            Order order,
+            CancelOrderReport cancelOrderReport)
+        {
+            var customer = await _context.Customers
+                .Where(c => c.Id == order.CustomerId)
+                .Include(c => c.User)
+                .FirstOrDefaultAsync();
 
-        //     return new UpdateResult<Order>
-        //     {
-        //         IsSuccess = true
-        //     };
+            try
+            {
+                if (!CheckValidCanceledOrder(order))
+                {
+                    throw new Exception("Huỷ đơn hàng bị lỗi, xin thử lại");
+                }
 
-        // }
+                using (var transaction = _context.Database.BeginTransaction())
+                {
+                    try
+                    {
+                        /** Update status of order to Canceled */
+                        order.OrderStatus = OrderStatus.Canceled;
+                        _context.Orders.Update(order);
+                        var updated = await _context.SaveChangesAsync();
+                        if (!(updated > 0))
+                        {
+                            transaction.Dispose();
+                            return new UpdateResult<Order>
+                            {
+                                IsSuccess = false,
+                                Errors = new List<string>()
+                                {
+                                    "Huỷ hoá đơn không thành công, xin thử lại"
+                                }
+                            };
+                        }
 
-        // private bool CheckValidCanceledOrder(Order order)
-        // {
-        //     /** Only can cancel order when its status is New */
-        //     if (order.OrderStatus != OrderStatus.New)
-        //     {
-        //         throw new Exception("Chỉ được phép huỷ đơn hàng khi đơn hàng đó có trạng thái là \"New\"");
-        //     }
+                        /** Create CancelOrderReport */
+                        cancelOrderReport.OrderId = order.Id;
+                        cancelOrderReport.CreatedAt = DateTime.UtcNow;
+                        cancelOrderReport.IsDeleted = false;
+                        await _context.CancelOrderReports.AddAsync(cancelOrderReport);
+                        var created = await _context.SaveChangesAsync();
+                        if (!(created > 0))
+                        {
+                            transaction.Dispose();
+                            return new UpdateResult<Order>
+                            {
+                                IsSuccess = false,
+                                Errors = new List<string>()
+                                {
+                                    "Huỷ hoá đơn không thành công, xin thử lại"
+                                }
+                            };
+                        }
 
-        //     return true;
-        // }
+                        await transaction.CommitAsync();
+                    }
+                    catch (Exception e)
+                    {
+                        return new UpdateResult<Order>
+                        {
+                            IsSuccess = false,
+                            Errors = new List<string>()
+                        {
+                            e.Message.ToString()
+                        }
+                        };
+                    }
+                }
+
+            }
+            catch (Exception e)
+            {
+                return new UpdateResult<Order>
+                {
+                    IsSuccess = false,
+                    Errors = new List<string>()
+                    {
+                        e.Message.ToString()
+                    }
+                };
+            }
+
+            /** Send mail to customer */
+            string cancelOrderTemplate = _emailTemplateService
+                .CancelOrderTemplate(
+                    customer.Name,
+                    order.Code,
+                    cancelOrderReport.CancelReason
+                );
+            _emailService.SendMail(
+                customer.User.Email,
+                customer.Name,
+                $"Huỷ hoá đơn {order.Code} tại Banana Boys Fruit",
+                cancelOrderTemplate
+            );
+
+            return new UpdateResult<Order>
+            {
+                IsSuccess = true
+            };
+
+        }
+
+        private bool CheckValidCanceledOrder(Order order)
+        {
+            /** Only can cancel order when its status is New */
+            if (order.OrderStatus != OrderStatus.New)
+            {
+                throw new Exception("Chỉ được phép huỷ đơn hàng khi đơn hàng đó chưa bàn giao cho thủ kho (trạng thái = New)");
+            }
+
+            return true;
+        }
+
+
+
+        /** ChangeOrderStatusToPayed */
+        public async Task<bool> ChangeOrderStatusToPayed(Order order)
+        {
+            order.OrderStatus = OrderStatus.Succeeded;
+            _context.Orders
+                .Update(order);
+            var updated = await _context.SaveChangesAsync();
+
+            return updated > 0;
+        }
+
+
+
+        /** GetByPaymentIntentIdAsync */
+        public async Task<Order> GetByPaymentIntentIdAsync(string paymentIntentId)
+        {
+            return await _context.Orders
+                .SingleOrDefaultAsync(x => x.PaymentIntentId == paymentIntentId);
+        }
+
+
+        /** GetByIdAsyncAnonymous */
+        public async Task<Order> GetByIdAsyncAnonymous(int id)
+        {
+            return await _context.Orders
+                .SingleOrDefaultAsync(x => x.Id == id);
+        }
     }
 }
