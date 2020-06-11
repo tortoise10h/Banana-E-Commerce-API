@@ -12,5 +12,6 @@ namespace Banana_E_Commerce_API.Helpers
         public string RatingImageDir { get; set; }
         public string ShopEmail { get; set; }
         public string ShopEmailPassword { get; set; }
+        public string StripeSecretKey { get; set; }
     }
 }

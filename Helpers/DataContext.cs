@@ -44,6 +44,7 @@ namespace Banana_E_Commerce_API.Helpers
         public DbSet<Tier> Tiers { get; set; }
         public DbSet<RatingImage> RatingImages { get; set; }
         public DbSet<RemoveProductQuantityReport> RemoveProductQuantityReports { get; set; }
+        public DbSet<CancelOrderReport> CancelOrderReports { get; set; }
 
 
         public DataContext(DbContextOptions options, IConfiguration configuration)

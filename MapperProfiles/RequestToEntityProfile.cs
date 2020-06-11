@@ -20,6 +20,8 @@ using Banana_E_Commerce_API.Contracts.V1.RequestModels.Order;
 using Banana_E_Commerce_API.Contracts.V1.RequestModels.OrderItem;
 using Banana_E_Commerce_API.Contracts.V1.RequestModels.Rating;
 using Banana_E_Commerce_API.Contracts.V1.RequestModels.RatingImage;
+using Banana_E_Commerce_API.Contracts.V1.RequestModels.ProductExportBill;
+using Banana_E_Commerce_API.Contracts.V1.RequestModels.ProductExportDetail;
 
 namespace Banana_E_Commerce_API.MapperProfiles
 {
@@ -94,6 +96,12 @@ namespace Banana_E_Commerce_API.MapperProfiles
 
             /** Rating Image */
             CreateMap<CreateRatingImageRequest, RatingImage>();
+            /** ProductExportBill */
+            CreateMap<CreateProductExportBillRequest, ProductExportBill>();
+
+            /** ProductExportDetail */
+            CreateMap<CreateProductExportDetailRequest, ProductExportDetail>();
+
         }
     }
 }

@@ -142,8 +142,11 @@ namespace Banana_E_Commerce_API.Contracts.V1
             public const string GetById = Base + "/Orders/{orderId}";
             public const string Update = Base + "/Orders/{orderId}";
             public const string Delete = Base + "/Orders/{orderId}";
+            public const string HandOverOrderToStorageManager = Base + "/Orders/{orderId}/ProcessingStatus";
+            public const string CancelOrder = Base + "/Orders/{orderId}/CanceledStatus";
+            public const string StripePaymentResponse = Base + "/Orders/StripePaymentResponse";
         }
-        
+
         public static class Rating
         {
             public const string Create = Base + "/rates";
@@ -156,6 +159,15 @@ namespace Banana_E_Commerce_API.Contracts.V1
         public static class RatingImage
         {
             public const string UploadMultiples = Base + "/ratingImages";
+        }
+
+        public static class ProductExportBill
+        {
+            public const string Create = Base + "/ProductExportBills";
+            public const string GetAll = Base + "/ProductExportBills";
+            public const string GetById = Base + "/ProductExportBills/{productExportBillId}";
+            public const string Update = Base + "/ProductExportBills/{productExportBillId}";
+            public const string Delete = Base + "/ProductExportBills/{productExportBillId}";
         }
     }
 }

@@ -37,7 +37,8 @@ namespace Banana_E_Commerce_API.Installers
                             return result;
                         };
                     })
-                .AddFluentValidation(config => config.RegisterValidatorsFromAssemblyContaining<Startup>());
+                .AddFluentValidation(
+                    config => config.RegisterValidatorsFromAssemblyContaining<Startup>());
 
         }
     }

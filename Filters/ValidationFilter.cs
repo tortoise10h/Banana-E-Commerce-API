@@ -8,7 +8,9 @@ namespace Banana_E_Commerce_API.Filters
 {
     public class ValidationFilter : IAsyncActionFilter
     {
-        public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
+        public async Task OnActionExecutionAsync(
+            ActionExecutingContext context,
+            ActionExecutionDelegate next)
         {
             // before controller
             if (!context.ModelState.IsValid)

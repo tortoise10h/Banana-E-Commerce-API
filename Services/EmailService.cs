@@ -54,6 +54,7 @@ namespace Banana_E_Commerce_API.Services
                 Body = body
             })
             {
+                message.IsBodyHtml = true;
                 smtp.Send(message);
             }
         }

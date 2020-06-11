@@ -34,6 +34,8 @@ namespace Banana_E_Commerce_API.Installers
             services.AddScoped<IEmailService, EmailService>();
             services.AddScoped<IRatingService, RatingService>();
             services.AddScoped<IRatingImageService, RatingImageService>();
+            services.AddScoped<IProductExportBillService, ProductExportBillService>();
+            services.AddScoped<IEmailTemplateService, EmailTemplateService>();
 
             services.AddSingleton<IUriService>(provider =>
             {

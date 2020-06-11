@@ -1,9 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using System.Threading.Tasks;
 using AutoMapper;
 using Banana_E_Commerce_API.Contracts.V1;
+using Banana_E_Commerce_API.Contracts.V1.RequestModels.CancelOrderReport;
 using Banana_E_Commerce_API.Contracts.V1.RequestModels.Order;
 using Banana_E_Commerce_API.Contracts.V1.RequestModels.OrderItem;
 using Banana_E_Commerce_API.Contracts.V1.RequestModels.Queries;
@@ -16,8 +18,11 @@ using Banana_E_Commerce_API.Enums;
 using Banana_E_Commerce_API.Extensions;
 using Banana_E_Commerce_API.Helpers;
 using Banana_E_Commerce_API.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
+using Stripe;
+using Order = Banana_E_Commerce_API.Entities.Order;
 
 namespace Banana_E_Commerce_API.Controllers.V1
 {
@@ -64,7 +69,8 @@ namespace Banana_E_Commerce_API.Controllers.V1
 
             var createResult = await _orderService.CreateAsync(
                 orderEntity,
-                requestedUserId
+                requestedUserId,
+                _appSettings.Value.StripeSecretKey
             );
 
             if (createResult.IsSuccess == false)
@@ -129,6 +135,122 @@ namespace Banana_E_Commerce_API.Controllers.V1
                 );
 
             return Ok(paginationOrdersResponse);
+        }
+
+        [AuthorizeRoles(RoleNameEnum.Admin)]
+        [HttpPut(ApiRoutes.Order.HandOverOrderToStorageManager)]
+        public async Task<IActionResult> HandOverOrderToStorageManager(
+            [FromRoute] int orderId
+        )
+        {
+            int requestedUserId = int.Parse(HttpContext.GetUserIdFromRequest());
+            var order = await _orderService
+                .GetByIdAsync(orderId, requestedUserId);
+
+            if (order == null)
+            {
+                return NotFound();
+            }
+
+            var updateResult = await _orderService.HandOverOrderToStorageManager(
+                order
+            );
+
+            if (updateResult.IsSuccess == false)
+            {
+                return BadRequest(updateResult.Errors);
+            }
+
+            var orderResponse = _mapper.Map<OrderResponse>(order);
+
+            return Ok(new Response<OrderResponse>(orderResponse));
+        }
+
+
+        [AuthorizeRoles(RoleNameEnum.Admin)]
+        [HttpPut(ApiRoutes.Order.CancelOrder)]
+        public async Task<IActionResult> CancleOrder(
+            [FromRoute] int orderId,
+            [FromBody] CancelOrderRequest cancelRequest
+        )
+        {
+            int requestedUserId = int.Parse(HttpContext.GetUserIdFromRequest());
+            CancelOrderReport cancelOrderReport = new CancelOrderReport
+            {
+                CancelReason = cancelRequest.CancelReason
+            };
+            var order = await _orderService
+                .GetByIdAsync(orderId, requestedUserId);
+
+            if (order == null)
+            {
+                return NotFound();
+            }
+
+            var cancelResult = await _orderService.CancelOrderAsync(
+                order,
+                cancelOrderReport
+            );
+
+            if (cancelResult.IsSuccess == false)
+            {
+                return BadRequest(cancelResult.Errors);
+            }
+
+            var orderResponse = _mapper.Map<OrderResponse>(order);
+
+            return Ok(new Response<OrderResponse>(orderResponse));
+        }
+
+
+        [AllowAnonymous]
+        [HttpPost(ApiRoutes.Order.StripePaymentResponse)]
+        public async Task<IActionResult> UpdateOrderAfterStripeResponse(
+        )
+        {
+            var json = await new StreamReader(HttpContext.Request.Body).ReadToEndAsync();
+
+            try
+            {
+                var stripeEvent = EventUtility.ParseEvent(json);
+
+                // Handle the event
+                if (stripeEvent.Type == Events.PaymentIntentSucceeded)
+                {
+                    var paymentIntent = stripeEvent.Data.Object as PaymentIntent;
+                    var updateOrder = await _orderService
+                        .GetByPaymentIntentIdAsync(paymentIntent.Id);
+
+                    if (updateOrder == null)
+                    {
+                        return BadRequest();
+                    }
+                    var isChangeStatusSucceeded = await _orderService
+                        .ChangeOrderStatusToPayed(updateOrder);
+                    if (!isChangeStatusSucceeded)
+                    {
+                        return BadRequest();
+                    }
+
+                    return Ok();
+                }
+                else if (stripeEvent.Type == Events.PaymentMethodAttached)
+                {
+                    var paymentMethod = stripeEvent.Data.Object as Stripe.PaymentMethod;
+                }
+                // ... handle other event types
+                else
+                {
+                    // Unexpected event type
+                    return BadRequest();
+                }
+
+                return Ok();
+            }
+            catch (StripeException)
+            {
+                return BadRequest();
+            }
         }
     }
 }

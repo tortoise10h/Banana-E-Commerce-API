@@ -13,7 +13,8 @@ namespace Banana_E_Commerce_API.Domains
         public BooleanSearch IsGift { get; set; }
         public string Notes { get; set; }
         public BooleanSearch IsCustomerReceive { get; set; }
-        public DateTime CreatedAt { get; set; }
+        public string FromCreatedAt { get; set; }
+        public string ToCreatedAt { get; set; }
         public int CustomerId { get; set; }
         public MethodOfPayment MethodOfPayment { get; set; }
     }
