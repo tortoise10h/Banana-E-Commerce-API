@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Banana_E_Commerce_API.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20200613025449_Storage_And_Categories_Seed")]
+    [Migration("20200613123807_Storage_And_Categories_Seed")]
     partial class Storage_And_Categories_Seed
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -101,6 +101,33 @@ namespace Banana_E_Commerce_API.Migrations
                     b.ToTable("Admins");
                 });
 
+            modelBuilder.Entity("Banana_E_Commerce_API.Entities.CancelOrderReport", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("CancelReason")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("OrderId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OrderId")
+                        .IsUnique();
+
+                    b.ToTable("CancelOrderReports");
+                });
+
             modelBuilder.Entity("Banana_E_Commerce_API.Entities.Cart", b =>
                 {
                     b.Property<int>("Id")
@@ -182,38 +209,38 @@ namespace Banana_E_Commerce_API.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2020, 6, 13, 2, 54, 48, 582, DateTimeKind.Utc).AddTicks(9408),
+                            CreatedAt = new DateTime(2020, 6, 13, 12, 38, 7, 130, DateTimeKind.Utc).AddTicks(7332),
                             CreatedBy = 1,
                             IsDeleted = false,
                             Name = "Trái Cây Việt",
-                            UpdatedAt = new DateTime(2020, 6, 13, 2, 54, 48, 582, DateTimeKind.Utc).AddTicks(9769)
+                            UpdatedAt = new DateTime(2020, 6, 13, 12, 38, 7, 130, DateTimeKind.Utc).AddTicks(7749)
                         },
                         new
                         {
                             Id = 2,
-                            CreatedAt = new DateTime(2020, 6, 13, 2, 54, 48, 583, DateTimeKind.Utc).AddTicks(744),
+                            CreatedAt = new DateTime(2020, 6, 13, 12, 38, 7, 130, DateTimeKind.Utc).AddTicks(9346),
                             CreatedBy = 2,
                             IsDeleted = false,
                             Name = "Trái Cây Nhập",
-                            UpdatedAt = new DateTime(2020, 6, 13, 2, 54, 48, 583, DateTimeKind.Utc).AddTicks(770)
+                            UpdatedAt = new DateTime(2020, 6, 13, 12, 38, 7, 130, DateTimeKind.Utc).AddTicks(9377)
                         },
                         new
                         {
                             Id = 3,
-                            CreatedAt = new DateTime(2020, 6, 13, 2, 54, 48, 583, DateTimeKind.Utc).AddTicks(799),
+                            CreatedAt = new DateTime(2020, 6, 13, 12, 38, 7, 130, DateTimeKind.Utc).AddTicks(9412),
                             CreatedBy = 3,
                             IsDeleted = false,
                             Name = "Trái Cây Sấy Khô",
-                            UpdatedAt = new DateTime(2020, 6, 13, 2, 54, 48, 583, DateTimeKind.Utc).AddTicks(801)
+                            UpdatedAt = new DateTime(2020, 6, 13, 12, 38, 7, 130, DateTimeKind.Utc).AddTicks(9413)
                         },
                         new
                         {
                             Id = 4,
-                            CreatedAt = new DateTime(2020, 6, 13, 2, 54, 48, 583, DateTimeKind.Utc).AddTicks(803),
+                            CreatedAt = new DateTime(2020, 6, 13, 12, 38, 7, 130, DateTimeKind.Utc).AddTicks(9416),
                             CreatedBy = 4,
                             IsDeleted = false,
                             Name = "Mứt Trái Cây>",
-                            UpdatedAt = new DateTime(2020, 6, 13, 2, 54, 48, 583, DateTimeKind.Utc).AddTicks(804)
+                            UpdatedAt = new DateTime(2020, 6, 13, 12, 38, 7, 130, DateTimeKind.Utc).AddTicks(9417)
                         });
                 });
 
@@ -520,6 +547,9 @@ namespace Banana_E_Commerce_API.Migrations
                     b.Property<int>("OrderStatus")
                         .HasColumnType("int");
 
+                    b.Property<string>("PaymentIntentId")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("PaymentMethodId")
                         .HasColumnType("int");
 
@@ -708,7 +738,10 @@ namespace Banana_E_Commerce_API.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<int>("RequestExportProductId")
+                    b.Property<int>("OrderId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("RequestExportProductId")
                         .HasColumnType("int");
 
                     b.Property<int>("StorageManagerId")
@@ -718,6 +751,8 @@ namespace Banana_E_Commerce_API.Migrations
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("OrderId");
 
                     b.HasIndex("RequestExportProductId");
 
@@ -1061,6 +1096,9 @@ namespace Banana_E_Commerce_API.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<int?>("AdminId")
+                        .HasColumnType("int");
+
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
@@ -1075,10 +1113,9 @@ namespace Banana_E_Commerce_API.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CreatedBy");
+                    b.HasIndex("AdminId");
 
-                    b.HasIndex("OrderId")
-                        .IsUnique();
+                    b.HasIndex("OrderId");
 
                     b.ToTable("RequestExportProducts");
                 });
@@ -1164,34 +1201,34 @@ namespace Banana_E_Commerce_API.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2020, 6, 13, 2, 54, 48, 580, DateTimeKind.Utc).AddTicks(9165),
+                            CreatedAt = new DateTime(2020, 6, 13, 12, 38, 7, 128, DateTimeKind.Utc).AddTicks(5029),
                             IsDeleted = false,
                             RoleName = 0,
-                            UpdatedAt = new DateTime(2020, 6, 13, 2, 54, 48, 580, DateTimeKind.Utc).AddTicks(9613)
+                            UpdatedAt = new DateTime(2020, 6, 13, 12, 38, 7, 128, DateTimeKind.Utc).AddTicks(5555)
                         },
                         new
                         {
                             Id = 2,
-                            CreatedAt = new DateTime(2020, 6, 13, 2, 54, 48, 581, DateTimeKind.Utc).AddTicks(361),
+                            CreatedAt = new DateTime(2020, 6, 13, 12, 38, 7, 128, DateTimeKind.Utc).AddTicks(6464),
                             IsDeleted = false,
                             RoleName = 1,
-                            UpdatedAt = new DateTime(2020, 6, 13, 2, 54, 48, 581, DateTimeKind.Utc).AddTicks(375)
+                            UpdatedAt = new DateTime(2020, 6, 13, 12, 38, 7, 128, DateTimeKind.Utc).AddTicks(6479)
                         },
                         new
                         {
                             Id = 3,
-                            CreatedAt = new DateTime(2020, 6, 13, 2, 54, 48, 581, DateTimeKind.Utc).AddTicks(411),
+                            CreatedAt = new DateTime(2020, 6, 13, 12, 38, 7, 128, DateTimeKind.Utc).AddTicks(6518),
                             IsDeleted = false,
                             RoleName = 2,
-                            UpdatedAt = new DateTime(2020, 6, 13, 2, 54, 48, 581, DateTimeKind.Utc).AddTicks(412)
+                            UpdatedAt = new DateTime(2020, 6, 13, 12, 38, 7, 128, DateTimeKind.Utc).AddTicks(6519)
                         },
                         new
                         {
                             Id = 4,
-                            CreatedAt = new DateTime(2020, 6, 13, 2, 54, 48, 581, DateTimeKind.Utc).AddTicks(414),
+                            CreatedAt = new DateTime(2020, 6, 13, 12, 38, 7, 128, DateTimeKind.Utc).AddTicks(6521),
                             IsDeleted = false,
                             RoleName = 3,
-                            UpdatedAt = new DateTime(2020, 6, 13, 2, 54, 48, 581, DateTimeKind.Utc).AddTicks(415)
+                            UpdatedAt = new DateTime(2020, 6, 13, 12, 38, 7, 128, DateTimeKind.Utc).AddTicks(6522)
                         });
                 });
 
@@ -1343,13 +1380,13 @@ namespace Banana_E_Commerce_API.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2020, 6, 13, 2, 54, 48, 582, DateTimeKind.Utc).AddTicks(6993),
+                            CreatedAt = new DateTime(2020, 6, 13, 12, 38, 7, 130, DateTimeKind.Utc).AddTicks(4584),
                             IsDeleted = false,
                             Location = "Tiểu Vương Quốc Bình Chánh",
                             Name = "Hoàng Khố",
                             Size = 1000.2,
                             SizeUnit = "m2",
-                            UpdatedAt = new DateTime(2020, 6, 13, 2, 54, 48, 582, DateTimeKind.Utc).AddTicks(7407)
+                            UpdatedAt = new DateTime(2020, 6, 13, 12, 38, 7, 130, DateTimeKind.Utc).AddTicks(5057)
                         });
                 });
 
@@ -1466,6 +1503,15 @@ namespace Banana_E_Commerce_API.Migrations
                     b.HasOne("Banana_E_Commerce_API.Entities.User", "User")
                         .WithOne("Admin")
                         .HasForeignKey("Banana_E_Commerce_API.Entities.Admin", "UserId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Banana_E_Commerce_API.Entities.CancelOrderReport", b =>
+                {
+                    b.HasOne("Banana_E_Commerce_API.Entities.Order", "Order")
+                        .WithOne("CancelOrderReport")
+                        .HasForeignKey("Banana_E_Commerce_API.Entities.CancelOrderReport", "OrderId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
                 });
@@ -1677,11 +1723,15 @@ namespace Banana_E_Commerce_API.Migrations
 
             modelBuilder.Entity("Banana_E_Commerce_API.Entities.ProductExportBill", b =>
                 {
-                    b.HasOne("Banana_E_Commerce_API.Entities.RequestExportProduct", "RequestExportProduct")
+                    b.HasOne("Banana_E_Commerce_API.Entities.Order", "Order")
                         .WithMany("ProductExportBills")
-                        .HasForeignKey("RequestExportProductId")
+                        .HasForeignKey("OrderId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
+
+                    b.HasOne("Banana_E_Commerce_API.Entities.RequestExportProduct", null)
+                        .WithMany("ProductExportBills")
+                        .HasForeignKey("RequestExportProductId");
 
                     b.HasOne("Banana_E_Commerce_API.Entities.StorageManager", "StorageManager")
                         .WithMany("ProductExportBills")
@@ -1818,13 +1868,13 @@ namespace Banana_E_Commerce_API.Migrations
                     b.HasOne("Banana_E_Commerce_API.Entities.ProductTier", "ProductTier")
                         .WithMany("RequestExportDetails")
                         .HasForeignKey("ProductTierId")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Banana_E_Commerce_API.Entities.RequestExportProduct", "RequestExportProduct")
                         .WithMany("RequestExportDetails")
                         .HasForeignKey("RequestExportProductId")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
@@ -1832,14 +1882,12 @@ namespace Banana_E_Commerce_API.Migrations
                 {
                     b.HasOne("Banana_E_Commerce_API.Entities.Admin", "Admin")
                         .WithMany("RequestExportProducts")
-                        .HasForeignKey("CreatedBy")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
+                        .HasForeignKey("AdminId");
 
                     b.HasOne("Banana_E_Commerce_API.Entities.Order", "Order")
-                        .WithOne("RequestExportProduct")
-                        .HasForeignKey("Banana_E_Commerce_API.Entities.RequestExportProduct", "OrderId")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .WithMany()
+                        .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 

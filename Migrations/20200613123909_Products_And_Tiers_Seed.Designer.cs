@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Banana_E_Commerce_API.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20200613025530_Products_Seed")]
-    partial class Products_Seed
+    [Migration("20200613123909_Products_And_Tiers_Seed")]
+    partial class Products_And_Tiers_Seed
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -101,6 +101,33 @@ namespace Banana_E_Commerce_API.Migrations
                     b.ToTable("Admins");
                 });
 
+            modelBuilder.Entity("Banana_E_Commerce_API.Entities.CancelOrderReport", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("CancelReason")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("OrderId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OrderId")
+                        .IsUnique();
+
+                    b.ToTable("CancelOrderReports");
+                });
+
             modelBuilder.Entity("Banana_E_Commerce_API.Entities.Cart", b =>
                 {
                     b.Property<int>("Id")
@@ -182,38 +209,38 @@ namespace Banana_E_Commerce_API.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2020, 6, 13, 2, 55, 29, 720, DateTimeKind.Utc).AddTicks(13),
+                            CreatedAt = new DateTime(2020, 6, 13, 12, 39, 8, 368, DateTimeKind.Utc).AddTicks(2766),
                             CreatedBy = 1,
                             IsDeleted = false,
                             Name = "Trái Cây Việt",
-                            UpdatedAt = new DateTime(2020, 6, 13, 2, 55, 29, 720, DateTimeKind.Utc).AddTicks(377)
+                            UpdatedAt = new DateTime(2020, 6, 13, 12, 39, 8, 368, DateTimeKind.Utc).AddTicks(3136)
                         },
                         new
                         {
                             Id = 2,
-                            CreatedAt = new DateTime(2020, 6, 13, 2, 55, 29, 720, DateTimeKind.Utc).AddTicks(1417),
+                            CreatedAt = new DateTime(2020, 6, 13, 12, 39, 8, 368, DateTimeKind.Utc).AddTicks(4111),
                             CreatedBy = 2,
                             IsDeleted = false,
                             Name = "Trái Cây Nhập",
-                            UpdatedAt = new DateTime(2020, 6, 13, 2, 55, 29, 720, DateTimeKind.Utc).AddTicks(1448)
+                            UpdatedAt = new DateTime(2020, 6, 13, 12, 39, 8, 368, DateTimeKind.Utc).AddTicks(4137)
                         },
                         new
                         {
                             Id = 3,
-                            CreatedAt = new DateTime(2020, 6, 13, 2, 55, 29, 720, DateTimeKind.Utc).AddTicks(1477),
+                            CreatedAt = new DateTime(2020, 6, 13, 12, 39, 8, 368, DateTimeKind.Utc).AddTicks(4167),
                             CreatedBy = 3,
                             IsDeleted = false,
                             Name = "Trái Cây Sấy Khô",
-                            UpdatedAt = new DateTime(2020, 6, 13, 2, 55, 29, 720, DateTimeKind.Utc).AddTicks(1478)
+                            UpdatedAt = new DateTime(2020, 6, 13, 12, 39, 8, 368, DateTimeKind.Utc).AddTicks(4168)
                         },
                         new
                         {
                             Id = 4,
-                            CreatedAt = new DateTime(2020, 6, 13, 2, 55, 29, 720, DateTimeKind.Utc).AddTicks(1481),
+                            CreatedAt = new DateTime(2020, 6, 13, 12, 39, 8, 368, DateTimeKind.Utc).AddTicks(4171),
                             CreatedBy = 4,
                             IsDeleted = false,
                             Name = "Mứt Trái Cây>",
-                            UpdatedAt = new DateTime(2020, 6, 13, 2, 55, 29, 720, DateTimeKind.Utc).AddTicks(1482)
+                            UpdatedAt = new DateTime(2020, 6, 13, 12, 39, 8, 368, DateTimeKind.Utc).AddTicks(4172)
                         });
                 });
 
@@ -520,6 +547,9 @@ namespace Banana_E_Commerce_API.Migrations
                     b.Property<int>("OrderStatus")
                         .HasColumnType("int");
 
+                    b.Property<string>("PaymentIntentId")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("PaymentMethodId")
                         .HasColumnType("int");
 
@@ -699,7 +729,7 @@ namespace Banana_E_Commerce_API.Migrations
                         {
                             Id = 1,
                             CategoryId = 1,
-                            CreatedAt = new DateTime(2020, 6, 13, 2, 55, 29, 720, DateTimeKind.Utc).AddTicks(4685),
+                            CreatedAt = new DateTime(2020, 6, 13, 12, 39, 8, 368, DateTimeKind.Utc).AddTicks(7257),
                             CreatedBy = 1,
                             Description = "Bơ 034 từ Việt Nam, Đắk Lắk",
                             EntryPrice = 60000.0,
@@ -710,13 +740,13 @@ namespace Banana_E_Commerce_API.Migrations
                             ProductUnit = 7,
                             Status = 2,
                             StorageId = 1,
-                            UpdatedAt = new DateTime(2020, 6, 13, 2, 55, 29, 720, DateTimeKind.Utc).AddTicks(5044)
+                            UpdatedAt = new DateTime(2020, 6, 13, 12, 39, 8, 368, DateTimeKind.Utc).AddTicks(7617)
                         },
                         new
                         {
                             Id = 2,
                             CategoryId = 1,
-                            CreatedAt = new DateTime(2020, 6, 13, 2, 55, 29, 720, DateTimeKind.Utc).AddTicks(6674),
+                            CreatedAt = new DateTime(2020, 6, 13, 12, 39, 8, 368, DateTimeKind.Utc).AddTicks(9457),
                             CreatedBy = 2,
                             Description = "Bơ Sáp từ Việt Nam, Đắk Lắk",
                             EntryPrice = 58000.0,
@@ -727,13 +757,13 @@ namespace Banana_E_Commerce_API.Migrations
                             ProductUnit = 7,
                             Status = 2,
                             StorageId = 1,
-                            UpdatedAt = new DateTime(2020, 6, 13, 2, 55, 29, 720, DateTimeKind.Utc).AddTicks(6688)
+                            UpdatedAt = new DateTime(2020, 6, 13, 12, 39, 8, 368, DateTimeKind.Utc).AddTicks(9472)
                         },
                         new
                         {
                             Id = 3,
                             CategoryId = 1,
-                            CreatedAt = new DateTime(2020, 6, 13, 2, 55, 29, 720, DateTimeKind.Utc).AddTicks(6734),
+                            CreatedAt = new DateTime(2020, 6, 13, 12, 39, 8, 368, DateTimeKind.Utc).AddTicks(9522),
                             CreatedBy = 3,
                             Description = "Bưởi Da Xanh từ Việt Nam, Đồng Nai, Tân Triều",
                             EntryPrice = 30000.0,
@@ -744,13 +774,13 @@ namespace Banana_E_Commerce_API.Migrations
                             ProductUnit = 3,
                             Status = 2,
                             StorageId = 1,
-                            UpdatedAt = new DateTime(2020, 6, 13, 2, 55, 29, 720, DateTimeKind.Utc).AddTicks(6735)
+                            UpdatedAt = new DateTime(2020, 6, 13, 12, 39, 8, 368, DateTimeKind.Utc).AddTicks(9523)
                         },
                         new
                         {
                             Id = 4,
                             CategoryId = 1,
-                            CreatedAt = new DateTime(2020, 6, 13, 2, 55, 29, 720, DateTimeKind.Utc).AddTicks(6738),
+                            CreatedAt = new DateTime(2020, 6, 13, 12, 39, 8, 368, DateTimeKind.Utc).AddTicks(9526),
                             CreatedBy = 3,
                             Description = "Có sắc tố đặc biệt, rất hiệu dụng trong quá trình chống oxy hóa",
                             EntryPrice = 65000.0,
@@ -761,13 +791,13 @@ namespace Banana_E_Commerce_API.Migrations
                             ProductUnit = 7,
                             Status = 2,
                             StorageId = 1,
-                            UpdatedAt = new DateTime(2020, 6, 13, 2, 55, 29, 720, DateTimeKind.Utc).AddTicks(6739)
+                            UpdatedAt = new DateTime(2020, 6, 13, 12, 39, 8, 368, DateTimeKind.Utc).AddTicks(9528)
                         },
                         new
                         {
                             Id = 5,
                             CategoryId = 1,
-                            CreatedAt = new DateTime(2020, 6, 13, 2, 55, 29, 720, DateTimeKind.Utc).AddTicks(6743),
+                            CreatedAt = new DateTime(2020, 6, 13, 12, 39, 8, 368, DateTimeKind.Utc).AddTicks(9531),
                             CreatedBy = 4,
                             Description = "Cam Sành Miền Tây",
                             EntryPrice = 15000.0,
@@ -778,13 +808,13 @@ namespace Banana_E_Commerce_API.Migrations
                             ProductUnit = 7,
                             Status = 2,
                             StorageId = 1,
-                            UpdatedAt = new DateTime(2020, 6, 13, 2, 55, 29, 720, DateTimeKind.Utc).AddTicks(6744)
+                            UpdatedAt = new DateTime(2020, 6, 13, 12, 39, 8, 368, DateTimeKind.Utc).AddTicks(9532)
                         },
                         new
                         {
                             Id = 6,
                             CategoryId = 1,
-                            CreatedAt = new DateTime(2020, 6, 13, 2, 55, 29, 720, DateTimeKind.Utc).AddTicks(6746),
+                            CreatedAt = new DateTime(2020, 6, 13, 12, 39, 8, 368, DateTimeKind.Utc).AddTicks(9535),
                             CreatedBy = 1,
                             Description = "Chanh đào tươi Đà Lạt",
                             EntryPrice = 40000.0,
@@ -795,13 +825,13 @@ namespace Banana_E_Commerce_API.Migrations
                             ProductUnit = 7,
                             Status = 2,
                             StorageId = 1,
-                            UpdatedAt = new DateTime(2020, 6, 13, 2, 55, 29, 720, DateTimeKind.Utc).AddTicks(6747)
+                            UpdatedAt = new DateTime(2020, 6, 13, 12, 39, 8, 368, DateTimeKind.Utc).AddTicks(9536)
                         },
                         new
                         {
                             Id = 7,
                             CategoryId = 1,
-                            CreatedAt = new DateTime(2020, 6, 13, 2, 55, 29, 720, DateTimeKind.Utc).AddTicks(6751),
+                            CreatedAt = new DateTime(2020, 6, 13, 12, 39, 8, 368, DateTimeKind.Utc).AddTicks(9539),
                             CreatedBy = 2,
                             Description = "Chôm chôm nhãn",
                             EntryPrice = 35000.0,
@@ -812,13 +842,13 @@ namespace Banana_E_Commerce_API.Migrations
                             ProductUnit = 7,
                             Status = 2,
                             StorageId = 1,
-                            UpdatedAt = new DateTime(2020, 6, 13, 2, 55, 29, 720, DateTimeKind.Utc).AddTicks(6752)
+                            UpdatedAt = new DateTime(2020, 6, 13, 12, 39, 8, 368, DateTimeKind.Utc).AddTicks(9540)
                         },
                         new
                         {
                             Id = 8,
                             CategoryId = 1,
-                            CreatedAt = new DateTime(2020, 6, 13, 2, 55, 29, 720, DateTimeKind.Utc).AddTicks(6755),
+                            CreatedAt = new DateTime(2020, 6, 13, 12, 39, 8, 368, DateTimeKind.Utc).AddTicks(9542),
                             CreatedBy = 3,
                             Description = "Nhãn Lồng",
                             EntryPrice = 25000.0,
@@ -829,13 +859,13 @@ namespace Banana_E_Commerce_API.Migrations
                             ProductUnit = 7,
                             Status = 2,
                             StorageId = 1,
-                            UpdatedAt = new DateTime(2020, 6, 13, 2, 55, 29, 720, DateTimeKind.Utc).AddTicks(6756)
+                            UpdatedAt = new DateTime(2020, 6, 13, 12, 39, 8, 368, DateTimeKind.Utc).AddTicks(9543)
                         },
                         new
                         {
                             Id = 9,
                             CategoryId = 1,
-                            CreatedAt = new DateTime(2020, 6, 13, 2, 55, 29, 720, DateTimeKind.Utc).AddTicks(6758),
+                            CreatedAt = new DateTime(2020, 6, 13, 12, 39, 8, 368, DateTimeKind.Utc).AddTicks(9546),
                             CreatedBy = 4,
                             Description = "Thanh Long Ruột Đỏ",
                             EntryPrice = 22000.0,
@@ -846,13 +876,13 @@ namespace Banana_E_Commerce_API.Migrations
                             ProductUnit = 7,
                             Status = 2,
                             StorageId = 1,
-                            UpdatedAt = new DateTime(2020, 6, 13, 2, 55, 29, 720, DateTimeKind.Utc).AddTicks(6759)
+                            UpdatedAt = new DateTime(2020, 6, 13, 12, 39, 8, 368, DateTimeKind.Utc).AddTicks(9547)
                         },
                         new
                         {
                             Id = 10,
                             CategoryId = 1,
-                            CreatedAt = new DateTime(2020, 6, 13, 2, 55, 29, 720, DateTimeKind.Utc).AddTicks(6763),
+                            CreatedAt = new DateTime(2020, 6, 13, 12, 39, 8, 368, DateTimeKind.Utc).AddTicks(9550),
                             CreatedBy = 1,
                             Description = "Thanh long ruột trắng",
                             EntryPrice = 25000.0,
@@ -863,13 +893,13 @@ namespace Banana_E_Commerce_API.Migrations
                             ProductUnit = 7,
                             Status = 2,
                             StorageId = 1,
-                            UpdatedAt = new DateTime(2020, 6, 13, 2, 55, 29, 720, DateTimeKind.Utc).AddTicks(6764)
+                            UpdatedAt = new DateTime(2020, 6, 13, 12, 39, 8, 368, DateTimeKind.Utc).AddTicks(9551)
                         },
                         new
                         {
                             Id = 11,
                             CategoryId = 1,
-                            CreatedAt = new DateTime(2020, 6, 13, 2, 55, 29, 720, DateTimeKind.Utc).AddTicks(6766),
+                            CreatedAt = new DateTime(2020, 6, 13, 12, 39, 8, 368, DateTimeKind.Utc).AddTicks(9554),
                             CreatedBy = 2,
                             Description = "Dâu tây đà lạt giống Mỹ",
                             EntryPrice = 120000.0,
@@ -880,13 +910,13 @@ namespace Banana_E_Commerce_API.Migrations
                             ProductUnit = 7,
                             Status = 2,
                             StorageId = 1,
-                            UpdatedAt = new DateTime(2020, 6, 13, 2, 55, 29, 720, DateTimeKind.Utc).AddTicks(6767)
+                            UpdatedAt = new DateTime(2020, 6, 13, 12, 39, 8, 368, DateTimeKind.Utc).AddTicks(9555)
                         },
                         new
                         {
                             Id = 12,
                             CategoryId = 1,
-                            CreatedAt = new DateTime(2020, 6, 13, 2, 55, 29, 720, DateTimeKind.Utc).AddTicks(6770),
+                            CreatedAt = new DateTime(2020, 6, 13, 12, 39, 8, 368, DateTimeKind.Utc).AddTicks(9558),
                             CreatedBy = 3,
                             Description = "Dưa lưới Bình Dương",
                             EntryPrice = 30000.0,
@@ -897,13 +927,13 @@ namespace Banana_E_Commerce_API.Migrations
                             ProductUnit = 7,
                             Status = 2,
                             StorageId = 1,
-                            UpdatedAt = new DateTime(2020, 6, 13, 2, 55, 29, 720, DateTimeKind.Utc).AddTicks(6771)
+                            UpdatedAt = new DateTime(2020, 6, 13, 12, 39, 8, 368, DateTimeKind.Utc).AddTicks(9559)
                         },
                         new
                         {
                             Id = 13,
                             CategoryId = 2,
-                            CreatedAt = new DateTime(2020, 6, 13, 2, 55, 29, 720, DateTimeKind.Utc).AddTicks(6773),
+                            CreatedAt = new DateTime(2020, 6, 13, 12, 39, 8, 368, DateTimeKind.Utc).AddTicks(9561),
                             CreatedBy = 4,
                             Description = "Dưa Pepino Mexico",
                             EntryPrice = 45000.0,
@@ -914,13 +944,13 @@ namespace Banana_E_Commerce_API.Migrations
                             ProductUnit = 7,
                             Status = 2,
                             StorageId = 1,
-                            UpdatedAt = new DateTime(2020, 6, 13, 2, 55, 29, 720, DateTimeKind.Utc).AddTicks(6775)
+                            UpdatedAt = new DateTime(2020, 6, 13, 12, 39, 8, 368, DateTimeKind.Utc).AddTicks(9562)
                         },
                         new
                         {
                             Id = 14,
                             CategoryId = 2,
-                            CreatedAt = new DateTime(2020, 6, 13, 2, 55, 29, 720, DateTimeKind.Utc).AddTicks(6779),
+                            CreatedAt = new DateTime(2020, 6, 13, 12, 39, 8, 368, DateTimeKind.Utc).AddTicks(9565),
                             CreatedBy = 1,
                             Description = "Cherry Mỹ",
                             EntryPrice = 310000.0,
@@ -931,13 +961,13 @@ namespace Banana_E_Commerce_API.Migrations
                             ProductUnit = 7,
                             Status = 2,
                             StorageId = 1,
-                            UpdatedAt = new DateTime(2020, 6, 13, 2, 55, 29, 720, DateTimeKind.Utc).AddTicks(6780)
+                            UpdatedAt = new DateTime(2020, 6, 13, 12, 39, 8, 368, DateTimeKind.Utc).AddTicks(9566)
                         },
                         new
                         {
                             Id = 15,
                             CategoryId = 2,
-                            CreatedAt = new DateTime(2020, 6, 13, 2, 55, 29, 720, DateTimeKind.Utc).AddTicks(6783),
+                            CreatedAt = new DateTime(2020, 6, 13, 12, 39, 8, 368, DateTimeKind.Utc).AddTicks(9568),
                             CreatedBy = 2,
                             Description = "Việt Quất Mỹ",
                             EntryPrice = 380000.0,
@@ -948,13 +978,13 @@ namespace Banana_E_Commerce_API.Migrations
                             ProductUnit = 7,
                             Status = 2,
                             StorageId = 1,
-                            UpdatedAt = new DateTime(2020, 6, 13, 2, 55, 29, 720, DateTimeKind.Utc).AddTicks(6784)
+                            UpdatedAt = new DateTime(2020, 6, 13, 12, 39, 8, 368, DateTimeKind.Utc).AddTicks(9569)
                         },
                         new
                         {
                             Id = 16,
                             CategoryId = 2,
-                            CreatedAt = new DateTime(2020, 6, 13, 2, 55, 29, 720, DateTimeKind.Utc).AddTicks(6786),
+                            CreatedAt = new DateTime(2020, 6, 13, 12, 39, 8, 368, DateTimeKind.Utc).AddTicks(9572),
                             CreatedBy = 3,
                             Description = "Dưa Lê Hàn",
                             EntryPrice = 180000.0,
@@ -965,13 +995,13 @@ namespace Banana_E_Commerce_API.Migrations
                             ProductUnit = 7,
                             Status = 2,
                             StorageId = 1,
-                            UpdatedAt = new DateTime(2020, 6, 13, 2, 55, 29, 720, DateTimeKind.Utc).AddTicks(6787)
+                            UpdatedAt = new DateTime(2020, 6, 13, 12, 39, 8, 368, DateTimeKind.Utc).AddTicks(9573)
                         },
                         new
                         {
                             Id = 17,
                             CategoryId = 2,
-                            CreatedAt = new DateTime(2020, 6, 13, 2, 55, 29, 720, DateTimeKind.Utc).AddTicks(6790),
+                            CreatedAt = new DateTime(2020, 6, 13, 12, 39, 8, 368, DateTimeKind.Utc).AddTicks(9576),
                             CreatedBy = 4,
                             Description = "Táo New Zealand",
                             EntryPrice = 200000.0,
@@ -982,13 +1012,13 @@ namespace Banana_E_Commerce_API.Migrations
                             ProductUnit = 7,
                             Status = 2,
                             StorageId = 1,
-                            UpdatedAt = new DateTime(2020, 6, 13, 2, 55, 29, 720, DateTimeKind.Utc).AddTicks(6791)
+                            UpdatedAt = new DateTime(2020, 6, 13, 12, 39, 8, 368, DateTimeKind.Utc).AddTicks(9577)
                         },
                         new
                         {
                             Id = 18,
                             CategoryId = 2,
-                            CreatedAt = new DateTime(2020, 6, 13, 2, 55, 29, 720, DateTimeKind.Utc).AddTicks(6793),
+                            CreatedAt = new DateTime(2020, 6, 13, 12, 39, 8, 368, DateTimeKind.Utc).AddTicks(9579),
                             CreatedBy = 1,
                             Description = "Kiwi Vàng New Zealand ",
                             EntryPrice = 130000.0,
@@ -999,13 +1029,13 @@ namespace Banana_E_Commerce_API.Migrations
                             ProductUnit = 7,
                             Status = 2,
                             StorageId = 1,
-                            UpdatedAt = new DateTime(2020, 6, 13, 2, 55, 29, 720, DateTimeKind.Utc).AddTicks(6794)
+                            UpdatedAt = new DateTime(2020, 6, 13, 12, 39, 8, 368, DateTimeKind.Utc).AddTicks(9580)
                         },
                         new
                         {
                             Id = 19,
                             CategoryId = 2,
-                            CreatedAt = new DateTime(2020, 6, 13, 2, 55, 29, 720, DateTimeKind.Utc).AddTicks(6797),
+                            CreatedAt = new DateTime(2020, 6, 13, 12, 39, 8, 368, DateTimeKind.Utc).AddTicks(9583),
                             CreatedBy = 2,
                             Description = "Nho xanh Úc",
                             EntryPrice = 320000.0,
@@ -1016,13 +1046,13 @@ namespace Banana_E_Commerce_API.Migrations
                             ProductUnit = 7,
                             Status = 2,
                             StorageId = 1,
-                            UpdatedAt = new DateTime(2020, 6, 13, 2, 55, 29, 720, DateTimeKind.Utc).AddTicks(6798)
+                            UpdatedAt = new DateTime(2020, 6, 13, 12, 39, 8, 368, DateTimeKind.Utc).AddTicks(9584)
                         },
                         new
                         {
                             Id = 20,
                             CategoryId = 2,
-                            CreatedAt = new DateTime(2020, 6, 13, 2, 55, 29, 720, DateTimeKind.Utc).AddTicks(6801),
+                            CreatedAt = new DateTime(2020, 6, 13, 12, 39, 8, 368, DateTimeKind.Utc).AddTicks(9586),
                             CreatedBy = 3,
                             Description = "Dâu Anh Đào Nhật",
                             EntryPrice = 610000.0,
@@ -1033,13 +1063,13 @@ namespace Banana_E_Commerce_API.Migrations
                             ProductUnit = 8,
                             Status = 2,
                             StorageId = 1,
-                            UpdatedAt = new DateTime(2020, 6, 13, 2, 55, 29, 720, DateTimeKind.Utc).AddTicks(6802)
+                            UpdatedAt = new DateTime(2020, 6, 13, 12, 39, 8, 368, DateTimeKind.Utc).AddTicks(9587)
                         },
                         new
                         {
                             Id = 21,
                             CategoryId = 2,
-                            CreatedAt = new DateTime(2020, 6, 13, 2, 55, 29, 720, DateTimeKind.Utc).AddTicks(6806),
+                            CreatedAt = new DateTime(2020, 6, 13, 12, 39, 8, 368, DateTimeKind.Utc).AddTicks(9590),
                             CreatedBy = 4,
                             Description = "Dưa Hấu Luna Piena Nhật",
                             EntryPrice = 170000.0,
@@ -1050,13 +1080,13 @@ namespace Banana_E_Commerce_API.Migrations
                             ProductUnit = 3,
                             Status = 2,
                             StorageId = 1,
-                            UpdatedAt = new DateTime(2020, 6, 13, 2, 55, 29, 720, DateTimeKind.Utc).AddTicks(6807)
+                            UpdatedAt = new DateTime(2020, 6, 13, 12, 39, 8, 368, DateTimeKind.Utc).AddTicks(9591)
                         },
                         new
                         {
                             Id = 22,
                             CategoryId = 2,
-                            CreatedAt = new DateTime(2020, 6, 13, 2, 55, 29, 720, DateTimeKind.Utc).AddTicks(6810),
+                            CreatedAt = new DateTime(2020, 6, 13, 12, 39, 8, 368, DateTimeKind.Utc).AddTicks(9593),
                             CreatedBy = 1,
                             Description = "Sầu Riêng Muthong Thái",
                             EntryPrice = 100000.0,
@@ -1067,13 +1097,13 @@ namespace Banana_E_Commerce_API.Migrations
                             ProductUnit = 7,
                             Status = 2,
                             StorageId = 1,
-                            UpdatedAt = new DateTime(2020, 6, 13, 2, 55, 29, 720, DateTimeKind.Utc).AddTicks(6811)
+                            UpdatedAt = new DateTime(2020, 6, 13, 12, 39, 8, 368, DateTimeKind.Utc).AddTicks(9595)
                         },
                         new
                         {
                             Id = 23,
                             CategoryId = 2,
-                            CreatedAt = new DateTime(2020, 6, 13, 2, 55, 29, 720, DateTimeKind.Utc).AddTicks(6814),
+                            CreatedAt = new DateTime(2020, 6, 13, 12, 39, 8, 368, DateTimeKind.Utc).AddTicks(9597),
                             CreatedBy = 2,
                             Description = "Bơ Úc (Bơ Hass)",
                             EntryPrice = 140000.0,
@@ -1084,7 +1114,7 @@ namespace Banana_E_Commerce_API.Migrations
                             ProductUnit = 7,
                             Status = 2,
                             StorageId = 1,
-                            UpdatedAt = new DateTime(2020, 6, 13, 2, 55, 29, 720, DateTimeKind.Utc).AddTicks(6815)
+                            UpdatedAt = new DateTime(2020, 6, 13, 12, 39, 8, 368, DateTimeKind.Utc).AddTicks(9598)
                         });
                 });
 
@@ -1101,7 +1131,10 @@ namespace Banana_E_Commerce_API.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<int>("RequestExportProductId")
+                    b.Property<int>("OrderId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("RequestExportProductId")
                         .HasColumnType("int");
 
                     b.Property<int>("StorageManagerId")
@@ -1111,6 +1144,8 @@ namespace Banana_E_Commerce_API.Migrations
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("OrderId");
 
                     b.HasIndex("RequestExportProductId");
 
@@ -1454,6 +1489,9 @@ namespace Banana_E_Commerce_API.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<int?>("AdminId")
+                        .HasColumnType("int");
+
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
@@ -1468,10 +1506,9 @@ namespace Banana_E_Commerce_API.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CreatedBy");
+                    b.HasIndex("AdminId");
 
-                    b.HasIndex("OrderId")
-                        .IsUnique();
+                    b.HasIndex("OrderId");
 
                     b.ToTable("RequestExportProducts");
                 });
@@ -1557,34 +1594,34 @@ namespace Banana_E_Commerce_API.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2020, 6, 13, 2, 55, 29, 718, DateTimeKind.Utc).AddTicks(503),
+                            CreatedAt = new DateTime(2020, 6, 13, 12, 39, 8, 366, DateTimeKind.Utc).AddTicks(2311),
                             IsDeleted = false,
                             RoleName = 0,
-                            UpdatedAt = new DateTime(2020, 6, 13, 2, 55, 29, 718, DateTimeKind.Utc).AddTicks(968)
+                            UpdatedAt = new DateTime(2020, 6, 13, 12, 39, 8, 366, DateTimeKind.Utc).AddTicks(2768)
                         },
                         new
                         {
                             Id = 2,
-                            CreatedAt = new DateTime(2020, 6, 13, 2, 55, 29, 718, DateTimeKind.Utc).AddTicks(1722),
+                            CreatedAt = new DateTime(2020, 6, 13, 12, 39, 8, 366, DateTimeKind.Utc).AddTicks(3527),
                             IsDeleted = false,
                             RoleName = 1,
-                            UpdatedAt = new DateTime(2020, 6, 13, 2, 55, 29, 718, DateTimeKind.Utc).AddTicks(1737)
+                            UpdatedAt = new DateTime(2020, 6, 13, 12, 39, 8, 366, DateTimeKind.Utc).AddTicks(3542)
                         },
                         new
                         {
                             Id = 3,
-                            CreatedAt = new DateTime(2020, 6, 13, 2, 55, 29, 718, DateTimeKind.Utc).AddTicks(1771),
+                            CreatedAt = new DateTime(2020, 6, 13, 12, 39, 8, 366, DateTimeKind.Utc).AddTicks(3574),
                             IsDeleted = false,
                             RoleName = 2,
-                            UpdatedAt = new DateTime(2020, 6, 13, 2, 55, 29, 718, DateTimeKind.Utc).AddTicks(1772)
+                            UpdatedAt = new DateTime(2020, 6, 13, 12, 39, 8, 366, DateTimeKind.Utc).AddTicks(3576)
                         },
                         new
                         {
                             Id = 4,
-                            CreatedAt = new DateTime(2020, 6, 13, 2, 55, 29, 718, DateTimeKind.Utc).AddTicks(1774),
+                            CreatedAt = new DateTime(2020, 6, 13, 12, 39, 8, 366, DateTimeKind.Utc).AddTicks(3577),
                             IsDeleted = false,
                             RoleName = 3,
-                            UpdatedAt = new DateTime(2020, 6, 13, 2, 55, 29, 718, DateTimeKind.Utc).AddTicks(1775)
+                            UpdatedAt = new DateTime(2020, 6, 13, 12, 39, 8, 366, DateTimeKind.Utc).AddTicks(3579)
                         });
                 });
 
@@ -1736,13 +1773,13 @@ namespace Banana_E_Commerce_API.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2020, 6, 13, 2, 55, 29, 719, DateTimeKind.Utc).AddTicks(7601),
+                            CreatedAt = new DateTime(2020, 6, 13, 12, 39, 8, 367, DateTimeKind.Utc).AddTicks(9748),
                             IsDeleted = false,
                             Location = "Tiểu Vương Quốc Bình Chánh",
                             Name = "Hoàng Khố",
                             Size = 1000.2,
                             SizeUnit = "m2",
-                            UpdatedAt = new DateTime(2020, 6, 13, 2, 55, 29, 719, DateTimeKind.Utc).AddTicks(8012)
+                            UpdatedAt = new DateTime(2020, 6, 13, 12, 39, 8, 368, DateTimeKind.Utc).AddTicks(535)
                         });
                 });
 
@@ -1806,6 +1843,20 @@ namespace Banana_E_Commerce_API.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Tiers");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            IsDeleted = false,
+                            TierOption = 1
+                        },
+                        new
+                        {
+                            Id = 2,
+                            IsDeleted = false,
+                            TierOption = 2
+                        });
                 });
 
             modelBuilder.Entity("Banana_E_Commerce_API.Entities.User", b =>
@@ -1859,6 +1910,15 @@ namespace Banana_E_Commerce_API.Migrations
                     b.HasOne("Banana_E_Commerce_API.Entities.User", "User")
                         .WithOne("Admin")
                         .HasForeignKey("Banana_E_Commerce_API.Entities.Admin", "UserId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Banana_E_Commerce_API.Entities.CancelOrderReport", b =>
+                {
+                    b.HasOne("Banana_E_Commerce_API.Entities.Order", "Order")
+                        .WithOne("CancelOrderReport")
+                        .HasForeignKey("Banana_E_Commerce_API.Entities.CancelOrderReport", "OrderId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
                 });
@@ -2070,11 +2130,15 @@ namespace Banana_E_Commerce_API.Migrations
 
             modelBuilder.Entity("Banana_E_Commerce_API.Entities.ProductExportBill", b =>
                 {
-                    b.HasOne("Banana_E_Commerce_API.Entities.RequestExportProduct", "RequestExportProduct")
+                    b.HasOne("Banana_E_Commerce_API.Entities.Order", "Order")
                         .WithMany("ProductExportBills")
-                        .HasForeignKey("RequestExportProductId")
+                        .HasForeignKey("OrderId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
+
+                    b.HasOne("Banana_E_Commerce_API.Entities.RequestExportProduct", null)
+                        .WithMany("ProductExportBills")
+                        .HasForeignKey("RequestExportProductId");
 
                     b.HasOne("Banana_E_Commerce_API.Entities.StorageManager", "StorageManager")
                         .WithMany("ProductExportBills")
@@ -2211,13 +2275,13 @@ namespace Banana_E_Commerce_API.Migrations
                     b.HasOne("Banana_E_Commerce_API.Entities.ProductTier", "ProductTier")
                         .WithMany("RequestExportDetails")
                         .HasForeignKey("ProductTierId")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Banana_E_Commerce_API.Entities.RequestExportProduct", "RequestExportProduct")
                         .WithMany("RequestExportDetails")
                         .HasForeignKey("RequestExportProductId")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
@@ -2225,14 +2289,12 @@ namespace Banana_E_Commerce_API.Migrations
                 {
                     b.HasOne("Banana_E_Commerce_API.Entities.Admin", "Admin")
                         .WithMany("RequestExportProducts")
-                        .HasForeignKey("CreatedBy")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
+                        .HasForeignKey("AdminId");
 
                     b.HasOne("Banana_E_Commerce_API.Entities.Order", "Order")
-                        .WithOne("RequestExportProduct")
-                        .HasForeignKey("Banana_E_Commerce_API.Entities.RequestExportProduct", "OrderId")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .WithMany()
+                        .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 

@@ -532,7 +532,8 @@ namespace Banana_E_Commerce_API.Migrations
                     IsDeleted = table.Column<bool>(nullable: false),
                     AddressId = table.Column<int>(nullable: false),
                     CustomerId = table.Column<int>(nullable: false),
-                    PaymentMethodId = table.Column<int>(nullable: false)
+                    PaymentMethodId = table.Column<int>(nullable: false),
+                    PaymentIntentId = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -612,6 +613,27 @@ namespace Banana_E_Commerce_API.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "CancelOrderReports",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    CancelReason = table.Column<string>(nullable: true),
+                    CreatedAt = table.Column<DateTime>(nullable: false),
+                    IsDeleted = table.Column<bool>(nullable: false),
+                    OrderId = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CancelOrderReports", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_CancelOrderReports_Orders_OrderId",
+                        column: x => x.OrderId,
+                        principalTable: "Orders",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
                 name: "RequestExportProducts",
                 columns: table => new
                 {
@@ -620,21 +642,24 @@ namespace Banana_E_Commerce_API.Migrations
                     OrderId = table.Column<int>(nullable: false),
                     CreatedBy = table.Column<int>(nullable: false),
                     CreatedAt = table.Column<DateTime>(nullable: false),
-                    IsDeleted = table.Column<bool>(nullable: false)
+                    IsDeleted = table.Column<bool>(nullable: false),
+                    AdminId = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_RequestExportProducts", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_RequestExportProducts_Admins_CreatedBy",
-                        column: x => x.CreatedBy,
+                        name: "FK_RequestExportProducts_Admins_AdminId",
+                        column: x => x.AdminId,
                         principalTable: "Admins",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_RequestExportProducts_Orders_OrderId",
                         column: x => x.OrderId,
                         principalTable: "Orders",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -863,17 +888,24 @@ namespace Banana_E_Commerce_API.Migrations
                     CreatedAt = table.Column<DateTime>(nullable: false),
                     UpdatedAt = table.Column<DateTime>(nullable: false),
                     IsDeleted = table.Column<bool>(nullable: false),
-                    RequestExportProductId = table.Column<int>(nullable: false),
-                    StorageManagerId = table.Column<int>(nullable: false)
+                    OrderId = table.Column<int>(nullable: false),
+                    StorageManagerId = table.Column<int>(nullable: false),
+                    RequestExportProductId = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_ProductExportBills", x => x.Id);
                     table.ForeignKey(
+                        name: "FK_ProductExportBills_Orders_OrderId",
+                        column: x => x.OrderId,
+                        principalTable: "Orders",
+                        principalColumn: "Id");
+                    table.ForeignKey(
                         name: "FK_ProductExportBills_RequestExportProducts_RequestExportProductId",
                         column: x => x.RequestExportProductId,
                         principalTable: "RequestExportProducts",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_ProductExportBills_StorageManagers_StorageManagerId",
                         column: x => x.StorageManagerId,
@@ -898,12 +930,14 @@ namespace Banana_E_Commerce_API.Migrations
                         name: "FK_RequestExportDetails_ProductTiers_ProductTierId",
                         column: x => x.ProductTierId,
                         principalTable: "ProductTiers",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_RequestExportDetails_RequestExportProducts_RequestExportProductId",
                         column: x => x.RequestExportProductId,
                         principalTable: "RequestExportProducts",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -1045,10 +1079,10 @@ namespace Banana_E_Commerce_API.Migrations
                 columns: new[] { "Id", "CreatedAt", "IsDeleted", "RoleName", "UpdatedAt" },
                 values: new object[,]
                 {
-                    { 1, new DateTime(2020, 6, 13, 2, 53, 41, 46, DateTimeKind.Utc).AddTicks(4431), false, 0, new DateTime(2020, 6, 13, 2, 53, 41, 46, DateTimeKind.Utc).AddTicks(4868) },
-                    { 2, new DateTime(2020, 6, 13, 2, 53, 41, 46, DateTimeKind.Utc).AddTicks(5682), false, 1, new DateTime(2020, 6, 13, 2, 53, 41, 46, DateTimeKind.Utc).AddTicks(5694) },
-                    { 3, new DateTime(2020, 6, 13, 2, 53, 41, 46, DateTimeKind.Utc).AddTicks(5727), false, 2, new DateTime(2020, 6, 13, 2, 53, 41, 46, DateTimeKind.Utc).AddTicks(5728) },
-                    { 4, new DateTime(2020, 6, 13, 2, 53, 41, 46, DateTimeKind.Utc).AddTicks(5730), false, 3, new DateTime(2020, 6, 13, 2, 53, 41, 46, DateTimeKind.Utc).AddTicks(5731) }
+                    { 1, new DateTime(2020, 6, 13, 12, 37, 30, 306, DateTimeKind.Utc).AddTicks(458), false, 0, new DateTime(2020, 6, 13, 12, 37, 30, 306, DateTimeKind.Utc).AddTicks(1625) },
+                    { 2, new DateTime(2020, 6, 13, 12, 37, 30, 306, DateTimeKind.Utc).AddTicks(3137), false, 1, new DateTime(2020, 6, 13, 12, 37, 30, 306, DateTimeKind.Utc).AddTicks(3200) },
+                    { 3, new DateTime(2020, 6, 13, 12, 37, 30, 306, DateTimeKind.Utc).AddTicks(3256), false, 2, new DateTime(2020, 6, 13, 12, 37, 30, 306, DateTimeKind.Utc).AddTicks(3259) },
+                    { 4, new DateTime(2020, 6, 13, 12, 37, 30, 306, DateTimeKind.Utc).AddTicks(3262), false, 3, new DateTime(2020, 6, 13, 12, 37, 30, 306, DateTimeKind.Utc).AddTicks(3264) }
                 });
 
             migrationBuilder.CreateIndex(
@@ -1060,6 +1094,12 @@ namespace Banana_E_Commerce_API.Migrations
                 name: "IX_Admins_UserId",
                 table: "Admins",
                 column: "UserId",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CancelOrderReports_OrderId",
+                table: "CancelOrderReports",
+                column: "OrderId",
                 unique: true);
 
             migrationBuilder.CreateIndex(
@@ -1187,6 +1227,11 @@ namespace Banana_E_Commerce_API.Migrations
                 column: "AdminId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_ProductExportBills_OrderId",
+                table: "ProductExportBills",
+                column: "OrderId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_ProductExportBills_RequestExportProductId",
                 table: "ProductExportBills",
                 column: "RequestExportProductId");
@@ -1302,15 +1347,14 @@ namespace Banana_E_Commerce_API.Migrations
                 column: "RequestExportProductId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_RequestExportProducts_CreatedBy",
+                name: "IX_RequestExportProducts_AdminId",
                 table: "RequestExportProducts",
-                column: "CreatedBy");
+                column: "AdminId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_RequestExportProducts_OrderId",
                 table: "RequestExportProducts",
-                column: "OrderId",
-                unique: true);
+                column: "OrderId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_RequestImportDetails_ProductTierId",
@@ -1377,6 +1421,9 @@ namespace Banana_E_Commerce_API.Migrations
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "CancelOrderReports");
+
             migrationBuilder.DropTable(
                 name: "CartDetails");
 

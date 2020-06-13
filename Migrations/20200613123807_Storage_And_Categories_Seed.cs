@@ -12,10 +12,10 @@ namespace Banana_E_Commerce_API.Migrations
                 columns: new[] { "Id", "CreatedAt", "CreatedBy", "IsDeleted", "Name", "UpdatedAt" },
                 values: new object[,]
                 {
-                    { 1, new DateTime(2020, 6, 13, 2, 54, 48, 582, DateTimeKind.Utc).AddTicks(9408), 1, false, "Trái Cây Việt", new DateTime(2020, 6, 13, 2, 54, 48, 582, DateTimeKind.Utc).AddTicks(9769) },
-                    { 2, new DateTime(2020, 6, 13, 2, 54, 48, 583, DateTimeKind.Utc).AddTicks(744), 2, false, "Trái Cây Nhập", new DateTime(2020, 6, 13, 2, 54, 48, 583, DateTimeKind.Utc).AddTicks(770) },
-                    { 3, new DateTime(2020, 6, 13, 2, 54, 48, 583, DateTimeKind.Utc).AddTicks(799), 3, false, "Trái Cây Sấy Khô", new DateTime(2020, 6, 13, 2, 54, 48, 583, DateTimeKind.Utc).AddTicks(801) },
-                    { 4, new DateTime(2020, 6, 13, 2, 54, 48, 583, DateTimeKind.Utc).AddTicks(803), 4, false, "Mứt Trái Cây>", new DateTime(2020, 6, 13, 2, 54, 48, 583, DateTimeKind.Utc).AddTicks(804) }
+                    { 1, new DateTime(2020, 6, 13, 12, 38, 7, 130, DateTimeKind.Utc).AddTicks(7332), 1, false, "Trái Cây Việt", new DateTime(2020, 6, 13, 12, 38, 7, 130, DateTimeKind.Utc).AddTicks(7749) },
+                    { 2, new DateTime(2020, 6, 13, 12, 38, 7, 130, DateTimeKind.Utc).AddTicks(9346), 2, false, "Trái Cây Nhập", new DateTime(2020, 6, 13, 12, 38, 7, 130, DateTimeKind.Utc).AddTicks(9377) },
+                    { 3, new DateTime(2020, 6, 13, 12, 38, 7, 130, DateTimeKind.Utc).AddTicks(9412), 3, false, "Trái Cây Sấy Khô", new DateTime(2020, 6, 13, 12, 38, 7, 130, DateTimeKind.Utc).AddTicks(9413) },
+                    { 4, new DateTime(2020, 6, 13, 12, 38, 7, 130, DateTimeKind.Utc).AddTicks(9416), 4, false, "Mứt Trái Cây>", new DateTime(2020, 6, 13, 12, 38, 7, 130, DateTimeKind.Utc).AddTicks(9417) }
                 });
 
             migrationBuilder.UpdateData(
@@ -23,33 +23,33 @@ namespace Banana_E_Commerce_API.Migrations
                 keyColumn: "Id",
                 keyValue: 1,
                 columns: new[] { "CreatedAt", "UpdatedAt" },
-                values: new object[] { new DateTime(2020, 6, 13, 2, 54, 48, 580, DateTimeKind.Utc).AddTicks(9165), new DateTime(2020, 6, 13, 2, 54, 48, 580, DateTimeKind.Utc).AddTicks(9613) });
+                values: new object[] { new DateTime(2020, 6, 13, 12, 38, 7, 128, DateTimeKind.Utc).AddTicks(5029), new DateTime(2020, 6, 13, 12, 38, 7, 128, DateTimeKind.Utc).AddTicks(5555) });
 
             migrationBuilder.UpdateData(
                 table: "Roles",
                 keyColumn: "Id",
                 keyValue: 2,
                 columns: new[] { "CreatedAt", "UpdatedAt" },
-                values: new object[] { new DateTime(2020, 6, 13, 2, 54, 48, 581, DateTimeKind.Utc).AddTicks(361), new DateTime(2020, 6, 13, 2, 54, 48, 581, DateTimeKind.Utc).AddTicks(375) });
+                values: new object[] { new DateTime(2020, 6, 13, 12, 38, 7, 128, DateTimeKind.Utc).AddTicks(6464), new DateTime(2020, 6, 13, 12, 38, 7, 128, DateTimeKind.Utc).AddTicks(6479) });
 
             migrationBuilder.UpdateData(
                 table: "Roles",
                 keyColumn: "Id",
                 keyValue: 3,
                 columns: new[] { "CreatedAt", "UpdatedAt" },
-                values: new object[] { new DateTime(2020, 6, 13, 2, 54, 48, 581, DateTimeKind.Utc).AddTicks(411), new DateTime(2020, 6, 13, 2, 54, 48, 581, DateTimeKind.Utc).AddTicks(412) });
+                values: new object[] { new DateTime(2020, 6, 13, 12, 38, 7, 128, DateTimeKind.Utc).AddTicks(6518), new DateTime(2020, 6, 13, 12, 38, 7, 128, DateTimeKind.Utc).AddTicks(6519) });
 
             migrationBuilder.UpdateData(
                 table: "Roles",
                 keyColumn: "Id",
                 keyValue: 4,
                 columns: new[] { "CreatedAt", "UpdatedAt" },
-                values: new object[] { new DateTime(2020, 6, 13, 2, 54, 48, 581, DateTimeKind.Utc).AddTicks(414), new DateTime(2020, 6, 13, 2, 54, 48, 581, DateTimeKind.Utc).AddTicks(415) });
+                values: new object[] { new DateTime(2020, 6, 13, 12, 38, 7, 128, DateTimeKind.Utc).AddTicks(6521), new DateTime(2020, 6, 13, 12, 38, 7, 128, DateTimeKind.Utc).AddTicks(6522) });
 
             migrationBuilder.InsertData(
                 table: "Storages",
                 columns: new[] { "Id", "CreatedAt", "IsDeleted", "Location", "Name", "Size", "SizeUnit", "UpdatedAt" },
-                values: new object[] { 1, new DateTime(2020, 6, 13, 2, 54, 48, 582, DateTimeKind.Utc).AddTicks(6993), false, "Tiểu Vương Quốc Bình Chánh", "Hoàng Khố", 1000.2, "m2", new DateTime(2020, 6, 13, 2, 54, 48, 582, DateTimeKind.Utc).AddTicks(7407) });
+                values: new object[] { 1, new DateTime(2020, 6, 13, 12, 38, 7, 130, DateTimeKind.Utc).AddTicks(4584), false, "Tiểu Vương Quốc Bình Chánh", "Hoàng Khố", 1000.2, "m2", new DateTime(2020, 6, 13, 12, 38, 7, 130, DateTimeKind.Utc).AddTicks(5057) });
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -84,28 +84,28 @@ namespace Banana_E_Commerce_API.Migrations
                 keyColumn: "Id",
                 keyValue: 1,
                 columns: new[] { "CreatedAt", "UpdatedAt" },
-                values: new object[] { new DateTime(2020, 6, 13, 2, 53, 41, 46, DateTimeKind.Utc).AddTicks(4431), new DateTime(2020, 6, 13, 2, 53, 41, 46, DateTimeKind.Utc).AddTicks(4868) });
+                values: new object[] { new DateTime(2020, 6, 13, 12, 37, 30, 306, DateTimeKind.Utc).AddTicks(458), new DateTime(2020, 6, 13, 12, 37, 30, 306, DateTimeKind.Utc).AddTicks(1625) });
 
             migrationBuilder.UpdateData(
                 table: "Roles",
                 keyColumn: "Id",
                 keyValue: 2,
                 columns: new[] { "CreatedAt", "UpdatedAt" },
-                values: new object[] { new DateTime(2020, 6, 13, 2, 53, 41, 46, DateTimeKind.Utc).AddTicks(5682), new DateTime(2020, 6, 13, 2, 53, 41, 46, DateTimeKind.Utc).AddTicks(5694) });
+                values: new object[] { new DateTime(2020, 6, 13, 12, 37, 30, 306, DateTimeKind.Utc).AddTicks(3137), new DateTime(2020, 6, 13, 12, 37, 30, 306, DateTimeKind.Utc).AddTicks(3200) });
 
             migrationBuilder.UpdateData(
                 table: "Roles",
                 keyColumn: "Id",
                 keyValue: 3,
                 columns: new[] { "CreatedAt", "UpdatedAt" },
-                values: new object[] { new DateTime(2020, 6, 13, 2, 53, 41, 46, DateTimeKind.Utc).AddTicks(5727), new DateTime(2020, 6, 13, 2, 53, 41, 46, DateTimeKind.Utc).AddTicks(5728) });
+                values: new object[] { new DateTime(2020, 6, 13, 12, 37, 30, 306, DateTimeKind.Utc).AddTicks(3256), new DateTime(2020, 6, 13, 12, 37, 30, 306, DateTimeKind.Utc).AddTicks(3259) });
 
             migrationBuilder.UpdateData(
                 table: "Roles",
                 keyColumn: "Id",
                 keyValue: 4,
                 columns: new[] { "CreatedAt", "UpdatedAt" },
-                values: new object[] { new DateTime(2020, 6, 13, 2, 53, 41, 46, DateTimeKind.Utc).AddTicks(5730), new DateTime(2020, 6, 13, 2, 53, 41, 46, DateTimeKind.Utc).AddTicks(5731) });
+                values: new object[] { new DateTime(2020, 6, 13, 12, 37, 30, 306, DateTimeKind.Utc).AddTicks(3262), new DateTime(2020, 6, 13, 12, 37, 30, 306, DateTimeKind.Utc).AddTicks(3264) });
         }
     }
 }
