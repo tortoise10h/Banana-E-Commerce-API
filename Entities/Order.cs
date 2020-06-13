@@ -22,6 +22,8 @@ namespace Banana_E_Commerce_API.Entities
         public int CustomerId { get; set; }
         public int PaymentMethodId { get; set; }
         public string PaymentIntentId { get; set; }
+        public string StripeClientSecret { get; set; }
+        public bool IsPayed { get; set; }
 
 
         public Customer Customer { get; set; }

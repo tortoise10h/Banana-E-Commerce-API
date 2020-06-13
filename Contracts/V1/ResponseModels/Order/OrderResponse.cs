@@ -23,6 +23,9 @@ namespace Banana_E_Commerce_API.Contracts.V1.ResponseModels.Order
         public int AddressId { get; set; }
         public int CustomerId { get; set; }
         public int PaymentMethodId { get; set; }
+        public string StripeClientSecret { get; set; }
+        public string PaymentIntentId { get; set; }
+        public bool IsPayed { get; set; }
 
         public CustomerResponse Customer { get; set; }
         public AddressResponse Address { get; set; }

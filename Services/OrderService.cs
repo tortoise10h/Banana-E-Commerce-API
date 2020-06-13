@@ -41,7 +41,8 @@ namespace Banana_E_Commerce_API.Services
         Task<UpdateResult<Order>> CancelOrderAsync(
             Order order,
             CancelOrderReport cancelOrderReport);
-        Task<bool> ChangeOrderStatusToPayed(Order order);
+        Task<bool> ChangeOrderToPayed(Order order);
+        Task<UpdateResult<Order>> ChangeOrderToSucceeded(Order order);
     }
 
     public class OrderService : IOrderService
@@ -244,6 +245,7 @@ namespace Banana_E_Commerce_API.Services
         )
         {
             order.OrderStatus = OrderStatus.New;
+            order.IsPayed = false;
             order.TotalAmount = CalculateOrderTotalAmount(orderItems, productTiers);
             order.Currency = PriceCurrency.VND;
             order.Code = Regex.Replace(
@@ -372,6 +374,7 @@ namespace Banana_E_Commerce_API.Services
                 var stripeService = new PaymentIntentService();
                 var paymentIntent = stripeService.Create(options);
                 order.PaymentIntentId = paymentIntent.Id;
+                order.StripeClientSecret = paymentIntent.ClientSecret;
             }
         }
 
@@ -717,9 +720,9 @@ namespace Banana_E_Commerce_API.Services
 
 
         /** ChangeOrderStatusToPayed */
-        public async Task<bool> ChangeOrderStatusToPayed(Order order)
+        public async Task<bool> ChangeOrderToPayed(Order order)
         {
-            order.OrderStatus = OrderStatus.Succeeded;
+            order.IsPayed = true;
             _context.Orders
                 .Update(order);
             var updated = await _context.SaveChangesAsync();
@@ -742,6 +745,54 @@ namespace Banana_E_Commerce_API.Services
         {
             return await _context.Orders
                 .SingleOrDefaultAsync(x => x.Id == id);
+        }
+
+
+
+        /** CHANGE ORDER TO SUCCEEDED */
+        public async Task<UpdateResult<Order>> ChangeOrderToSucceeded(Order order)
+        {
+            if (order.OrderStatus != OrderStatus.Delivering)
+            {
+                return new UpdateResult<Order>
+                {
+                    IsSuccess = false,
+                    Errors = new List<string>()
+                    {
+                        "Đơn hàng chưa thể hoàn thành vì chưa được giao"
+                    }
+                };
+            }
+
+            /** Update order status */
+            order.OrderStatus = OrderStatus.Succeeded;
+
+            /** IF payment is COD then update IsPayed to true */
+            if (order.PaymentMethod.Method == MethodOfPayment.COD)
+            {
+                order.IsPayed = true;
+            }
+
+            _context.Orders
+                    .Update(order);
+            var updated = await _context.SaveChangesAsync();
+
+            if (!(updated > 0))
+            {
+                return new UpdateResult<Order>
+                {
+                    IsSuccess = false,
+                    Errors = new List<string>()
+                    {
+                        "Xác nhận đơn hàng thành công có lỗi, xin thử lại"
+                    }
+                };
+            }
+
+            return new UpdateResult<Order>
+            {
+                IsSuccess = true
+            };
         }
     }
 }
