@@ -226,7 +226,7 @@ namespace Banana_E_Commerce_API.Controllers.V1
                         return BadRequest();
                     }
                     var isChangeStatusSucceeded = await _orderService
-                        .ChangeOrderStatusToPayed(updateOrder);
+                        .ChangeOrderToPayed(updateOrder);
                     if (!isChangeStatusSucceeded)
                     {
                         return BadRequest();
@@ -251,6 +251,36 @@ namespace Banana_E_Commerce_API.Controllers.V1
             {
                 return BadRequest();
             }
+        }
+
+
+        [AuthorizeRoles(RoleNameEnum.Admin)]
+        [HttpPut(ApiRoutes.Order.ConfirmSucceeded)]
+        public async Task<IActionResult> ConfirmSucceeded(
+            [FromRoute] int orderId
+        )
+        {
+            int requestedUserId = int.Parse(HttpContext.GetUserIdFromRequest());
+            var order = await _orderService
+                .GetByIdAsync(orderId, requestedUserId);
+
+            if (order == null)
+            {
+                return NotFound();
+            }
+
+            var confirmResult = await _orderService.ChangeOrderToSucceeded(
+                order
+            );
+
+            if (confirmResult.IsSuccess == false)
+            {
+                return BadRequest(confirmResult.Errors);
+            }
+
+            var orderResponse = _mapper.Map<OrderResponse>(order);
+
+            return Ok(new Response<OrderResponse>(orderResponse));
         }
     }
 }

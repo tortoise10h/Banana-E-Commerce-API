@@ -144,6 +144,7 @@ namespace Banana_E_Commerce_API.Contracts.V1
             public const string Delete = Base + "/Orders/{orderId}";
             public const string HandOverOrderToStorageManager = Base + "/Orders/{orderId}/ProcessingStatus";
             public const string CancelOrder = Base + "/Orders/{orderId}/CanceledStatus";
+            public const string ConfirmSucceeded = Base + "/Orders/{orderId}/SucceededStatus";
             public const string StripePaymentResponse = Base + "/Orders/StripePaymentResponse";
         }
 
