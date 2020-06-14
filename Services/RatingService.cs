@@ -197,7 +197,7 @@ namespace Banana_E_Commerce_API.Services
                 };
             }
 
-            if (isCustomerOrder == null && isItemOrder == null)
+            if (isCustomerOrder == null || isItemOrder == null)
             {
                 return new PrepareRatingInfoResult
                 {
