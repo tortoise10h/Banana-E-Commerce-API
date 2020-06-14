@@ -25,7 +25,7 @@ namespace Banana_E_Commerce_API.Services
             string appRootDir);
         Task<bool> UpdateAsync(Product product);
         Task<bool> DeleteAsync(int productId);
-        Task<Product> GetByIdAsync(int productId);
+        Task<GetProductByIdResult> GetByIdAsync(int productId);
         Task<IEnumerable<Product>> GetAllAsync(
             PaginationFilter pagination,
             GetAllProductsFilter filter = null
@@ -334,15 +334,58 @@ namespace Banana_E_Commerce_API.Services
             return deleted > 0;
         }
 
-        public async Task<Product> GetByIdAsync(int productId)
+        public async Task<GetProductByIdResult> GetByIdAsync(int productId)
         {
-            return await _context.Products
+            var product = await _context.Products
                 .Where(x => x.Id == productId &&
                     x.IsDeleted == false)
                 .Include(x => x.ProductImages)
                 .Include(x => x.ProductTiers)
                 .FirstOrDefaultAsync();
 
+            var productTier1 = product.ProductTiers
+                .SingleOrDefault(pt => pt.TierId == 1);
+            var productTier2 = product.ProductTiers
+                .SingleOrDefault(pt => pt.TierId == 2);
+            var productTier1Rates = await _context.Rates
+                .Where(x => x.ProductTierId == productTier1.Id)
+                .ToListAsync();
+            var productTier2Rates = await _context.Rates
+                .Where(x => x.ProductTierId == productTier2.Id)
+                .ToListAsync();
+
+            double productTier1AverageRate = 0;
+            if (productTier1Rates.Count() > 0)
+            {
+                foreach (var productRate in productTier1Rates)
+                {
+                    productTier1AverageRate += productRate.StarNum;
+                }
+                productTier1AverageRate = Math.Round(
+                    productTier1AverageRate / productTier1Rates.Count(),
+                    1,
+                    MidpointRounding.AwayFromZero);
+            }
+
+            double productTier2AverageRate = 0;
+            if (productTier2Rates.Count() > 0)
+            {
+                foreach (var productRate in productTier2Rates)
+                {
+                    productTier2AverageRate += productRate.StarNum;
+                }
+                productTier2AverageRate = Math.Round(
+                    productTier2AverageRate / productTier2Rates.Count(),
+                    1,
+                    MidpointRounding.AwayFromZero);
+            }
+
+            return new GetProductByIdResult
+            {
+                Product = product,
+                ProductTier1AverageRate = productTier1AverageRate,
+                ProductTier2AverageRate = productTier2AverageRate
+            };
         }
 
         public async Task<bool> UpdateAsync(Product product)

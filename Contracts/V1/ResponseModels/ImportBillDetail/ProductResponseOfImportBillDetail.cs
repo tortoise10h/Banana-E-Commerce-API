@@ -19,6 +19,8 @@ namespace Banana_E_Commerce_API.Contracts.V1.ResponseModels.ImportBillDetail
         public ProductStatus Status { get; set; }
 
         public int StorageId { get; set; }
+        public double ProductTier1AverageRate { get; set; }
+        public double ProductTier2AverageRate { get; set; }
         public IEnumerable<ProductImageResponse> ProductImages { get; set; }
     }
 }
