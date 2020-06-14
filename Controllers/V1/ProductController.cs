@@ -105,19 +105,19 @@ namespace Banana_E_Commerce_API.Controllers.V1
             [FromRoute] int productId,
             [FromBody] UpdateProductRequest updateModel)
         {
-            var productEntity = await _productService.GetByIdAsync(productId);
+            var result = await _productService.GetByIdAsync(productId);
 
-            if (productEntity == null)
+            if (result.Product == null)
             {
                 return NotFound();
             }
 
             // map modified fields from request model to entity
-            _mapper.Map<UpdateProductRequest, Product>(updateModel, productEntity);
+            _mapper.Map<UpdateProductRequest, Product>(updateModel, result.Product);
 
-            var isProductUpdated = await _productService.UpdateAsync(productEntity);
+            var isProductUpdated = await _productService.UpdateAsync(result.Product);
 
-            var productResponse = _mapper.Map<ProductResponse>(productEntity);
+            var productResponse = _mapper.Map<ProductResponse>(result);
             if (isProductUpdated)
             {
                 return Ok(new Response<ProductResponse>(productResponse));
@@ -150,10 +150,13 @@ namespace Banana_E_Commerce_API.Controllers.V1
         public async Task<IActionResult> GetById([FromRoute] int productId)
         {
             var result = await _productService.GetByIdAsync(productId);
-            var productResponse = _mapper.Map<ProductResponse>(result);
 
-            if (result != null)
+            if (result.Product != null)
             {
+                var productResponse = _mapper.Map<ProductResponse>(result.Product);
+                productResponse.ProductTier1AverageRate = result.ProductTier1AverageRate;
+                productResponse.ProductTier2AverageRate = result.ProductTier2AverageRate;
+
                 return Ok(new Response<ProductResponse>(productResponse));
             }
 

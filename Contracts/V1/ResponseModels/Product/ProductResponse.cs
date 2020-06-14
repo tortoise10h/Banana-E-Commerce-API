@@ -19,6 +19,8 @@ namespace Banana_E_Commerce_API.Contracts.V1.ResponseModels.Product
         public int CategoryId { get; set; }
         public int StorageId { get; set; }
         public int isDeleted { get; set; }
+        public double ProductTier1AverageRate { get; set; }
+        public double ProductTier2AverageRate { get; set; }
         public IEnumerable<ProductImageResponse> ProductImages { get; set; }
         public IEnumerable<ProductTierResponseOfProduct> ProductTiers { get; set; }
     }

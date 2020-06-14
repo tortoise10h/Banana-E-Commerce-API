@@ -12,5 +12,7 @@ namespace Banana_E_Commerce_API.Contracts.V1.ResponseModels.Rating
         public string Origin { get; set; }
         public PriceCurrency PriceCurrency { get; set; }
         public IEnumerable<ProductImageResponse> ProductImages { get; set; }
+        public double ProductTier1AverageRate { get; set; }
+        public double ProductTier2AverageRate { get; set; }
     }
 }
