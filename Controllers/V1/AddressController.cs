@@ -50,7 +50,7 @@ namespace Banana_E_Commerce_API.Controllers.V1
 
             if (!isCreateSuccess)
             {
-                return BadRequest("Create address failed");
+                return BadRequest();
             }
 
             var addressUri = _uriService.GetByIdUri(
@@ -141,7 +141,7 @@ namespace Banana_E_Commerce_API.Controllers.V1
             var isCustomerValidDelete = await _addressService.IsCustomerOwnAddress(userId, addressId);
             if (!isCustomerValidDelete)
             {   
-                return Unauthorized("You don\'t have a permission");
+                return Unauthorized("Bạn không có quyền truy cập");
             }
 
             var isDeleted = await _addressService.DeleteAsync(addressId);

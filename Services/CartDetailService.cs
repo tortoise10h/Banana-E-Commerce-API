@@ -257,18 +257,6 @@ namespace Banana_E_Commerce_API.Services
 
         public async Task<UpdateCartDetailResult> UpdateAsync(CartDetail cartDetail)
         {
-            /** handle quantity of product */
-            var productTier = await _context.ProductTiers
-                .SingleOrDefaultAsync(p => p.Id == cartDetail.ProductTierId);
-            if (cartDetail.Quantity > productTier.Quantity)
-            {
-                return new UpdateCartDetailResult
-                {
-                    IsSuccess = false,
-                    Errors = new[] { "The quantity of product is not enough" }
-                };
-            }
-
             _context.CartDetails.Update(cartDetail);
             var updated = await _context.SaveChangesAsync();
 

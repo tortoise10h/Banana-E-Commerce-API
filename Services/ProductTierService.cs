@@ -55,7 +55,7 @@ namespace Banana_E_Commerce_API.Services
                 return new CreateProductTierResult
                 {
                     IsSuccess = false,
-                    Errors = new[] { "Create product tier error" }
+                    Errors = new[] { "Có lỗi khi tạo sản phẩm mới, vui lòng thử lại" }
                 };
             }
 

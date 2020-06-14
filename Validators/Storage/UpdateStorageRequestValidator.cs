@@ -20,7 +20,7 @@ namespace Banana_E_Commerce_API.Validators.Storage
             List<string> validSizeUnitValues = new List<string>() { "m2" };
             RuleFor(x => x.SizeUnit)
                 .Must(x => validSizeUnitValues.Contains(x))
-                    .WithMessage("Size Unit value is invalid");
+                    .WithMessage("Đơn vị kích cỡ không hợp lệ");
         }
     }
 }

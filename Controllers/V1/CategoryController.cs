@@ -56,7 +56,7 @@ namespace Banana_E_Commerce_API.Controllers.V1
                 return BadRequest(
                     new CreateCategoryFailResponse
                     {
-                        Errors = new[] { "Create category failed, please try again" }
+                        Errors = new[] { "Tạo loại sản phẩm không thành công" }
                     });
             }
 

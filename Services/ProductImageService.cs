@@ -99,7 +99,7 @@ namespace Banana_E_Commerce_API.Services
                 return new UploadMultipleProductImagesResult
                 {
                     IsSuccess = false,
-                    Errors = new[] { "Upload product images error" }
+                    Errors = new[] { "Có lỗi khi tải hình ảnh lên, vui lòng thử lại" }
                 };
             }
 

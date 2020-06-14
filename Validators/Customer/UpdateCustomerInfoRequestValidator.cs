@@ -13,12 +13,12 @@ namespace Banana_E_Commerce_API.Validators.Customer
             RuleFor(x => x.Name)
                 .MaximumLength(255)
                 .Matches(@"[a-zA-z]")
-                    .WithMessage("Name only allow letter characters");
+                    .WithMessage("Tên chỉ cho phép các kí tự chữ cái");
 
             // Phone
             RuleFor(x => x.Phone)
                 .Matches(@"[0-9]")
-                    .WithMessage("Your phone must be only contains number")
+                    .WithMessage("Số điện thoại chỉ cho phép chứa số")
                 .Length(10);
 
             // Gender
@@ -26,7 +26,7 @@ namespace Banana_E_Commerce_API.Validators.Customer
             RuleFor(x => x.Gender)
                 .NotNull()
                 .Must(x => validGenderValues.Contains(x))
-                    .WithMessage("Gender value is not valid");
+                    .WithMessage("Giới tính không hợp lệ");
         }
     }
 }

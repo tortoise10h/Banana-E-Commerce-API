@@ -71,7 +71,7 @@ namespace Banana_E_Commerce_API.Services
                     IsSuccess = false,
                     Errors = new[]
                     {
-                        $"The email {email} is already existed"
+                        $"Email {email} đã tồn tại"
                     }
                 };
             }
@@ -102,7 +102,7 @@ namespace Banana_E_Commerce_API.Services
                     if (!(created > 0))
                     {
                         transaction.Dispose();
-                        throw new Exception("Đăng ký tài khoản thất bại, xin thử lại");
+                        throw new Exception("Đăng ký tài khoản thất bại, vui lòng thử lại");
                     }
 
                     // create customer
@@ -111,7 +111,7 @@ namespace Banana_E_Commerce_API.Services
                     if (!isCustomerCreated)
                     {
                         transaction.Dispose();
-                        throw new Exception("Đăng ký tài khoản thất bại, xin thử lại");
+                        throw new Exception("Đăng ký tài khoản thất bại, vui lòng thử lại");
                     }
 
                     // create cart for customer
@@ -119,7 +119,7 @@ namespace Banana_E_Commerce_API.Services
                     if (!isCartCreated)
                     {
                         transaction.Dispose();
-                        throw new Exception("Đăng ký tài khoản thất bại, xin thử lại");
+                        throw new Exception("Đăng ký tài khoản thất bại, vui lòng thử lại");
                     }
 
                     transaction.Commit();
@@ -155,7 +155,16 @@ namespace Banana_E_Commerce_API.Services
                 return new AuthenticateResult
                 {
                     IsSuccess = false,
-                    Errors = new[] { "This user does not exist" }
+                    Errors = new[] { "Tài khoản không tồn tại" }
+                };
+            }
+
+            if (user.Status == UserStatus.Banned)
+            {
+                return new AuthenticateResult
+                {
+                    IsSuccess = false,
+                    Errors = new[] { "Tài khoản của bạn đã bị khoá" }
                 };
             }
 
@@ -165,7 +174,7 @@ namespace Banana_E_Commerce_API.Services
                 return new AuthenticateResult
                 {
                     IsSuccess = false,
-                    Errors = new[] { "The email or password is incorrect" }
+                    Errors = new[] { "Email hoặc mật khẩu không chính xác, vui lòng thử lại" }
                 };
             }
 

@@ -72,7 +72,7 @@ namespace Banana_E_Commerce_API.Controllers.V1
             var isDeleted = await _productImageService.DeleteAsync(productImage);
             if (!isDeleted)
             {
-                return BadRequest("Delete product image error");
+                return BadRequest("Xoá hình ảnh không thành công");
             }
 
             return NoContent();

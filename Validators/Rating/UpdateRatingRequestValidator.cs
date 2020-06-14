@@ -15,7 +15,7 @@ namespace Banana_E_Commerce_API.Validators.Rating
             RuleFor(x => x.StarNum)
                 .NotNull()
                 .InclusiveBetween(1, 5)
-                .WithMessage("Star num is between 1 and 5");
+                .WithMessage("Đánh giá sao từ 1 đến 5");
         }
     }
 }

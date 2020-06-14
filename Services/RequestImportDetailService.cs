@@ -36,7 +36,7 @@ namespace Banana_E_Commerce_API.Services
                 return new CreateRequestImportDetailResult
                 {
                     IsSuccess = false,
-                    Errors = new[] { "Product tier need to import is not existed" }
+                    Errors = new[] { "Sản phẩm cần nhập hàng không tồn tại" }
                 };
             }
 
@@ -49,7 +49,7 @@ namespace Banana_E_Commerce_API.Services
                 {
                     IsSuccess = false,
                     Errors = new[] {
-                        $"Create request import detail for product {productTier.Product.Name} is not success"
+                        $"Tạo yêu cầu nhập hàng cho sản phẩm {productTier.Product.Name} không thành công"
                     }
                 };
             }

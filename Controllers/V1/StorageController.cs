@@ -46,7 +46,7 @@ namespace Banana_E_Commerce_API.Controllers.V1
 
             if (!isCreateSuccess)
             {
-                return BadRequest("create storage failed");
+                return BadRequest("Tạo kho hàng không thành công, vui lòng thử lại");
             }
 
             var storageUri = _uriService.GetByIdUri(

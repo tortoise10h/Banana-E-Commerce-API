@@ -30,7 +30,7 @@ namespace Banana_E_Commerce_API.Validators.ProductTier
             // Price Currency
             RuleFor(x => x.PriceCurrency)
                 .IsInEnum()
-                .WithMessage("Price currency value is not valid");
+                .WithMessage("Đơn vị tiền tệ không hợp lệ");
 
         }
     }

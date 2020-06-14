@@ -13,8 +13,15 @@ namespace Banana_E_Commerce_API.Contracts.V1
             public const string GetAll = Base + "/users";
             public const string Create = Base + "/users";
             public const string Update = Base + "/users/{userId}";
-            public const string Delete = Base + "/users/{userId}";
+            public const string Banned = Base + "/users/banned/{userId}";
+            public const string Unbanned = Base + "/users/unbanned/{userId}";
             public const string Get = Base + "/users/{userId}";
+        }
+
+        public static class Admin
+        {
+            public const string GetAll = Base + "/admin/products";
+            public const string Get = Base + "/admin/products/{productId}";
         }
 
         public static class Customer
