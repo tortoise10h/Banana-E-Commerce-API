@@ -172,18 +172,38 @@ namespace Banana_E_Commerce_API.Services
         )
         {
             var createdByCustomer = await _context.Customers.SingleOrDefaultAsync(c => c.UserId == userId);
-            var newRating = await _context.ProductTiers.SingleOrDefaultAsync(pt => pt.Id == rating.ProductTierId);
-            var currentRating = await _context.Rates
-                .SingleOrDefaultAsync(r => r.ProductTierId == rating.ProductTierId 
-                                        && r.CustomerId == rating.CustomerId);
+            var productRating = await _context.ProductTiers.SingleOrDefaultAsync(pt => pt.Id == rating.ProductTierId);
 
-            if (newRating == null)
+            var isCustomerOrder = await _context.Orders.Where(
+                o => o.CustomerId == createdByCustomer.Id
+            ).FirstOrDefaultAsync();
+
+            var isItemOrder = await _context.OrderItems.Where(
+                io => io.ProductTierId == rating.ProductTierId  
+            ).FirstOrDefaultAsync();
+
+            var currentRating = await _context.Rates.Where(
+                r => r.CustomerId == createdByCustomer.Id &&
+                r.ProductTierId == rating.ProductTierId
+            ).FirstOrDefaultAsync();
+
+            if (productRating == null)
             {
                 return new PrepareRatingInfoResult
                 {
                     IsSuccess = false,
                     Errors = new List<string>()
                     { "Product is not existed" }
+                };
+            }
+
+            if (isCustomerOrder == null && isItemOrder == null)
+            {
+                return new PrepareRatingInfoResult
+                {
+                    IsSuccess = false,
+                    Errors = new List<string>()
+                    { "Bạn phải mua hàng trước khi đánh giá" }
                 };
             }
 

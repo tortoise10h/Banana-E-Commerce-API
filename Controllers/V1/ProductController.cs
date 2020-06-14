@@ -20,6 +20,7 @@ using Microsoft.AspNetCore.Hosting;
 
 namespace Banana_E_Commerce_API.Controllers.V1
 {
+    [AuthorizeRoles(RoleNameEnum.Admin, RoleNameEnum.StorageManager)]
     public class ProductController : ControllerBase
     {
         private readonly IProductService _productService;
@@ -82,10 +83,11 @@ namespace Banana_E_Commerce_API.Controllers.V1
             [FromQuery] GetAllProductsQuery filterModel,
             [FromQuery] PaginationQuery paginModel)
         {
+            int requestedUserId = int.Parse(HttpContext.GetUserIdFromRequest());
             var pagination = _mapper.Map<PaginationFilter>(paginModel);
             var filter = _mapper.Map<GetAllProductsFilter>(filterModel);
-            var products = await _productService.GetAllAsync(pagination, filter);
-            int totalProducts = await _productService.CountAllAsync(pagination, filter);
+            var products = await _productService.GetAllAsync(pagination, filter, requestedUserId);
+            int totalProducts = await _productService.CountAllAsync(pagination, filter, requestedUserId);
             var responseProducts = _mapper.Map<List<ProductResponse>>(products);
 
             var paginationProductsResponse = PaginationHelpers.CreatePaginatedResponse(
@@ -105,7 +107,8 @@ namespace Banana_E_Commerce_API.Controllers.V1
             [FromRoute] int productId,
             [FromBody] UpdateProductRequest updateModel)
         {
-            var productEntity = await _productService.GetByIdAsync(productId);
+            int requestedUserId = int.Parse(HttpContext.GetUserIdFromRequest());
+            var productEntity = await _productService.GetByIdAsync(productId, requestedUserId);
 
             if (productEntity == null)
             {
@@ -126,10 +129,32 @@ namespace Banana_E_Commerce_API.Controllers.V1
             return NotFound();
         }
 
+        [AuthorizeRoles(RoleNameEnum.Admin)]
+        [HttpDelete(ApiRoutes.Product.Delete)]
+        public async Task<IActionResult> Delete([FromRoute] int productId)
+        {
+            int requestedUserId = int.Parse(HttpContext.GetUserIdFromRequest());
+            var productEntity = await _productService.GetByIdAsync(productId, requestedUserId);
+
+            if (productEntity == null)
+            {
+                return NotFound();
+            }
+
+            var isDeleted = await _productService.DeleteAsync(productId);
+            if (isDeleted)
+            {
+                return NoContent();
+            }
+
+            return NotFound();
+        }
+
         [HttpGet(ApiRoutes.Product.GetById)]
         public async Task<IActionResult> GetById([FromRoute] int productId)
         {
-            var result = await _productService.GetByIdAsync(productId);
+            int requestedUserId = int.Parse(HttpContext.GetUserIdFromRequest());
+            var result = await _productService.GetByIdAsync(productId, requestedUserId);
             var productResponse = _mapper.Map<ProductResponse>(result);
 
             if (result != null)
