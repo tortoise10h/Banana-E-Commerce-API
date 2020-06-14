@@ -25,16 +25,24 @@ namespace Banana_E_Commerce_API.Services
             string appRootDir);
         Task<bool> UpdateAsync(Product product);
         Task<bool> DeleteAsync(int productId);
-        Task<Product> GetByIdAsync(int productId, int requestedUserId);
+        Task<Product> GetByIdAsync(int productId);
         Task<IEnumerable<Product>> GetAllAsync(
             PaginationFilter pagination,
-            GetAllProductsFilter filter,
-            int requestedUserId);
+            GetAllProductsFilter filter = null
+        );
         Task<int> CountAllAsync(
             PaginationFilter pagination,
-            GetAllProductsFilter filter,
-            int requestedUserId
+            GetAllProductsFilter filter = null
         );
+        Task<IEnumerable<Product>> AdminGetAllAsync(
+            PaginationFilter pagination,
+            GetAllProductsFilter filter = null
+        );
+        Task<int> AdminCountAllAsync(
+            PaginationFilter pagination,
+            GetAllProductsFilter filter = null
+        );
+        Task<Product> AdminGetByIdAsync(int productId);
 
         double CalculateAfterDiscountPrice(
             double originalPrice,
@@ -77,14 +85,13 @@ namespace Banana_E_Commerce_API.Services
 
         public async Task<int> CountAllAsync(
             PaginationFilter pagination,
-            GetAllProductsFilter filter,
-            int requestedUserId
+            GetAllProductsFilter filter = null
         )
         {
             var queryable = _context.Products.AsQueryable();
 
             queryable = queryable.Where(x => x.IsDeleted == false);
-            queryable = await AddFilterOnQuery(filter, queryable, requestedUserId);
+            queryable = AddFilterOnQuery(filter, queryable);
             return await queryable.CountAsync();
         }
 
@@ -294,12 +301,12 @@ namespace Banana_E_Commerce_API.Services
 
         public async Task<IEnumerable<Product>> GetAllAsync(
             PaginationFilter pagination,
-            GetAllProductsFilter filter,
-            int requestedUserId)
+            GetAllProductsFilter filter = null
+        )
         {
             var queryable = _context.Products.AsQueryable();
 
-            queryable = await AddFilterOnQuery(filter, queryable, requestedUserId);
+            queryable = AddFilterOnQuery(filter, queryable);
 
             var skip = (pagination.PageNumber - 1) * pagination.PageSize;
             return await queryable
@@ -327,22 +334,15 @@ namespace Banana_E_Commerce_API.Services
             return deleted > 0;
         }
 
-        public async Task<Product> GetByIdAsync(int productId, int requestedUserId)
+        public async Task<Product> GetByIdAsync(int productId)
         {
-            var user = await _userService.GetByIdAsync(requestedUserId);
-
-            var queryable = _context.Products.AsQueryable();
-
-            if (user.Role.RoleName == RoleNameEnum.StorageManager)
-            {
-                queryable = queryable.Where(p => p.IsDeleted == false);
-            }
-
-            return await queryable
-                .Where(x => x.Id == productId)
+            return await _context.Products
+                .Where(x => x.Id == productId &&
+                    x.IsDeleted == false)
                 .Include(x => x.ProductImages)
                 .Include(x => x.ProductTiers)
                 .FirstOrDefaultAsync();
+
         }
 
         public async Task<bool> UpdateAsync(Product product)
@@ -353,18 +353,114 @@ namespace Banana_E_Commerce_API.Services
             return updated > 0;
         }
 
-        private async Task<IQueryable<Product>> AddFilterOnQuery(
+        private IQueryable<Product> AddFilterOnQuery(
             GetAllProductsFilter filter,
-            IQueryable<Product> queryable,
-            int requestedUserId
+            IQueryable<Product> queryable
         )
         {
-            var user = await _userService.GetByIdAsync(requestedUserId);
 
-            if (user.Role.RoleName == RoleNameEnum.StorageManager)
+            queryable = queryable.Where(p => p.IsDeleted == false);
+
+            if (!string.IsNullOrEmpty(filter?.Name))
             {
-                queryable = queryable.Where(p => p.IsDeleted == false);
+                queryable = queryable.Where(x => x.Name.Contains(filter.Name));
             }
+
+            if (filter?.CategoryIds.Length > 0)
+            {
+                queryable = queryable.Where(x => filter.CategoryIds.Contains(x.CategoryId));
+            }
+
+            if (filter?.StorageId > 0)
+            {
+                queryable = queryable.Where(x => x.StorageId == filter.StorageId);
+            }
+
+            if (filter?.ProductTier1FromPrice != null)
+            {
+                queryable = queryable.Where(x =>
+                    x.ProductTiers
+                        .SingleOrDefault(
+                            pt => pt.Tier.TierOption == TierEnum.tier1
+                        )
+                            .AfterDiscountPrice >= filter.ProductTier1FromPrice);
+            }
+
+            if (filter?.ProductTier1ToPrice != null && filter.ProductTier1ToPrice > 0)
+            {
+                queryable = queryable.Where(x =>
+                    x.ProductTiers
+                        .SingleOrDefault(
+                            pt => pt.Tier.TierOption == TierEnum.tier1
+                        )
+                            .AfterDiscountPrice <= filter.ProductTier1ToPrice);
+            }
+            if (filter?.ProductTier2FromPrice != null)
+            {
+                queryable = queryable.Where(x =>
+                    x.ProductTiers
+                        .SingleOrDefault(
+                            pt => pt.Tier.TierOption == TierEnum.tier2
+                        )
+                            .AfterDiscountPrice >= filter.ProductTier2FromPrice);
+            }
+
+            if (filter?.ProductTier2ToPrice != null && filter.ProductTier2ToPrice > 0)
+            {
+                queryable = queryable.Where(x =>
+                    x.ProductTiers
+                        .SingleOrDefault(
+                            pt => pt.Tier.TierOption == TierEnum.tier2
+                        )
+                            .AfterDiscountPrice <= filter.ProductTier2ToPrice);
+            }
+            return queryable;
+        }
+
+        public async Task<Product> AdminGetByIdAsync(int productId)
+        {
+
+            var queryable = _context.Products.AsQueryable();
+
+            return await queryable
+                .Where(x => x.Id == productId)
+                .Include(x => x.ProductImages)
+                .Include(x => x.ProductTiers)
+                .FirstOrDefaultAsync();
+        }
+        public async Task<IEnumerable<Product>> AdminGetAllAsync(
+            PaginationFilter pagination,
+            GetAllProductsFilter filter
+        )
+        {
+            var queryable = _context.Products.AsQueryable();
+
+            queryable = AdminAddFilterOnQuery(filter, queryable);
+
+            var skip = (pagination.PageNumber - 1) * pagination.PageSize;
+            return await queryable
+                .Skip(skip)
+                .Take(pagination.PageSize)
+                .Include(p => p.ProductImages)
+                .Include(p => p.ProductTiers)
+                    .ThenInclude(pt => pt.Tier)
+                .ToListAsync();
+        }
+        public async Task<int> AdminCountAllAsync(
+            PaginationFilter pagination,
+            GetAllProductsFilter filter
+        )
+        {
+            var queryable = _context.Products.AsQueryable();
+
+            queryable = AdminAddFilterOnQuery(filter, queryable);
+            return await queryable.CountAsync();
+        }
+        private IQueryable<Product> AdminAddFilterOnQuery(
+            GetAllProductsFilter filter,
+            IQueryable<Product> queryable
+        )
+        {
 
             if (!string.IsNullOrEmpty(filter?.Name))
             {

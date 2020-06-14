@@ -16,7 +16,7 @@ namespace Banana_E_Commerce_API.Validators.Product
             // Price Currency
             RuleFor(x => x.PriceCurrency)
                 .IsInEnum()
-                .WithMessage("Loại tiền tệ không hợp lệ");
+                .WithMessage("Đơn vị tiền tệ không hợp lệ");
 
             // Product Unit
             RuleFor(x => x.ProductUnit)

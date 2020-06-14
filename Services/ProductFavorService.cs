@@ -48,7 +48,7 @@ namespace Banana_E_Commerce_API.Services
                 return new CreateProductFavorResult
                 {
                     IsSuccess = false,
-                    Errors = new[] { "Product is already in your favorite list" }
+                    Errors = new[] { "Sản phẩm đã tồn tại trong danh sách yêu thích của bạn" }
                 };
             }
 
@@ -57,7 +57,7 @@ namespace Banana_E_Commerce_API.Services
                 return new CreateProductFavorResult
                 {
                     IsSuccess = false,
-                    Errors = new[] { "Product is not existed" }
+                    Errors = new[] { "Sản phẩm này không tồn tại" }
                 };
             }
 

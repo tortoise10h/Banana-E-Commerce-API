@@ -150,7 +150,7 @@ namespace Banana_E_Commerce_API.Controllers.V1
             var isCustomerValidRating = await _ratingService.IsCustomerOwnRating(userId, ratingId);
             if (!isCustomerValidRating)
             {   
-                return Unauthorized("You don\'t have a permission");
+                return Unauthorized("Bạn không có quyền truy cập");
             }
 
             var isDeleted = await _ratingService.DeleteAsync(ratingId);

@@ -20,7 +20,6 @@ using Microsoft.AspNetCore.Hosting;
 
 namespace Banana_E_Commerce_API.Controllers.V1
 {
-    [AuthorizeRoles(RoleNameEnum.Admin, RoleNameEnum.StorageManager)]
     public class ProductController : ControllerBase
     {
         private readonly IProductService _productService;
@@ -83,11 +82,10 @@ namespace Banana_E_Commerce_API.Controllers.V1
             [FromQuery] GetAllProductsQuery filterModel,
             [FromQuery] PaginationQuery paginModel)
         {
-            int requestedUserId = int.Parse(HttpContext.GetUserIdFromRequest());
             var pagination = _mapper.Map<PaginationFilter>(paginModel);
             var filter = _mapper.Map<GetAllProductsFilter>(filterModel);
-            var products = await _productService.GetAllAsync(pagination, filter, requestedUserId);
-            int totalProducts = await _productService.CountAllAsync(pagination, filter, requestedUserId);
+            var products = await _productService.GetAllAsync(pagination, filter);
+            int totalProducts = await _productService.CountAllAsync(pagination, filter);
             var responseProducts = _mapper.Map<List<ProductResponse>>(products);
 
             var paginationProductsResponse = PaginationHelpers.CreatePaginatedResponse(
@@ -107,8 +105,7 @@ namespace Banana_E_Commerce_API.Controllers.V1
             [FromRoute] int productId,
             [FromBody] UpdateProductRequest updateModel)
         {
-            int requestedUserId = int.Parse(HttpContext.GetUserIdFromRequest());
-            var productEntity = await _productService.GetByIdAsync(productId, requestedUserId);
+            var productEntity = await _productService.GetByIdAsync(productId);
 
             if (productEntity == null)
             {
@@ -133,8 +130,7 @@ namespace Banana_E_Commerce_API.Controllers.V1
         [HttpDelete(ApiRoutes.Product.Delete)]
         public async Task<IActionResult> Delete([FromRoute] int productId)
         {
-            int requestedUserId = int.Parse(HttpContext.GetUserIdFromRequest());
-            var productEntity = await _productService.GetByIdAsync(productId, requestedUserId);
+            var productEntity = await _productService.GetByIdAsync(productId);
 
             if (productEntity == null)
             {
@@ -153,8 +149,7 @@ namespace Banana_E_Commerce_API.Controllers.V1
         [HttpGet(ApiRoutes.Product.GetById)]
         public async Task<IActionResult> GetById([FromRoute] int productId)
         {
-            int requestedUserId = int.Parse(HttpContext.GetUserIdFromRequest());
-            var result = await _productService.GetByIdAsync(productId, requestedUserId);
+            var result = await _productService.GetByIdAsync(productId);
             var productResponse = _mapper.Map<ProductResponse>(result);
 
             if (result != null)
@@ -163,6 +158,45 @@ namespace Banana_E_Commerce_API.Controllers.V1
             }
 
             return NotFound();
+        }
+
+        [AuthorizeRoles(RoleNameEnum.Admin)]
+        [HttpGet(ApiRoutes.Admin.Get)]
+        public async Task<IActionResult> AdminGetById([FromRoute] int productId)
+        {
+            var result = await _productService.AdminGetByIdAsync(productId);
+            var productResponse = _mapper.Map<ProductResponse>(result);
+
+            if (result != null)
+            {
+                return Ok(new Response<ProductResponse>(productResponse));
+            }
+
+            return NotFound();
+        }
+
+        [AuthorizeRoles(RoleNameEnum.Admin)]
+        [HttpGet(ApiRoutes.Admin.GetAll)]
+        public async Task<IActionResult> AdminGetAll(
+            [FromQuery] GetAllProductsQuery filterModel,
+            [FromQuery] PaginationQuery paginModel)
+        {
+            int requestedUserId = int.Parse(HttpContext.GetUserIdFromRequest());
+            var pagination = _mapper.Map<PaginationFilter>(paginModel);
+            var filter = _mapper.Map<GetAllProductsFilter>(filterModel);
+            var products = await _productService.AdminGetAllAsync(pagination, filter);
+            int totalProducts = await _productService.AdminCountAllAsync(pagination, filter);
+            var responseProducts = _mapper.Map<List<ProductResponse>>(products);
+
+            var paginationProductsResponse = PaginationHelpers.CreatePaginatedResponse(
+                _uriService,
+                pagination,
+                responseProducts,
+                totalProducts,
+                ApiRoutes.Product.GetAll
+            );
+
+            return Ok(paginationProductsResponse);
         }
 
     }

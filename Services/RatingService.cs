@@ -193,7 +193,7 @@ namespace Banana_E_Commerce_API.Services
                 {
                     IsSuccess = false,
                     Errors = new List<string>()
-                    { "Product is not existed" }
+                    { "Sản phẩm này không tồn tại" }
                 };
             }
 
@@ -213,7 +213,7 @@ namespace Banana_E_Commerce_API.Services
                 {
                     IsSuccess = false,
                     Errors = new List<string>()
-                    { "You have already rated this product" }
+                    { "Bạn đã đánh giá sản phẩm này rồi" }
                 };
             }
 

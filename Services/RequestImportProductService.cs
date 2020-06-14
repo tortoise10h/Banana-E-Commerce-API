@@ -90,7 +90,7 @@ namespace Banana_E_Commerce_API.Services
                     if (!areProductTiersInRequestValid)
                     {
                         transaction.Dispose();
-                        throw new Exception("Product tier which is requested to import is not existed");
+                        throw new Exception("Sản phẩm cần nhập hàng không tồn tại");
                     }
 
                     await _context.RequestImportDetails.AddRangeAsync(
@@ -101,7 +101,7 @@ namespace Banana_E_Commerce_API.Services
                     {
                         transaction.Dispose();
                         throw new Exception(
-                            "Create request import product error"
+                            "Tạo yêu cầu nhập hàng không thành công, vui lòng thử lại"
                         );
                     }
 

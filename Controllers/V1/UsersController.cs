@@ -55,7 +55,7 @@ namespace Banana_E_Commerce_API.Controllers
 
             if (!isUserOwnInfo && !isAdmin)
             {   
-                return Unauthorized("You don\'t have a permission");
+                return Unauthorized("Bạn không có quyền tra cứu thông tin tài khoản này");
             }
 
             var result = await _userService.GetByIdAsync(userId);
@@ -86,7 +86,7 @@ namespace Banana_E_Commerce_API.Controllers
 
             if (!isUserOwnInfo)
             {   
-                return Unauthorized("You don\'t have a permission");
+                return Unauthorized("Bạn không có quyền thay đổi thông tin tài khoản này");
             }
 
             _mapper.Map<UpdateUserPasswordRequest, User>(updateModel, userEntity);
@@ -101,9 +101,77 @@ namespace Banana_E_Commerce_API.Controllers
             }
 
             var userResponse = _mapper.Map<UserResponse>(userEntity);
-            return Ok("Update password successfully");
+            return Ok("Cập nhật mật khẩu thành công");
 
         }
+
+        [AuthorizeRoles(RoleNameEnum.Admin)]
+        [HttpDelete(ApiRoutes.Users.Banned)]
+        public async Task<IActionResult> BannedUser([FromRoute] int userId)
+        {
+            int requestedUserId = int.Parse(HttpContext.GetUserIdFromRequest());
+            var userEntity = await _userService.GetByIdAsync(userId);
+            var isAdminAccount = await _userService.IsAdmin(userId);
+            var isAdmin = await _userService.IsAdmin(requestedUserId);
+
+            if (userEntity == null)
+            {
+                return NotFound();
+            }
+
+            if (!isAdmin)
+            {   
+                return Unauthorized("Bạn không có quyền khoá tài khoản người dùng");
+            }
+
+            if (isAdminAccount)
+            {   
+                return BadRequest("Bạn không thể khoá tài khoản này");
+            }
+
+            var isDeleted = await _userService.BannedUserAsync(userId);
+            if (isDeleted)
+            {
+                return NoContent();
+            }
+
+            return NotFound();
+        }
+
+        [AuthorizeRoles(RoleNameEnum.Admin)]
+        [HttpPut(ApiRoutes.Users.Unbanned)]
+        public async Task<IActionResult> UnbannedUser([FromRoute] int userId)
+        {
+            int requestedUserId = int.Parse(HttpContext.GetUserIdFromRequest());
+            var userEntity = await _userService.GetByIdAsync(userId);
+            var isAdminAccount = await _userService.IsAdmin(userId);
+            var isAdmin = await _userService.IsAdmin(requestedUserId);
+            var isUserBanned = await _userService.isUserBanned(userId);
+
+            if (userEntity == null)
+            {
+                return NotFound();
+            }
+
+            if (!isAdmin)
+            {   
+                return Unauthorized("Bạn không có quyền mở khoá tài khoản người dùng");
+            }
+
+            if (isAdminAccount || !isUserBanned)
+            {   
+                return BadRequest();
+            }
+
+            var isUpdated = await _userService.UnbannedUserAsync(userId);
+            if (isUpdated)
+            {
+                return NoContent();
+            }
+
+            return NotFound();
+        }
+
 
         [AuthorizeRoles(RoleNameEnum.Admin, RoleNameEnum.StorageManager)]
         [HttpGet(ApiRoutes.Users.GetAll)]

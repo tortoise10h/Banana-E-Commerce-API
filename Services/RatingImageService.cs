@@ -85,7 +85,7 @@ namespace Banana_E_Commerce_API.Services
                 return new UploadMultipleRatingImagesResult
                 {
                     IsSuccess = false,
-                    Errors = new[] { "Upload rating images error" }
+                    Errors = new[] { "Có lỗi khi tải hình ảnh lên, vui lòng thử lại" }
                 };
             }
 

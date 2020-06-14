@@ -75,7 +75,7 @@ namespace Banana_E_Commerce_API.Controllers.V1
                 return BadRequest(
                     new AuthenticateFailedResponse
                     {
-                        Errors = new[] { "Login error, please try again" }
+                        Errors = new[] { "Đăng nhập không thành công, vui lòng thử lại" }
                     }
                 );
             }

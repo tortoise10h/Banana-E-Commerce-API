@@ -80,7 +80,7 @@ namespace Banana_E_Commerce_API.Services
                 return new UpdateCustomerInfoResult
                 {
                     IsSuccess = false,
-                    Errors = new[] { $"The phone number {customer.Phone} is already existed" }
+                    Errors = new[] { $"Số điện thoại {customer.Phone} đã tồn tại, vui lòng thử lại" }
                 };
             }
 
@@ -90,7 +90,7 @@ namespace Banana_E_Commerce_API.Services
                 return new UpdateCustomerInfoResult
                 {
                     IsSuccess = false,
-                    Errors = new[] { $"The phone number {customer.Phone} is already existed" }
+                    Errors = new[] { $"Số điện thoại {customer.Phone} đã tồn tại, vui lòng thử lại" }
                 };
             }
 
@@ -100,7 +100,7 @@ namespace Banana_E_Commerce_API.Services
                 return new UpdateCustomerInfoResult
                 {
                     IsSuccess = false,
-                    Errors = new[] { $"The phone number {customer.Phone} is already existed" }
+                    Errors = new[] { $"Số điện thoại {customer.Phone} đã tồn tại, vui lòng thử lại" }
                 };
             }
 

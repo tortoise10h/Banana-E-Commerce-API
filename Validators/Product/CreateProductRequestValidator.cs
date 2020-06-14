@@ -30,12 +30,12 @@ namespace Banana_E_Commerce_API.Validators.Product
             // Price Currency
             RuleFor(x => x.PriceCurrency)
                 .IsInEnum()
-                .WithMessage("Price currency value is not valid");
+                .WithMessage("Đơn vị tiền tệ không hợp lệ");
 
             // Product Unit
             RuleFor(x => x.ProductUnit)
                 .IsInEnum()
-                .WithMessage("Product Unit value is not valid");
+                .WithMessage("Đơn vị bán không hợp lệ");
 
             // StorageId
             RuleFor(x => x.StorageId)

@@ -34,10 +34,12 @@ namespace Banana_E_Commerce_API.Services
             string newPassword, 
             string confirmPassword
         );
-        Task<bool> BanUserAsync(int userId);
+        Task<bool> BannedUserAsync(int userId);
+        Task<bool> UnbannedUserAsync(int userId);
         Task<bool> CreateAsync(User user, string password);
         Task<bool> IsUserOwnInfo(int userId, int requestedUserId);
         Task<bool> IsAdmin(int userId);
+        Task<bool> isUserBanned(int userId);
     }
 
     public class UserService : IUserService
@@ -149,7 +151,7 @@ namespace Banana_E_Commerce_API.Services
                 return new UpdateUserPasswordResult
                 {
                     IsSuccess = false,
-                    Errors = new[] { "User is not existed" }
+                    Errors = new[] { "Tài khoản không tồn tại" }
                 };
             }
         
@@ -159,7 +161,7 @@ namespace Banana_E_Commerce_API.Services
                 return new UpdateUserPasswordResult
                 {
                     IsSuccess = false,
-                    Errors = new[] { "Old password is not correct" }
+                    Errors = new[] { "Mật khẩu cũ không chính xác, vui lòng thử lại" }
                 };
             }
 
@@ -169,7 +171,7 @@ namespace Banana_E_Commerce_API.Services
                 return new UpdateUserPasswordResult
                 {
                     IsSuccess = false,
-                    Errors = new[] { "New password and confirm password do not match" }
+                    Errors = new[] { "Mật khẩu mới và mật khẩu xác nhận phải giống nhau" }
                 };
             }
 
@@ -192,7 +194,7 @@ namespace Banana_E_Commerce_API.Services
                 };
         }
         
-        public async Task<bool> BanUserAsync(int userId)
+        public async Task<bool> BannedUserAsync(int userId)
         {
             var userInfo = await _context.Users.SingleOrDefaultAsync(a => a.Id == userId);
 
@@ -206,6 +208,38 @@ namespace Banana_E_Commerce_API.Services
             var deleted = await _context.SaveChangesAsync();
 
             return deleted > 0;
+        }
+
+        public async Task<bool> UnbannedUserAsync(int userId)
+        {
+            var userInfo = await _context.Users.SingleOrDefaultAsync(a => a.Id == userId);
+            var isUserBanned = await _context.Users.SingleOrDefaultAsync(
+                a => a.Id == userId && a.Status == UserStatus.Banned
+            );
+
+            if (userInfo == null)
+            {
+                return false;
+            }
+
+            userInfo.Status = UserStatus.Verified;
+            _context.Users.Update(userInfo);
+            var updated = await _context.SaveChangesAsync();
+
+            return updated > 0;
+        }
+
+        public async Task<bool> isUserBanned(int userId)
+        {
+            var isUserBanned = await _context.Users.SingleOrDefaultAsync(
+                a => a.Id == userId && a.Status == UserStatus.Banned
+            );
+
+            if (isUserBanned == null)
+            {
+                return false;
+            }
+            return true;
         }
 
         public async Task<IEnumerable<User>> GetAllAsync(

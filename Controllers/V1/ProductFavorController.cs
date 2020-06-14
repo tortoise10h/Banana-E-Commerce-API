@@ -99,7 +99,7 @@ namespace Banana_E_Commerce_API.Controllers.V1
             var isCustomerOwnInfo = await _productFavorService.IsCustomerOwnInfo(userId, productFavor.CustomerId);
             if (!isCustomerOwnInfo)
             {   
-                return Unauthorized("You don\'t have a permission");
+                return Unauthorized("Bạn không có quyền truy cập");
             }
 
             var isDeleted = await _productFavorService.DeleteAsync(productFavorId);

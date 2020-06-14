@@ -12,7 +12,7 @@ namespace Banana_E_Commerce_API.Validators.ProductImage
             RuleFor(x => x.Length)
                 .NotNull()
                 .LessThanOrEqualTo(10 * 1024 * 1024)
-                .WithMessage("File size is larger than allowed");
+                .WithMessage("Kích thước hình ảnh lớn hơn mức cho phép");
 
             // Content Type
             RuleFor(x => x.ContentType)
@@ -21,7 +21,7 @@ namespace Banana_E_Commerce_API.Validators.ProductImage
                     x.Equals("image/jpg") ||
                     x.Equals("image/png") ||
                     x.Equals("image/gif"))
-                .WithMessage("File type is not valid, only accept jpg, jpeg, png and gif");
+                .WithMessage("Định dạng file không hợp lệ, vui lòng thử lại");
         }
     }
 }
