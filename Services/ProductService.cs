@@ -24,13 +24,16 @@ namespace Banana_E_Commerce_API.Services
             string productImageDir,
             string appRootDir);
         Task<bool> UpdateAsync(Product product);
-        Task<Product> GetByIdAsync(int productId);
+        Task<bool> DeleteAsync(int productId);
+        Task<Product> GetByIdAsync(int productId, int requestedUserId);
         Task<IEnumerable<Product>> GetAllAsync(
             PaginationFilter pagination,
-            GetAllProductsFilter filter = null);
+            GetAllProductsFilter filter,
+            int requestedUserId);
         Task<int> CountAllAsync(
             PaginationFilter pagination,
-            GetAllProductsFilter filter = null
+            GetAllProductsFilter filter,
+            int requestedUserId
         );
 
         double CalculateAfterDiscountPrice(
@@ -46,19 +49,22 @@ namespace Banana_E_Commerce_API.Services
         private readonly IProductImageService _productImageService;
         private readonly IProductTierService _productTierService;
         private readonly ITierService _tierService;
+        private readonly IUserService _userService;
 
         public ProductService(
             DataContext context,
             IMapper mapper,
             IProductImageService productImageService,
             IProductTierService productTierService,
-            ITierService tierService)
+            ITierService tierService,
+            IUserService userService)
         {
             _context = context;
             _mapper = mapper;
             _productImageService = productImageService;
             _productTierService = productTierService;
             _tierService = tierService;
+            _userService = userService;
         }
 
         public double CalculateAfterDiscountPrice(double originalPrice, int discountPercentage)
@@ -71,13 +77,14 @@ namespace Banana_E_Commerce_API.Services
 
         public async Task<int> CountAllAsync(
             PaginationFilter pagination,
-            GetAllProductsFilter filter = null
+            GetAllProductsFilter filter,
+            int requestedUserId
         )
         {
             var queryable = _context.Products.AsQueryable();
 
             queryable = queryable.Where(x => x.IsDeleted == false);
-            queryable = AddFilterOnQuery(filter, queryable);
+            queryable = await AddFilterOnQuery(filter, queryable, requestedUserId);
             return await queryable.CountAsync();
         }
 
@@ -287,11 +294,12 @@ namespace Banana_E_Commerce_API.Services
 
         public async Task<IEnumerable<Product>> GetAllAsync(
             PaginationFilter pagination,
-            GetAllProductsFilter filter = null)
+            GetAllProductsFilter filter,
+            int requestedUserId)
         {
             var queryable = _context.Products.AsQueryable();
 
-            queryable = AddFilterOnQuery(filter, queryable);
+            queryable = await AddFilterOnQuery(filter, queryable, requestedUserId);
 
             var skip = (pagination.PageNumber - 1) * pagination.PageSize;
             return await queryable
@@ -303,11 +311,35 @@ namespace Banana_E_Commerce_API.Services
                 .ToListAsync();
         }
 
-        public async Task<Product> GetByIdAsync(int productId)
+        public async Task<bool> DeleteAsync(int productId)
         {
-            return await _context.Products
-                .Where(x => x.Id == productId &&
-                    x.IsDeleted == false)
+            var productInfo = await _context.Products.SingleOrDefaultAsync(a => a.Id == productId);
+
+            if (productInfo == null)
+            {
+                return false;
+            }
+
+            productInfo.IsDeleted = true;
+            _context.Products.Update(productInfo);
+            var deleted = await _context.SaveChangesAsync();
+
+            return deleted > 0;
+        }
+
+        public async Task<Product> GetByIdAsync(int productId, int requestedUserId)
+        {
+            var user = await _userService.GetByIdAsync(requestedUserId);
+
+            var queryable = _context.Products.AsQueryable();
+
+            if (user.Role.RoleName == RoleNameEnum.StorageManager)
+            {
+                queryable = queryable.Where(p => p.IsDeleted == false);
+            }
+
+            return await queryable
+                .Where(x => x.Id == productId)
                 .Include(x => x.ProductImages)
                 .Include(x => x.ProductTiers)
                 .FirstOrDefaultAsync();
@@ -321,12 +353,18 @@ namespace Banana_E_Commerce_API.Services
             return updated > 0;
         }
 
-        private IQueryable<Product> AddFilterOnQuery(
+        private async Task<IQueryable<Product>> AddFilterOnQuery(
             GetAllProductsFilter filter,
-            IQueryable<Product> queryable
+            IQueryable<Product> queryable,
+            int requestedUserId
         )
         {
-            queryable = queryable.Where(x => x.IsDeleted == false);
+            var user = await _userService.GetByIdAsync(requestedUserId);
+
+            if (user.Role.RoleName == RoleNameEnum.StorageManager)
+            {
+                queryable = queryable.Where(p => p.IsDeleted == false);
+            }
 
             if (!string.IsNullOrEmpty(filter?.Name))
             {
