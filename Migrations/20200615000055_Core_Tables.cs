@@ -533,7 +533,9 @@ namespace Banana_E_Commerce_API.Migrations
                     AddressId = table.Column<int>(nullable: false),
                     CustomerId = table.Column<int>(nullable: false),
                     PaymentMethodId = table.Column<int>(nullable: false),
-                    PaymentIntentId = table.Column<string>(nullable: true)
+                    PaymentIntentId = table.Column<string>(nullable: true),
+                    StripeClientSecret = table.Column<string>(nullable: true),
+                    IsPayed = table.Column<bool>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -1079,11 +1081,16 @@ namespace Banana_E_Commerce_API.Migrations
                 columns: new[] { "Id", "CreatedAt", "IsDeleted", "RoleName", "UpdatedAt" },
                 values: new object[,]
                 {
-                    { 1, new DateTime(2020, 6, 13, 12, 37, 30, 306, DateTimeKind.Utc).AddTicks(458), false, 0, new DateTime(2020, 6, 13, 12, 37, 30, 306, DateTimeKind.Utc).AddTicks(1625) },
-                    { 2, new DateTime(2020, 6, 13, 12, 37, 30, 306, DateTimeKind.Utc).AddTicks(3137), false, 1, new DateTime(2020, 6, 13, 12, 37, 30, 306, DateTimeKind.Utc).AddTicks(3200) },
-                    { 3, new DateTime(2020, 6, 13, 12, 37, 30, 306, DateTimeKind.Utc).AddTicks(3256), false, 2, new DateTime(2020, 6, 13, 12, 37, 30, 306, DateTimeKind.Utc).AddTicks(3259) },
-                    { 4, new DateTime(2020, 6, 13, 12, 37, 30, 306, DateTimeKind.Utc).AddTicks(3262), false, 3, new DateTime(2020, 6, 13, 12, 37, 30, 306, DateTimeKind.Utc).AddTicks(3264) }
+                    { 1, new DateTime(2020, 6, 15, 0, 0, 54, 493, DateTimeKind.Utc).AddTicks(5411), false, 0, new DateTime(2020, 6, 15, 0, 0, 54, 493, DateTimeKind.Utc).AddTicks(5871) },
+                    { 2, new DateTime(2020, 6, 15, 0, 0, 54, 493, DateTimeKind.Utc).AddTicks(6666), false, 1, new DateTime(2020, 6, 15, 0, 0, 54, 493, DateTimeKind.Utc).AddTicks(6680) },
+                    { 3, new DateTime(2020, 6, 15, 0, 0, 54, 493, DateTimeKind.Utc).AddTicks(6717), false, 2, new DateTime(2020, 6, 15, 0, 0, 54, 493, DateTimeKind.Utc).AddTicks(6719) },
+                    { 4, new DateTime(2020, 6, 15, 0, 0, 54, 493, DateTimeKind.Utc).AddTicks(6721), false, 3, new DateTime(2020, 6, 15, 0, 0, 54, 493, DateTimeKind.Utc).AddTicks(6722) }
                 });
+
+            migrationBuilder.InsertData(
+                table: "Storages",
+                columns: new[] { "Id", "CreatedAt", "IsDeleted", "Location", "Name", "Size", "SizeUnit", "UpdatedAt" },
+                values: new object[] { 1, new DateTime(2020, 6, 15, 0, 0, 54, 495, DateTimeKind.Utc).AddTicks(2163), false, "Tiểu Vương Quốc Bình Chánh", "Hoàng Khố", 1000.2, "m2", new DateTime(2020, 6, 15, 0, 0, 54, 495, DateTimeKind.Utc).AddTicks(2846) });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Addresses_CustomerId",

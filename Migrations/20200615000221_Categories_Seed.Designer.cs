@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Banana_E_Commerce_API.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20200613152158_Add_Field_StripeClientSecret_To_Order")]
-    partial class Add_Field_StripeClientSecret_To_Order
+    [Migration("20200615000221_Categories_Seed")]
+    partial class Categories_Seed
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -209,38 +209,38 @@ namespace Banana_E_Commerce_API.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2020, 6, 13, 15, 21, 56, 776, DateTimeKind.Utc).AddTicks(7218),
+                            CreatedAt = new DateTime(2020, 6, 15, 0, 2, 20, 614, DateTimeKind.Utc).AddTicks(4831),
                             CreatedBy = 1,
                             IsDeleted = false,
                             Name = "Trái Cây Việt",
-                            UpdatedAt = new DateTime(2020, 6, 13, 15, 21, 56, 776, DateTimeKind.Utc).AddTicks(7682)
+                            UpdatedAt = new DateTime(2020, 6, 15, 0, 2, 20, 614, DateTimeKind.Utc).AddTicks(5807)
                         },
                         new
                         {
                             Id = 2,
-                            CreatedAt = new DateTime(2020, 6, 13, 15, 21, 56, 776, DateTimeKind.Utc).AddTicks(8936),
+                            CreatedAt = new DateTime(2020, 6, 15, 0, 2, 20, 614, DateTimeKind.Utc).AddTicks(8368),
                             CreatedBy = 2,
                             IsDeleted = false,
                             Name = "Trái Cây Nhập",
-                            UpdatedAt = new DateTime(2020, 6, 13, 15, 21, 56, 776, DateTimeKind.Utc).AddTicks(8949)
+                            UpdatedAt = new DateTime(2020, 6, 15, 0, 2, 20, 614, DateTimeKind.Utc).AddTicks(8431)
                         },
                         new
                         {
                             Id = 3,
-                            CreatedAt = new DateTime(2020, 6, 13, 15, 21, 56, 776, DateTimeKind.Utc).AddTicks(8981),
+                            CreatedAt = new DateTime(2020, 6, 15, 0, 2, 20, 614, DateTimeKind.Utc).AddTicks(8491),
                             CreatedBy = 3,
                             IsDeleted = false,
                             Name = "Trái Cây Sấy Khô",
-                            UpdatedAt = new DateTime(2020, 6, 13, 15, 21, 56, 776, DateTimeKind.Utc).AddTicks(8983)
+                            UpdatedAt = new DateTime(2020, 6, 15, 0, 2, 20, 614, DateTimeKind.Utc).AddTicks(8495)
                         },
                         new
                         {
                             Id = 4,
-                            CreatedAt = new DateTime(2020, 6, 13, 15, 21, 56, 776, DateTimeKind.Utc).AddTicks(8985),
+                            CreatedAt = new DateTime(2020, 6, 15, 0, 2, 20, 614, DateTimeKind.Utc).AddTicks(8500),
                             CreatedBy = 4,
                             IsDeleted = false,
                             Name = "Mứt Trái Cây>",
-                            UpdatedAt = new DateTime(2020, 6, 13, 15, 21, 56, 776, DateTimeKind.Utc).AddTicks(8987)
+                            UpdatedAt = new DateTime(2020, 6, 15, 0, 2, 20, 614, DateTimeKind.Utc).AddTicks(8503)
                         });
                 });
 
@@ -541,6 +541,9 @@ namespace Banana_E_Commerce_API.Migrations
                     b.Property<bool>("IsGift")
                         .HasColumnType("bit");
 
+                    b.Property<bool>("IsPayed")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Notes")
                         .HasColumnType("nvarchar(max)");
 
@@ -669,26 +672,6 @@ namespace Banana_E_Commerce_API.Migrations
                     b.HasIndex("CreatedBy");
 
                     b.ToTable("PaymentMethods");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            CreatedAt = new DateTime(2020, 6, 13, 15, 21, 56, 778, DateTimeKind.Utc).AddTicks(4906),
-                            CreatedBy = 1,
-                            IsDeleted = false,
-                            Method = 1,
-                            UpdatedAt = new DateTime(2020, 6, 13, 15, 21, 56, 778, DateTimeKind.Utc).AddTicks(5321)
-                        },
-                        new
-                        {
-                            Id = 2,
-                            CreatedAt = new DateTime(2020, 6, 13, 15, 21, 56, 778, DateTimeKind.Utc).AddTicks(6632),
-                            CreatedBy = 1,
-                            IsDeleted = false,
-                            Method = 2,
-                            UpdatedAt = new DateTime(2020, 6, 13, 15, 21, 56, 778, DateTimeKind.Utc).AddTicks(6648)
-                        });
                 });
 
             modelBuilder.Entity("Banana_E_Commerce_API.Entities.Product", b =>
@@ -746,399 +729,6 @@ namespace Banana_E_Commerce_API.Migrations
                     b.HasIndex("StorageId");
 
                     b.ToTable("Products");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            CategoryId = 1,
-                            CreatedAt = new DateTime(2020, 6, 13, 15, 21, 56, 777, DateTimeKind.Utc).AddTicks(2813),
-                            CreatedBy = 1,
-                            Description = "Bơ 034 từ Việt Nam, Đắk Lắk",
-                            EntryPrice = 60000.0,
-                            IsDeleted = false,
-                            Name = "Bơ 034",
-                            Origin = "Việt Nam, Đắk Lắk",
-                            PriceCurrency = 1,
-                            ProductUnit = 7,
-                            Status = 2,
-                            StorageId = 1,
-                            UpdatedAt = new DateTime(2020, 6, 13, 15, 21, 56, 777, DateTimeKind.Utc).AddTicks(3232)
-                        },
-                        new
-                        {
-                            Id = 2,
-                            CategoryId = 1,
-                            CreatedAt = new DateTime(2020, 6, 13, 15, 21, 56, 777, DateTimeKind.Utc).AddTicks(5027),
-                            CreatedBy = 2,
-                            Description = "Bơ Sáp từ Việt Nam, Đắk Lắk",
-                            EntryPrice = 58000.0,
-                            IsDeleted = false,
-                            Name = "Bơ Sáp",
-                            Origin = "Việt Nam, Đắk Lắk",
-                            PriceCurrency = 1,
-                            ProductUnit = 7,
-                            Status = 2,
-                            StorageId = 1,
-                            UpdatedAt = new DateTime(2020, 6, 13, 15, 21, 56, 777, DateTimeKind.Utc).AddTicks(5041)
-                        },
-                        new
-                        {
-                            Id = 3,
-                            CategoryId = 1,
-                            CreatedAt = new DateTime(2020, 6, 13, 15, 21, 56, 777, DateTimeKind.Utc).AddTicks(5091),
-                            CreatedBy = 3,
-                            Description = "Bưởi Da Xanh từ Việt Nam, Đồng Nai, Tân Triều",
-                            EntryPrice = 30000.0,
-                            IsDeleted = false,
-                            Name = "Bưởi Da Xanh",
-                            Origin = "Việt Nam, Đồng Nai, Tân Triều",
-                            PriceCurrency = 1,
-                            ProductUnit = 3,
-                            Status = 2,
-                            StorageId = 1,
-                            UpdatedAt = new DateTime(2020, 6, 13, 15, 21, 56, 777, DateTimeKind.Utc).AddTicks(5092)
-                        },
-                        new
-                        {
-                            Id = 4,
-                            CategoryId = 1,
-                            CreatedAt = new DateTime(2020, 6, 13, 15, 21, 56, 777, DateTimeKind.Utc).AddTicks(5096),
-                            CreatedBy = 3,
-                            Description = "Có sắc tố đặc biệt, rất hiệu dụng trong quá trình chống oxy hóa",
-                            EntryPrice = 65000.0,
-                            IsDeleted = false,
-                            Name = "Cà Chua Đen",
-                            Origin = "Hà Nội",
-                            PriceCurrency = 1,
-                            ProductUnit = 7,
-                            Status = 2,
-                            StorageId = 1,
-                            UpdatedAt = new DateTime(2020, 6, 13, 15, 21, 56, 777, DateTimeKind.Utc).AddTicks(5097)
-                        },
-                        new
-                        {
-                            Id = 5,
-                            CategoryId = 1,
-                            CreatedAt = new DateTime(2020, 6, 13, 15, 21, 56, 777, DateTimeKind.Utc).AddTicks(5103),
-                            CreatedBy = 4,
-                            Description = "Cam Sành Miền Tây",
-                            EntryPrice = 15000.0,
-                            IsDeleted = false,
-                            Name = "Cam Sành",
-                            Origin = "Miền Tây",
-                            PriceCurrency = 1,
-                            ProductUnit = 7,
-                            Status = 2,
-                            StorageId = 1,
-                            UpdatedAt = new DateTime(2020, 6, 13, 15, 21, 56, 777, DateTimeKind.Utc).AddTicks(5104)
-                        },
-                        new
-                        {
-                            Id = 6,
-                            CategoryId = 1,
-                            CreatedAt = new DateTime(2020, 6, 13, 15, 21, 56, 777, DateTimeKind.Utc).AddTicks(5107),
-                            CreatedBy = 1,
-                            Description = "Chanh đào tươi Đà Lạt",
-                            EntryPrice = 40000.0,
-                            IsDeleted = false,
-                            Name = "Chanh Đào Tươi",
-                            Origin = "Đà Lạt",
-                            PriceCurrency = 1,
-                            ProductUnit = 7,
-                            Status = 2,
-                            StorageId = 1,
-                            UpdatedAt = new DateTime(2020, 6, 13, 15, 21, 56, 777, DateTimeKind.Utc).AddTicks(5109)
-                        },
-                        new
-                        {
-                            Id = 7,
-                            CategoryId = 1,
-                            CreatedAt = new DateTime(2020, 6, 13, 15, 21, 56, 777, DateTimeKind.Utc).AddTicks(5112),
-                            CreatedBy = 2,
-                            Description = "Chôm chôm nhãn",
-                            EntryPrice = 35000.0,
-                            IsDeleted = false,
-                            Name = "Chôm Chôm Nhãn",
-                            Origin = "Đồng Bằng Sông Cửu Long",
-                            PriceCurrency = 1,
-                            ProductUnit = 7,
-                            Status = 2,
-                            StorageId = 1,
-                            UpdatedAt = new DateTime(2020, 6, 13, 15, 21, 56, 777, DateTimeKind.Utc).AddTicks(5113)
-                        },
-                        new
-                        {
-                            Id = 8,
-                            CategoryId = 1,
-                            CreatedAt = new DateTime(2020, 6, 13, 15, 21, 56, 777, DateTimeKind.Utc).AddTicks(5116),
-                            CreatedBy = 3,
-                            Description = "Nhãn Lồng",
-                            EntryPrice = 25000.0,
-                            IsDeleted = false,
-                            Name = "Nhãn Lồng",
-                            Origin = "Hưng Yên",
-                            PriceCurrency = 1,
-                            ProductUnit = 7,
-                            Status = 2,
-                            StorageId = 1,
-                            UpdatedAt = new DateTime(2020, 6, 13, 15, 21, 56, 777, DateTimeKind.Utc).AddTicks(5117)
-                        },
-                        new
-                        {
-                            Id = 9,
-                            CategoryId = 1,
-                            CreatedAt = new DateTime(2020, 6, 13, 15, 21, 56, 777, DateTimeKind.Utc).AddTicks(5120),
-                            CreatedBy = 4,
-                            Description = "Thanh Long Ruột Đỏ",
-                            EntryPrice = 22000.0,
-                            IsDeleted = false,
-                            Name = "Thanh Long Ruột Đỏ",
-                            Origin = "Bình Thuận",
-                            PriceCurrency = 1,
-                            ProductUnit = 7,
-                            Status = 2,
-                            StorageId = 1,
-                            UpdatedAt = new DateTime(2020, 6, 13, 15, 21, 56, 777, DateTimeKind.Utc).AddTicks(5122)
-                        },
-                        new
-                        {
-                            Id = 10,
-                            CategoryId = 1,
-                            CreatedAt = new DateTime(2020, 6, 13, 15, 21, 56, 777, DateTimeKind.Utc).AddTicks(5125),
-                            CreatedBy = 1,
-                            Description = "Thanh long ruột trắng",
-                            EntryPrice = 25000.0,
-                            IsDeleted = false,
-                            Name = "Thanh Long Ruột Trắng",
-                            Origin = "Bình Thuận",
-                            PriceCurrency = 1,
-                            ProductUnit = 7,
-                            Status = 2,
-                            StorageId = 1,
-                            UpdatedAt = new DateTime(2020, 6, 13, 15, 21, 56, 777, DateTimeKind.Utc).AddTicks(5126)
-                        },
-                        new
-                        {
-                            Id = 11,
-                            CategoryId = 1,
-                            CreatedAt = new DateTime(2020, 6, 13, 15, 21, 56, 777, DateTimeKind.Utc).AddTicks(5129),
-                            CreatedBy = 2,
-                            Description = "Dâu tây đà lạt giống Mỹ",
-                            EntryPrice = 120000.0,
-                            IsDeleted = false,
-                            Name = "Dâu Tây Đà Lạt",
-                            Origin = "Đà Lạt",
-                            PriceCurrency = 1,
-                            ProductUnit = 7,
-                            Status = 2,
-                            StorageId = 1,
-                            UpdatedAt = new DateTime(2020, 6, 13, 15, 21, 56, 777, DateTimeKind.Utc).AddTicks(5130)
-                        },
-                        new
-                        {
-                            Id = 12,
-                            CategoryId = 1,
-                            CreatedAt = new DateTime(2020, 6, 13, 15, 21, 56, 777, DateTimeKind.Utc).AddTicks(5133),
-                            CreatedBy = 3,
-                            Description = "Dưa lưới Bình Dương",
-                            EntryPrice = 30000.0,
-                            IsDeleted = false,
-                            Name = "Dưa Lưới",
-                            Origin = "Bình Dương",
-                            PriceCurrency = 1,
-                            ProductUnit = 7,
-                            Status = 2,
-                            StorageId = 1,
-                            UpdatedAt = new DateTime(2020, 6, 13, 15, 21, 56, 777, DateTimeKind.Utc).AddTicks(5134)
-                        },
-                        new
-                        {
-                            Id = 13,
-                            CategoryId = 2,
-                            CreatedAt = new DateTime(2020, 6, 13, 15, 21, 56, 777, DateTimeKind.Utc).AddTicks(5137),
-                            CreatedBy = 4,
-                            Description = "Dưa Pepino Mexico",
-                            EntryPrice = 45000.0,
-                            IsDeleted = false,
-                            Name = "Dưới Pepino",
-                            Origin = "Mexico",
-                            PriceCurrency = 1,
-                            ProductUnit = 7,
-                            Status = 2,
-                            StorageId = 1,
-                            UpdatedAt = new DateTime(2020, 6, 13, 15, 21, 56, 777, DateTimeKind.Utc).AddTicks(5138)
-                        },
-                        new
-                        {
-                            Id = 14,
-                            CategoryId = 2,
-                            CreatedAt = new DateTime(2020, 6, 13, 15, 21, 56, 777, DateTimeKind.Utc).AddTicks(5141),
-                            CreatedBy = 1,
-                            Description = "Cherry Mỹ",
-                            EntryPrice = 310000.0,
-                            IsDeleted = false,
-                            Name = "Cherry Mỹ",
-                            Origin = "Mỹ",
-                            PriceCurrency = 1,
-                            ProductUnit = 7,
-                            Status = 2,
-                            StorageId = 1,
-                            UpdatedAt = new DateTime(2020, 6, 13, 15, 21, 56, 777, DateTimeKind.Utc).AddTicks(5143)
-                        },
-                        new
-                        {
-                            Id = 15,
-                            CategoryId = 2,
-                            CreatedAt = new DateTime(2020, 6, 13, 15, 21, 56, 777, DateTimeKind.Utc).AddTicks(5146),
-                            CreatedBy = 2,
-                            Description = "Việt Quất Mỹ",
-                            EntryPrice = 380000.0,
-                            IsDeleted = false,
-                            Name = "Việt Quất Mỹ",
-                            Origin = "Mỹ",
-                            PriceCurrency = 1,
-                            ProductUnit = 7,
-                            Status = 2,
-                            StorageId = 1,
-                            UpdatedAt = new DateTime(2020, 6, 13, 15, 21, 56, 777, DateTimeKind.Utc).AddTicks(5147)
-                        },
-                        new
-                        {
-                            Id = 16,
-                            CategoryId = 2,
-                            CreatedAt = new DateTime(2020, 6, 13, 15, 21, 56, 777, DateTimeKind.Utc).AddTicks(5150),
-                            CreatedBy = 3,
-                            Description = "Dưa Lê Hàn",
-                            EntryPrice = 180000.0,
-                            IsDeleted = false,
-                            Name = "Dưa Lê Hàn",
-                            Origin = "Hàn Quốc",
-                            PriceCurrency = 1,
-                            ProductUnit = 7,
-                            Status = 2,
-                            StorageId = 1,
-                            UpdatedAt = new DateTime(2020, 6, 13, 15, 21, 56, 777, DateTimeKind.Utc).AddTicks(5151)
-                        },
-                        new
-                        {
-                            Id = 17,
-                            CategoryId = 2,
-                            CreatedAt = new DateTime(2020, 6, 13, 15, 21, 56, 777, DateTimeKind.Utc).AddTicks(5154),
-                            CreatedBy = 4,
-                            Description = "Táo New Zealand",
-                            EntryPrice = 200000.0,
-                            IsDeleted = false,
-                            Name = "Táo New Zealand",
-                            Origin = "New Zealand",
-                            PriceCurrency = 1,
-                            ProductUnit = 7,
-                            Status = 2,
-                            StorageId = 1,
-                            UpdatedAt = new DateTime(2020, 6, 13, 15, 21, 56, 777, DateTimeKind.Utc).AddTicks(5156)
-                        },
-                        new
-                        {
-                            Id = 18,
-                            CategoryId = 2,
-                            CreatedAt = new DateTime(2020, 6, 13, 15, 21, 56, 777, DateTimeKind.Utc).AddTicks(5159),
-                            CreatedBy = 1,
-                            Description = "Kiwi Vàng New Zealand ",
-                            EntryPrice = 130000.0,
-                            IsDeleted = false,
-                            Name = "Kiwi Vàng New Zealand ",
-                            Origin = "New Zealand",
-                            PriceCurrency = 1,
-                            ProductUnit = 7,
-                            Status = 2,
-                            StorageId = 1,
-                            UpdatedAt = new DateTime(2020, 6, 13, 15, 21, 56, 777, DateTimeKind.Utc).AddTicks(5160)
-                        },
-                        new
-                        {
-                            Id = 19,
-                            CategoryId = 2,
-                            CreatedAt = new DateTime(2020, 6, 13, 15, 21, 56, 777, DateTimeKind.Utc).AddTicks(5163),
-                            CreatedBy = 2,
-                            Description = "Nho xanh Úc",
-                            EntryPrice = 320000.0,
-                            IsDeleted = false,
-                            Name = "Nho xanh Úc",
-                            Origin = "Úc",
-                            PriceCurrency = 1,
-                            ProductUnit = 7,
-                            Status = 2,
-                            StorageId = 1,
-                            UpdatedAt = new DateTime(2020, 6, 13, 15, 21, 56, 777, DateTimeKind.Utc).AddTicks(5164)
-                        },
-                        new
-                        {
-                            Id = 20,
-                            CategoryId = 2,
-                            CreatedAt = new DateTime(2020, 6, 13, 15, 21, 56, 777, DateTimeKind.Utc).AddTicks(5167),
-                            CreatedBy = 3,
-                            Description = "Dâu Anh Đào Nhật",
-                            EntryPrice = 610000.0,
-                            IsDeleted = false,
-                            Name = "Dâu Anh Đào Nhật",
-                            Origin = "Nhật Bản",
-                            PriceCurrency = 1,
-                            ProductUnit = 8,
-                            Status = 2,
-                            StorageId = 1,
-                            UpdatedAt = new DateTime(2020, 6, 13, 15, 21, 56, 777, DateTimeKind.Utc).AddTicks(5168)
-                        },
-                        new
-                        {
-                            Id = 21,
-                            CategoryId = 2,
-                            CreatedAt = new DateTime(2020, 6, 13, 15, 21, 56, 777, DateTimeKind.Utc).AddTicks(5171),
-                            CreatedBy = 4,
-                            Description = "Dưa Hấu Luna Piena Nhật",
-                            EntryPrice = 170000.0,
-                            IsDeleted = false,
-                            Name = "Dưa Hấu Luna Piena Nhật",
-                            Origin = "Nhật Bản",
-                            PriceCurrency = 1,
-                            ProductUnit = 3,
-                            Status = 2,
-                            StorageId = 1,
-                            UpdatedAt = new DateTime(2020, 6, 13, 15, 21, 56, 777, DateTimeKind.Utc).AddTicks(5172)
-                        },
-                        new
-                        {
-                            Id = 22,
-                            CategoryId = 2,
-                            CreatedAt = new DateTime(2020, 6, 13, 15, 21, 56, 777, DateTimeKind.Utc).AddTicks(5175),
-                            CreatedBy = 1,
-                            Description = "Sầu Riêng Muthong Thái",
-                            EntryPrice = 100000.0,
-                            IsDeleted = false,
-                            Name = "Sầu Riêng Muthong Thái",
-                            Origin = "Thái Lan",
-                            PriceCurrency = 1,
-                            ProductUnit = 7,
-                            Status = 2,
-                            StorageId = 1,
-                            UpdatedAt = new DateTime(2020, 6, 13, 15, 21, 56, 777, DateTimeKind.Utc).AddTicks(5176)
-                        },
-                        new
-                        {
-                            Id = 23,
-                            CategoryId = 2,
-                            CreatedAt = new DateTime(2020, 6, 13, 15, 21, 56, 777, DateTimeKind.Utc).AddTicks(5179),
-                            CreatedBy = 2,
-                            Description = "Bơ Úc (Bơ Hass)",
-                            EntryPrice = 140000.0,
-                            IsDeleted = false,
-                            Name = "Bơ Úc (Bơ Hass)",
-                            Origin = "Úc",
-                            PriceCurrency = 1,
-                            ProductUnit = 7,
-                            Status = 2,
-                            StorageId = 1,
-                            UpdatedAt = new DateTime(2020, 6, 13, 15, 21, 56, 777, DateTimeKind.Utc).AddTicks(5181)
-                        });
                 });
 
             modelBuilder.Entity("Banana_E_Commerce_API.Entities.ProductExportBill", b =>
@@ -1309,744 +899,6 @@ namespace Banana_E_Commerce_API.Migrations
                     b.HasIndex("TierId");
 
                     b.ToTable("ProductTiers");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            AfterDiscountPrice = 100000.0,
-                            CreatedAt = new DateTime(2020, 6, 13, 15, 21, 56, 778, DateTimeKind.Utc).AddTicks(1900),
-                            DiscountPercentage = 0,
-                            IsDeleted = false,
-                            KgSale = 1.0,
-                            PriceCurrency = 1,
-                            PricePerKg = 100000.0,
-                            ProductId = 1,
-                            Quantity = 57.0,
-                            SalePrice = 100000.0,
-                            TierId = 1,
-                            UpdatedAt = new DateTime(2020, 6, 13, 15, 21, 56, 778, DateTimeKind.Utc).AddTicks(2333)
-                        },
-                        new
-                        {
-                            Id = 2,
-                            AfterDiscountPrice = 100000.0,
-                            CreatedAt = new DateTime(2020, 6, 13, 15, 21, 56, 778, DateTimeKind.Utc).AddTicks(3211),
-                            DiscountPercentage = 0,
-                            IsDeleted = false,
-                            KgSale = 1.0,
-                            PriceCurrency = 1,
-                            PricePerKg = 110000.0,
-                            ProductId = 2,
-                            Quantity = 50.0,
-                            SalePrice = 110000.0,
-                            TierId = 1,
-                            UpdatedAt = new DateTime(2020, 6, 13, 15, 21, 56, 778, DateTimeKind.Utc).AddTicks(3227)
-                        },
-                        new
-                        {
-                            Id = 3,
-                            AfterDiscountPrice = 243000.0,
-                            CreatedAt = new DateTime(2020, 6, 13, 15, 21, 56, 778, DateTimeKind.Utc).AddTicks(3249),
-                            DiscountPercentage = 0,
-                            IsDeleted = false,
-                            KgSale = 2.7000000000000002,
-                            PriceCurrency = 1,
-                            PricePerKg = 90000.0,
-                            ProductId = 3,
-                            Quantity = 62.0,
-                            SalePrice = 243000.0,
-                            TierId = 1,
-                            UpdatedAt = new DateTime(2020, 6, 13, 15, 21, 56, 778, DateTimeKind.Utc).AddTicks(3251)
-                        },
-                        new
-                        {
-                            Id = 4,
-                            AfterDiscountPrice = 130000.0,
-                            CreatedAt = new DateTime(2020, 6, 13, 15, 21, 56, 778, DateTimeKind.Utc).AddTicks(3255),
-                            DiscountPercentage = 0,
-                            IsDeleted = false,
-                            KgSale = 1.0,
-                            PriceCurrency = 1,
-                            PricePerKg = 130000.0,
-                            ProductId = 4,
-                            Quantity = 39.0,
-                            SalePrice = 130000.0,
-                            TierId = 1,
-                            UpdatedAt = new DateTime(2020, 6, 13, 15, 21, 56, 778, DateTimeKind.Utc).AddTicks(3256)
-                        },
-                        new
-                        {
-                            Id = 5,
-                            AfterDiscountPrice = 45000.0,
-                            CreatedAt = new DateTime(2020, 6, 13, 15, 21, 56, 778, DateTimeKind.Utc).AddTicks(3259),
-                            DiscountPercentage = 0,
-                            IsDeleted = false,
-                            KgSale = 1.0,
-                            PriceCurrency = 1,
-                            PricePerKg = 45000.0,
-                            ProductId = 5,
-                            Quantity = 50.0,
-                            SalePrice = 45000.0,
-                            TierId = 1,
-                            UpdatedAt = new DateTime(2020, 6, 13, 15, 21, 56, 778, DateTimeKind.Utc).AddTicks(3260)
-                        },
-                        new
-                        {
-                            Id = 6,
-                            AfterDiscountPrice = 80000.0,
-                            CreatedAt = new DateTime(2020, 6, 13, 15, 21, 56, 778, DateTimeKind.Utc).AddTicks(3262),
-                            DiscountPercentage = 0,
-                            IsDeleted = false,
-                            KgSale = 1.0,
-                            PriceCurrency = 1,
-                            PricePerKg = 80000.0,
-                            ProductId = 6,
-                            Quantity = 50.0,
-                            SalePrice = 80000.0,
-                            TierId = 1,
-                            UpdatedAt = new DateTime(2020, 6, 13, 15, 21, 56, 778, DateTimeKind.Utc).AddTicks(3264)
-                        },
-                        new
-                        {
-                            Id = 7,
-                            AfterDiscountPrice = 75000.0,
-                            CreatedAt = new DateTime(2020, 6, 13, 15, 21, 56, 778, DateTimeKind.Utc).AddTicks(3267),
-                            DiscountPercentage = 0,
-                            IsDeleted = false,
-                            KgSale = 1.0,
-                            PriceCurrency = 1,
-                            PricePerKg = 75000.0,
-                            ProductId = 7,
-                            Quantity = 50.0,
-                            SalePrice = 75000.0,
-                            TierId = 1,
-                            UpdatedAt = new DateTime(2020, 6, 13, 15, 21, 56, 778, DateTimeKind.Utc).AddTicks(3268)
-                        },
-                        new
-                        {
-                            Id = 8,
-                            AfterDiscountPrice = 65000.0,
-                            CreatedAt = new DateTime(2020, 6, 13, 15, 21, 56, 778, DateTimeKind.Utc).AddTicks(3270),
-                            DiscountPercentage = 0,
-                            IsDeleted = false,
-                            KgSale = 1.0,
-                            PriceCurrency = 1,
-                            PricePerKg = 65000.0,
-                            ProductId = 8,
-                            Quantity = 50.0,
-                            SalePrice = 65000.0,
-                            TierId = 1,
-                            UpdatedAt = new DateTime(2020, 6, 13, 15, 21, 56, 778, DateTimeKind.Utc).AddTicks(3272)
-                        },
-                        new
-                        {
-                            Id = 9,
-                            AfterDiscountPrice = 66000.0,
-                            CreatedAt = new DateTime(2020, 6, 13, 15, 21, 56, 778, DateTimeKind.Utc).AddTicks(3275),
-                            DiscountPercentage = 0,
-                            IsDeleted = false,
-                            KgSale = 1.0,
-                            PriceCurrency = 1,
-                            PricePerKg = 66000.0,
-                            ProductId = 9,
-                            Quantity = 50.0,
-                            SalePrice = 66000.0,
-                            TierId = 1,
-                            UpdatedAt = new DateTime(2020, 6, 13, 15, 21, 56, 778, DateTimeKind.Utc).AddTicks(3276)
-                        },
-                        new
-                        {
-                            Id = 10,
-                            AfterDiscountPrice = 58000.0,
-                            CreatedAt = new DateTime(2020, 6, 13, 15, 21, 56, 778, DateTimeKind.Utc).AddTicks(3278),
-                            DiscountPercentage = 0,
-                            IsDeleted = false,
-                            KgSale = 1.0,
-                            PriceCurrency = 1,
-                            PricePerKg = 58000.0,
-                            ProductId = 10,
-                            Quantity = 50.0,
-                            SalePrice = 58000.0,
-                            TierId = 1,
-                            UpdatedAt = new DateTime(2020, 6, 13, 15, 21, 56, 778, DateTimeKind.Utc).AddTicks(3280)
-                        },
-                        new
-                        {
-                            Id = 11,
-                            AfterDiscountPrice = 260000.0,
-                            CreatedAt = new DateTime(2020, 6, 13, 15, 21, 56, 778, DateTimeKind.Utc).AddTicks(3282),
-                            DiscountPercentage = 0,
-                            IsDeleted = false,
-                            KgSale = 1.0,
-                            PriceCurrency = 1,
-                            PricePerKg = 260000.0,
-                            ProductId = 11,
-                            Quantity = 50.0,
-                            SalePrice = 260000.0,
-                            TierId = 1,
-                            UpdatedAt = new DateTime(2020, 6, 13, 15, 21, 56, 778, DateTimeKind.Utc).AddTicks(3284)
-                        },
-                        new
-                        {
-                            Id = 12,
-                            AfterDiscountPrice = 70000.0,
-                            CreatedAt = new DateTime(2020, 6, 13, 15, 21, 56, 778, DateTimeKind.Utc).AddTicks(3286),
-                            DiscountPercentage = 0,
-                            IsDeleted = false,
-                            KgSale = 1.0,
-                            PriceCurrency = 1,
-                            PricePerKg = 70000.0,
-                            ProductId = 12,
-                            Quantity = 50.0,
-                            SalePrice = 70000.0,
-                            TierId = 1,
-                            UpdatedAt = new DateTime(2020, 6, 13, 15, 21, 56, 778, DateTimeKind.Utc).AddTicks(3288)
-                        },
-                        new
-                        {
-                            Id = 13,
-                            AfterDiscountPrice = 100000.0,
-                            CreatedAt = new DateTime(2020, 6, 13, 15, 21, 56, 778, DateTimeKind.Utc).AddTicks(3290),
-                            DiscountPercentage = 0,
-                            IsDeleted = false,
-                            KgSale = 1.0,
-                            PriceCurrency = 1,
-                            PricePerKg = 100000.0,
-                            ProductId = 13,
-                            Quantity = 50.0,
-                            SalePrice = 100000.0,
-                            TierId = 1,
-                            UpdatedAt = new DateTime(2020, 6, 13, 15, 21, 56, 778, DateTimeKind.Utc).AddTicks(3292)
-                        },
-                        new
-                        {
-                            Id = 14,
-                            AfterDiscountPrice = 620000.0,
-                            CreatedAt = new DateTime(2020, 6, 13, 15, 21, 56, 778, DateTimeKind.Utc).AddTicks(3294),
-                            DiscountPercentage = 0,
-                            IsDeleted = false,
-                            KgSale = 1.0,
-                            PriceCurrency = 1,
-                            PricePerKg = 620000.0,
-                            ProductId = 14,
-                            Quantity = 50.0,
-                            SalePrice = 620000.0,
-                            TierId = 1,
-                            UpdatedAt = new DateTime(2020, 6, 13, 15, 21, 56, 778, DateTimeKind.Utc).AddTicks(3295)
-                        },
-                        new
-                        {
-                            Id = 15,
-                            AfterDiscountPrice = 700000.0,
-                            CreatedAt = new DateTime(2020, 6, 13, 15, 21, 56, 778, DateTimeKind.Utc).AddTicks(3298),
-                            DiscountPercentage = 0,
-                            IsDeleted = false,
-                            KgSale = 1.0,
-                            PriceCurrency = 1,
-                            PricePerKg = 700000.0,
-                            ProductId = 15,
-                            Quantity = 50.0,
-                            SalePrice = 700000.0,
-                            TierId = 1,
-                            UpdatedAt = new DateTime(2020, 6, 13, 15, 21, 56, 778, DateTimeKind.Utc).AddTicks(3300)
-                        },
-                        new
-                        {
-                            Id = 16,
-                            AfterDiscountPrice = 400000.0,
-                            CreatedAt = new DateTime(2020, 6, 13, 15, 21, 56, 778, DateTimeKind.Utc).AddTicks(3302),
-                            DiscountPercentage = 0,
-                            IsDeleted = false,
-                            KgSale = 1.0,
-                            PriceCurrency = 1,
-                            PricePerKg = 400000.0,
-                            ProductId = 16,
-                            Quantity = 50.0,
-                            SalePrice = 400000.0,
-                            TierId = 1,
-                            UpdatedAt = new DateTime(2020, 6, 13, 15, 21, 56, 778, DateTimeKind.Utc).AddTicks(3304)
-                        },
-                        new
-                        {
-                            Id = 17,
-                            AfterDiscountPrice = 480000.0,
-                            CreatedAt = new DateTime(2020, 6, 13, 15, 21, 56, 778, DateTimeKind.Utc).AddTicks(3320),
-                            DiscountPercentage = 0,
-                            IsDeleted = false,
-                            KgSale = 1.0,
-                            PriceCurrency = 1,
-                            PricePerKg = 480000.0,
-                            ProductId = 17,
-                            Quantity = 50.0,
-                            SalePrice = 480000.0,
-                            TierId = 1,
-                            UpdatedAt = new DateTime(2020, 6, 13, 15, 21, 56, 778, DateTimeKind.Utc).AddTicks(3321)
-                        },
-                        new
-                        {
-                            Id = 18,
-                            AfterDiscountPrice = 330000.0,
-                            CreatedAt = new DateTime(2020, 6, 13, 15, 21, 56, 778, DateTimeKind.Utc).AddTicks(3324),
-                            DiscountPercentage = 0,
-                            IsDeleted = false,
-                            KgSale = 1.0,
-                            PriceCurrency = 1,
-                            PricePerKg = 330000.0,
-                            ProductId = 18,
-                            Quantity = 50.0,
-                            SalePrice = 330000.0,
-                            TierId = 1,
-                            UpdatedAt = new DateTime(2020, 6, 13, 15, 21, 56, 778, DateTimeKind.Utc).AddTicks(3325)
-                        },
-                        new
-                        {
-                            Id = 19,
-                            AfterDiscountPrice = 700000.0,
-                            CreatedAt = new DateTime(2020, 6, 13, 15, 21, 56, 778, DateTimeKind.Utc).AddTicks(3328),
-                            DiscountPercentage = 0,
-                            IsDeleted = false,
-                            KgSale = 1.0,
-                            PriceCurrency = 1,
-                            PricePerKg = 700000.0,
-                            ProductId = 19,
-                            Quantity = 50.0,
-                            SalePrice = 700000.0,
-                            TierId = 1,
-                            UpdatedAt = new DateTime(2020, 6, 13, 15, 21, 56, 778, DateTimeKind.Utc).AddTicks(3329)
-                        },
-                        new
-                        {
-                            Id = 20,
-                            AfterDiscountPrice = 400000.0,
-                            CreatedAt = new DateTime(2020, 6, 13, 15, 21, 56, 778, DateTimeKind.Utc).AddTicks(3332),
-                            DiscountPercentage = 0,
-                            IsDeleted = false,
-                            KgSale = 0.5,
-                            PriceCurrency = 1,
-                            PricePerKg = 400000.0,
-                            ProductId = 20,
-                            Quantity = 50.0,
-                            SalePrice = 400000.0,
-                            TierId = 1,
-                            UpdatedAt = new DateTime(2020, 6, 13, 15, 21, 56, 778, DateTimeKind.Utc).AddTicks(3333)
-                        },
-                        new
-                        {
-                            Id = 21,
-                            AfterDiscountPrice = 900000.0,
-                            CreatedAt = new DateTime(2020, 6, 13, 15, 21, 56, 778, DateTimeKind.Utc).AddTicks(3336),
-                            DiscountPercentage = 0,
-                            IsDeleted = false,
-                            KgSale = 3.0,
-                            PriceCurrency = 1,
-                            PricePerKg = 900000.0,
-                            ProductId = 21,
-                            Quantity = 50.0,
-                            SalePrice = 900000.0,
-                            TierId = 1,
-                            UpdatedAt = new DateTime(2020, 6, 13, 15, 21, 56, 778, DateTimeKind.Utc).AddTicks(3338)
-                        },
-                        new
-                        {
-                            Id = 22,
-                            AfterDiscountPrice = 230000.0,
-                            CreatedAt = new DateTime(2020, 6, 13, 15, 21, 56, 778, DateTimeKind.Utc).AddTicks(3340),
-                            DiscountPercentage = 0,
-                            IsDeleted = false,
-                            KgSale = 1.0,
-                            PriceCurrency = 1,
-                            PricePerKg = 230000.0,
-                            ProductId = 22,
-                            Quantity = 50.0,
-                            SalePrice = 230000.0,
-                            TierId = 1,
-                            UpdatedAt = new DateTime(2020, 6, 13, 15, 21, 56, 778, DateTimeKind.Utc).AddTicks(3341)
-                        },
-                        new
-                        {
-                            Id = 23,
-                            AfterDiscountPrice = 300000.0,
-                            CreatedAt = new DateTime(2020, 6, 13, 15, 21, 56, 778, DateTimeKind.Utc).AddTicks(3344),
-                            DiscountPercentage = 0,
-                            IsDeleted = false,
-                            KgSale = 1.0,
-                            PriceCurrency = 1,
-                            PricePerKg = 300000.0,
-                            ProductId = 23,
-                            Quantity = 50.0,
-                            SalePrice = 300000.0,
-                            TierId = 1,
-                            UpdatedAt = new DateTime(2020, 6, 13, 15, 21, 56, 778, DateTimeKind.Utc).AddTicks(3345)
-                        },
-                        new
-                        {
-                            Id = 24,
-                            AfterDiscountPrice = 100000.0,
-                            CreatedAt = new DateTime(2020, 6, 13, 15, 21, 56, 778, DateTimeKind.Utc).AddTicks(3348),
-                            DiscountPercentage = 0,
-                            IsDeleted = false,
-                            KgSale = 1.0,
-                            PriceCurrency = 1,
-                            PricePerKg = 100000.0,
-                            ProductId = 1,
-                            Quantity = 0.0,
-                            SalePrice = 100000.0,
-                            TierId = 2,
-                            UpdatedAt = new DateTime(2020, 6, 13, 15, 21, 56, 778, DateTimeKind.Utc).AddTicks(3349)
-                        },
-                        new
-                        {
-                            Id = 25,
-                            AfterDiscountPrice = 100000.0,
-                            CreatedAt = new DateTime(2020, 6, 13, 15, 21, 56, 778, DateTimeKind.Utc).AddTicks(3352),
-                            DiscountPercentage = 0,
-                            IsDeleted = false,
-                            KgSale = 1.0,
-                            PriceCurrency = 1,
-                            PricePerKg = 110000.0,
-                            ProductId = 2,
-                            Quantity = 0.0,
-                            SalePrice = 110000.0,
-                            TierId = 2,
-                            UpdatedAt = new DateTime(2020, 6, 13, 15, 21, 56, 778, DateTimeKind.Utc).AddTicks(3353)
-                        },
-                        new
-                        {
-                            Id = 26,
-                            AfterDiscountPrice = 243000.0,
-                            CreatedAt = new DateTime(2020, 6, 13, 15, 21, 56, 778, DateTimeKind.Utc).AddTicks(3356),
-                            DiscountPercentage = 0,
-                            IsDeleted = false,
-                            KgSale = 2.7000000000000002,
-                            PriceCurrency = 1,
-                            PricePerKg = 90000.0,
-                            ProductId = 3,
-                            Quantity = 0.0,
-                            SalePrice = 243000.0,
-                            TierId = 2,
-                            UpdatedAt = new DateTime(2020, 6, 13, 15, 21, 56, 778, DateTimeKind.Utc).AddTicks(3357)
-                        },
-                        new
-                        {
-                            Id = 27,
-                            AfterDiscountPrice = 130000.0,
-                            CreatedAt = new DateTime(2020, 6, 13, 15, 21, 56, 778, DateTimeKind.Utc).AddTicks(3360),
-                            DiscountPercentage = 0,
-                            IsDeleted = false,
-                            KgSale = 1.0,
-                            PriceCurrency = 1,
-                            PricePerKg = 130000.0,
-                            ProductId = 4,
-                            Quantity = 0.0,
-                            SalePrice = 130000.0,
-                            TierId = 2,
-                            UpdatedAt = new DateTime(2020, 6, 13, 15, 21, 56, 778, DateTimeKind.Utc).AddTicks(3361)
-                        },
-                        new
-                        {
-                            Id = 28,
-                            AfterDiscountPrice = 45000.0,
-                            CreatedAt = new DateTime(2020, 6, 13, 15, 21, 56, 778, DateTimeKind.Utc).AddTicks(3364),
-                            DiscountPercentage = 0,
-                            IsDeleted = false,
-                            KgSale = 1.0,
-                            PriceCurrency = 1,
-                            PricePerKg = 45000.0,
-                            ProductId = 5,
-                            Quantity = 0.0,
-                            SalePrice = 45000.0,
-                            TierId = 2,
-                            UpdatedAt = new DateTime(2020, 6, 13, 15, 21, 56, 778, DateTimeKind.Utc).AddTicks(3365)
-                        },
-                        new
-                        {
-                            Id = 29,
-                            AfterDiscountPrice = 80000.0,
-                            CreatedAt = new DateTime(2020, 6, 13, 15, 21, 56, 778, DateTimeKind.Utc).AddTicks(3368),
-                            DiscountPercentage = 0,
-                            IsDeleted = false,
-                            KgSale = 1.0,
-                            PriceCurrency = 1,
-                            PricePerKg = 80000.0,
-                            ProductId = 6,
-                            Quantity = 0.0,
-                            SalePrice = 80000.0,
-                            TierId = 2,
-                            UpdatedAt = new DateTime(2020, 6, 13, 15, 21, 56, 778, DateTimeKind.Utc).AddTicks(3369)
-                        },
-                        new
-                        {
-                            Id = 30,
-                            AfterDiscountPrice = 75000.0,
-                            CreatedAt = new DateTime(2020, 6, 13, 15, 21, 56, 778, DateTimeKind.Utc).AddTicks(3372),
-                            DiscountPercentage = 0,
-                            IsDeleted = false,
-                            KgSale = 1.0,
-                            PriceCurrency = 1,
-                            PricePerKg = 75000.0,
-                            ProductId = 7,
-                            Quantity = 0.0,
-                            SalePrice = 75000.0,
-                            TierId = 2,
-                            UpdatedAt = new DateTime(2020, 6, 13, 15, 21, 56, 778, DateTimeKind.Utc).AddTicks(3374)
-                        },
-                        new
-                        {
-                            Id = 31,
-                            AfterDiscountPrice = 65000.0,
-                            CreatedAt = new DateTime(2020, 6, 13, 15, 21, 56, 778, DateTimeKind.Utc).AddTicks(3376),
-                            DiscountPercentage = 0,
-                            IsDeleted = false,
-                            KgSale = 1.0,
-                            PriceCurrency = 1,
-                            PricePerKg = 65000.0,
-                            ProductId = 8,
-                            Quantity = 0.0,
-                            SalePrice = 65000.0,
-                            TierId = 2,
-                            UpdatedAt = new DateTime(2020, 6, 13, 15, 21, 56, 778, DateTimeKind.Utc).AddTicks(3378)
-                        },
-                        new
-                        {
-                            Id = 32,
-                            AfterDiscountPrice = 66000.0,
-                            CreatedAt = new DateTime(2020, 6, 13, 15, 21, 56, 778, DateTimeKind.Utc).AddTicks(3380),
-                            DiscountPercentage = 0,
-                            IsDeleted = false,
-                            KgSale = 1.0,
-                            PriceCurrency = 1,
-                            PricePerKg = 66000.0,
-                            ProductId = 9,
-                            Quantity = 0.0,
-                            SalePrice = 66000.0,
-                            TierId = 2,
-                            UpdatedAt = new DateTime(2020, 6, 13, 15, 21, 56, 778, DateTimeKind.Utc).AddTicks(3382)
-                        },
-                        new
-                        {
-                            Id = 33,
-                            AfterDiscountPrice = 58000.0,
-                            CreatedAt = new DateTime(2020, 6, 13, 15, 21, 56, 778, DateTimeKind.Utc).AddTicks(3384),
-                            DiscountPercentage = 0,
-                            IsDeleted = false,
-                            KgSale = 1.0,
-                            PriceCurrency = 1,
-                            PricePerKg = 58000.0,
-                            ProductId = 10,
-                            Quantity = 0.0,
-                            SalePrice = 58000.0,
-                            TierId = 2,
-                            UpdatedAt = new DateTime(2020, 6, 13, 15, 21, 56, 778, DateTimeKind.Utc).AddTicks(3386)
-                        },
-                        new
-                        {
-                            Id = 34,
-                            AfterDiscountPrice = 260000.0,
-                            CreatedAt = new DateTime(2020, 6, 13, 15, 21, 56, 778, DateTimeKind.Utc).AddTicks(3388),
-                            DiscountPercentage = 0,
-                            IsDeleted = false,
-                            KgSale = 1.0,
-                            PriceCurrency = 1,
-                            PricePerKg = 260000.0,
-                            ProductId = 11,
-                            Quantity = 0.0,
-                            SalePrice = 260000.0,
-                            TierId = 2,
-                            UpdatedAt = new DateTime(2020, 6, 13, 15, 21, 56, 778, DateTimeKind.Utc).AddTicks(3390)
-                        },
-                        new
-                        {
-                            Id = 35,
-                            AfterDiscountPrice = 70000.0,
-                            CreatedAt = new DateTime(2020, 6, 13, 15, 21, 56, 778, DateTimeKind.Utc).AddTicks(3393),
-                            DiscountPercentage = 0,
-                            IsDeleted = false,
-                            KgSale = 1.0,
-                            PriceCurrency = 1,
-                            PricePerKg = 70000.0,
-                            ProductId = 12,
-                            Quantity = 0.0,
-                            SalePrice = 70000.0,
-                            TierId = 2,
-                            UpdatedAt = new DateTime(2020, 6, 13, 15, 21, 56, 778, DateTimeKind.Utc).AddTicks(3394)
-                        },
-                        new
-                        {
-                            Id = 36,
-                            AfterDiscountPrice = 100000.0,
-                            CreatedAt = new DateTime(2020, 6, 13, 15, 21, 56, 778, DateTimeKind.Utc).AddTicks(3397),
-                            DiscountPercentage = 0,
-                            IsDeleted = false,
-                            KgSale = 1.0,
-                            PriceCurrency = 1,
-                            PricePerKg = 100000.0,
-                            ProductId = 13,
-                            Quantity = 0.0,
-                            SalePrice = 100000.0,
-                            TierId = 2,
-                            UpdatedAt = new DateTime(2020, 6, 13, 15, 21, 56, 778, DateTimeKind.Utc).AddTicks(3398)
-                        },
-                        new
-                        {
-                            Id = 37,
-                            AfterDiscountPrice = 620000.0,
-                            CreatedAt = new DateTime(2020, 6, 13, 15, 21, 56, 778, DateTimeKind.Utc).AddTicks(3401),
-                            DiscountPercentage = 0,
-                            IsDeleted = false,
-                            KgSale = 1.0,
-                            PriceCurrency = 1,
-                            PricePerKg = 620000.0,
-                            ProductId = 14,
-                            Quantity = 0.0,
-                            SalePrice = 620000.0,
-                            TierId = 2,
-                            UpdatedAt = new DateTime(2020, 6, 13, 15, 21, 56, 778, DateTimeKind.Utc).AddTicks(3402)
-                        },
-                        new
-                        {
-                            Id = 38,
-                            AfterDiscountPrice = 700000.0,
-                            CreatedAt = new DateTime(2020, 6, 13, 15, 21, 56, 778, DateTimeKind.Utc).AddTicks(3405),
-                            DiscountPercentage = 0,
-                            IsDeleted = false,
-                            KgSale = 1.0,
-                            PriceCurrency = 1,
-                            PricePerKg = 700000.0,
-                            ProductId = 15,
-                            Quantity = 0.0,
-                            SalePrice = 700000.0,
-                            TierId = 2,
-                            UpdatedAt = new DateTime(2020, 6, 13, 15, 21, 56, 778, DateTimeKind.Utc).AddTicks(3406)
-                        },
-                        new
-                        {
-                            Id = 39,
-                            AfterDiscountPrice = 400000.0,
-                            CreatedAt = new DateTime(2020, 6, 13, 15, 21, 56, 778, DateTimeKind.Utc).AddTicks(3409),
-                            DiscountPercentage = 0,
-                            IsDeleted = false,
-                            KgSale = 1.0,
-                            PriceCurrency = 1,
-                            PricePerKg = 400000.0,
-                            ProductId = 16,
-                            Quantity = 0.0,
-                            SalePrice = 400000.0,
-                            TierId = 2,
-                            UpdatedAt = new DateTime(2020, 6, 13, 15, 21, 56, 778, DateTimeKind.Utc).AddTicks(3410)
-                        },
-                        new
-                        {
-                            Id = 40,
-                            AfterDiscountPrice = 480000.0,
-                            CreatedAt = new DateTime(2020, 6, 13, 15, 21, 56, 778, DateTimeKind.Utc).AddTicks(3412),
-                            DiscountPercentage = 0,
-                            IsDeleted = false,
-                            KgSale = 1.0,
-                            PriceCurrency = 1,
-                            PricePerKg = 480000.0,
-                            ProductId = 17,
-                            Quantity = 0.0,
-                            SalePrice = 480000.0,
-                            TierId = 2,
-                            UpdatedAt = new DateTime(2020, 6, 13, 15, 21, 56, 778, DateTimeKind.Utc).AddTicks(3414)
-                        },
-                        new
-                        {
-                            Id = 41,
-                            AfterDiscountPrice = 330000.0,
-                            CreatedAt = new DateTime(2020, 6, 13, 15, 21, 56, 778, DateTimeKind.Utc).AddTicks(3416),
-                            DiscountPercentage = 0,
-                            IsDeleted = false,
-                            KgSale = 1.0,
-                            PriceCurrency = 1,
-                            PricePerKg = 330000.0,
-                            ProductId = 18,
-                            Quantity = 0.0,
-                            SalePrice = 330000.0,
-                            TierId = 2,
-                            UpdatedAt = new DateTime(2020, 6, 13, 15, 21, 56, 778, DateTimeKind.Utc).AddTicks(3417)
-                        },
-                        new
-                        {
-                            Id = 42,
-                            AfterDiscountPrice = 700000.0,
-                            CreatedAt = new DateTime(2020, 6, 13, 15, 21, 56, 778, DateTimeKind.Utc).AddTicks(3420),
-                            DiscountPercentage = 0,
-                            IsDeleted = false,
-                            KgSale = 1.0,
-                            PriceCurrency = 1,
-                            PricePerKg = 700000.0,
-                            ProductId = 19,
-                            Quantity = 0.0,
-                            SalePrice = 700000.0,
-                            TierId = 2,
-                            UpdatedAt = new DateTime(2020, 6, 13, 15, 21, 56, 778, DateTimeKind.Utc).AddTicks(3421)
-                        },
-                        new
-                        {
-                            Id = 43,
-                            AfterDiscountPrice = 400000.0,
-                            CreatedAt = new DateTime(2020, 6, 13, 15, 21, 56, 778, DateTimeKind.Utc).AddTicks(3424),
-                            DiscountPercentage = 0,
-                            IsDeleted = false,
-                            KgSale = 0.5,
-                            PriceCurrency = 1,
-                            PricePerKg = 400000.0,
-                            ProductId = 20,
-                            Quantity = 0.0,
-                            SalePrice = 400000.0,
-                            TierId = 2,
-                            UpdatedAt = new DateTime(2020, 6, 13, 15, 21, 56, 778, DateTimeKind.Utc).AddTicks(3425)
-                        },
-                        new
-                        {
-                            Id = 44,
-                            AfterDiscountPrice = 900000.0,
-                            CreatedAt = new DateTime(2020, 6, 13, 15, 21, 56, 778, DateTimeKind.Utc).AddTicks(3428),
-                            DiscountPercentage = 0,
-                            IsDeleted = false,
-                            KgSale = 3.0,
-                            PriceCurrency = 1,
-                            PricePerKg = 900000.0,
-                            ProductId = 21,
-                            Quantity = 0.0,
-                            SalePrice = 900000.0,
-                            TierId = 2,
-                            UpdatedAt = new DateTime(2020, 6, 13, 15, 21, 56, 778, DateTimeKind.Utc).AddTicks(3429)
-                        },
-                        new
-                        {
-                            Id = 45,
-                            AfterDiscountPrice = 230000.0,
-                            CreatedAt = new DateTime(2020, 6, 13, 15, 21, 56, 778, DateTimeKind.Utc).AddTicks(3432),
-                            DiscountPercentage = 0,
-                            IsDeleted = false,
-                            KgSale = 1.0,
-                            PriceCurrency = 1,
-                            PricePerKg = 230000.0,
-                            ProductId = 22,
-                            Quantity = 0.0,
-                            SalePrice = 230000.0,
-                            TierId = 2,
-                            UpdatedAt = new DateTime(2020, 6, 13, 15, 21, 56, 778, DateTimeKind.Utc).AddTicks(3433)
-                        },
-                        new
-                        {
-                            Id = 46,
-                            AfterDiscountPrice = 300000.0,
-                            CreatedAt = new DateTime(2020, 6, 13, 15, 21, 56, 778, DateTimeKind.Utc).AddTicks(3436),
-                            DiscountPercentage = 0,
-                            IsDeleted = false,
-                            KgSale = 1.0,
-                            PriceCurrency = 1,
-                            PricePerKg = 300000.0,
-                            ProductId = 23,
-                            Quantity = 0.0,
-                            SalePrice = 300000.0,
-                            TierId = 2,
-                            UpdatedAt = new DateTime(2020, 6, 13, 15, 21, 56, 778, DateTimeKind.Utc).AddTicks(3437)
-                        });
                 });
 
             modelBuilder.Entity("Banana_E_Commerce_API.Entities.ProductTierTransferReport", b =>
@@ -2355,34 +1207,34 @@ namespace Banana_E_Commerce_API.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2020, 6, 13, 15, 21, 56, 774, DateTimeKind.Utc).AddTicks(2883),
+                            CreatedAt = new DateTime(2020, 6, 15, 0, 2, 20, 609, DateTimeKind.Utc).AddTicks(8085),
                             IsDeleted = false,
                             RoleName = 0,
-                            UpdatedAt = new DateTime(2020, 6, 13, 15, 21, 56, 774, DateTimeKind.Utc).AddTicks(3407)
+                            UpdatedAt = new DateTime(2020, 6, 15, 0, 2, 20, 609, DateTimeKind.Utc).AddTicks(9180)
                         },
                         new
                         {
                             Id = 2,
-                            CreatedAt = new DateTime(2020, 6, 13, 15, 21, 56, 774, DateTimeKind.Utc).AddTicks(4286),
+                            CreatedAt = new DateTime(2020, 6, 15, 0, 2, 20, 610, DateTimeKind.Utc).AddTicks(1151),
                             IsDeleted = false,
                             RoleName = 1,
-                            UpdatedAt = new DateTime(2020, 6, 13, 15, 21, 56, 774, DateTimeKind.Utc).AddTicks(4304)
+                            UpdatedAt = new DateTime(2020, 6, 15, 0, 2, 20, 610, DateTimeKind.Utc).AddTicks(1182)
                         },
                         new
                         {
                             Id = 3,
-                            CreatedAt = new DateTime(2020, 6, 13, 15, 21, 56, 774, DateTimeKind.Utc).AddTicks(4374),
+                            CreatedAt = new DateTime(2020, 6, 15, 0, 2, 20, 610, DateTimeKind.Utc).AddTicks(1264),
                             IsDeleted = false,
                             RoleName = 2,
-                            UpdatedAt = new DateTime(2020, 6, 13, 15, 21, 56, 774, DateTimeKind.Utc).AddTicks(4376)
+                            UpdatedAt = new DateTime(2020, 6, 15, 0, 2, 20, 610, DateTimeKind.Utc).AddTicks(1267)
                         },
                         new
                         {
                             Id = 4,
-                            CreatedAt = new DateTime(2020, 6, 13, 15, 21, 56, 774, DateTimeKind.Utc).AddTicks(4378),
+                            CreatedAt = new DateTime(2020, 6, 15, 0, 2, 20, 610, DateTimeKind.Utc).AddTicks(1271),
                             IsDeleted = false,
                             RoleName = 3,
-                            UpdatedAt = new DateTime(2020, 6, 13, 15, 21, 56, 774, DateTimeKind.Utc).AddTicks(4379)
+                            UpdatedAt = new DateTime(2020, 6, 15, 0, 2, 20, 610, DateTimeKind.Utc).AddTicks(1274)
                         });
                 });
 
@@ -2534,13 +1386,13 @@ namespace Banana_E_Commerce_API.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2020, 6, 13, 15, 21, 56, 776, DateTimeKind.Utc).AddTicks(4274),
+                            CreatedAt = new DateTime(2020, 6, 15, 0, 2, 20, 613, DateTimeKind.Utc).AddTicks(8560),
                             IsDeleted = false,
                             Location = "Tiểu Vương Quốc Bình Chánh",
                             Name = "Hoàng Khố",
                             Size = 1000.2,
                             SizeUnit = "m2",
-                            UpdatedAt = new DateTime(2020, 6, 13, 15, 21, 56, 776, DateTimeKind.Utc).AddTicks(4754)
+                            UpdatedAt = new DateTime(2020, 6, 15, 0, 2, 20, 613, DateTimeKind.Utc).AddTicks(9620)
                         });
                 });
 
@@ -2604,20 +1456,6 @@ namespace Banana_E_Commerce_API.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Tiers");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            IsDeleted = false,
-                            TierOption = 1
-                        },
-                        new
-                        {
-                            Id = 2,
-                            IsDeleted = false,
-                            TierOption = 2
-                        });
                 });
 
             modelBuilder.Entity("Banana_E_Commerce_API.Entities.User", b =>
