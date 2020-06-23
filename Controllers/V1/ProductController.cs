@@ -117,7 +117,7 @@ namespace Banana_E_Commerce_API.Controllers.V1
 
             var isProductUpdated = await _productService.UpdateAsync(result.Product);
 
-            var productResponse = _mapper.Map<ProductResponse>(result);
+            var productResponse = _mapper.Map<ProductResponse>(result.Product);
             if (isProductUpdated)
             {
                 return Ok(new Response<ProductResponse>(productResponse));
@@ -130,9 +130,9 @@ namespace Banana_E_Commerce_API.Controllers.V1
         [HttpDelete(ApiRoutes.Product.Delete)]
         public async Task<IActionResult> Delete([FromRoute] int productId)
         {
-            var productEntity = await _productService.GetByIdAsync(productId);
+            var result = await _productService.GetByIdAsync(productId);
 
-            if (productEntity == null)
+            if (result.Product == null)
             {
                 return NotFound();
             }
