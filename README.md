@@ -1,6 +1,6 @@
 # Fruit Ecommerce Web Application API
 
-This is a back-end part of a full project for an e-commerce fruits website in e-commerce and applications subject at my university. This project was developed follow RESTful API using .NET Core framework 3.1 and MS SQLServer, this is an API server for front-end part using Reactjs. In this project, we have all basic features of an e-commerce website like: 
+This is a back-end part of a full project for an e-commerce fruit website in e-commerce and applications subject at my university. This project was developed following RESTful API using .NET Core framework 3.1 and MS SQLServer, this is an API server for the front-end part using Reactjs. In this project, we have all the basic features of an e-commerce website like
 * List your products
 * Cart feature
 * Rating product feature
